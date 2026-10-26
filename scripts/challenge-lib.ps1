@@ -219,11 +219,8 @@ function Get-AgentResource {
     $st = Get-AetherionState
     $j = az resource list -g $st.resourceGroup --resource-type Microsoft.App/agents -o json 2>$null
     $agents = if ($j) { $j | ConvertFrom-Json } else { @() }
-    # Attendees sometimes create the agent outside the lab resource group.
-    if (-not $agents -or $agents.Count -eq 0) {
-        $j = az resource list --resource-type Microsoft.App/agents -o json 2>$null
-        $agents = if ($j) { $j | ConvertFrom-Json } else { @() }
-    }
+    # Only THIS environment's resource group. Many attendees share a subscription, so
+    # falling back to "any agent in the subscription" could grade somebody else's agent.
     if (-not $agents -or $agents.Count -eq 0) { return $null }
     $full = az resource show --ids $agents[0].id --api-version 2026-01-01 -o json 2>$null
     if (-not $full) { return $null }
@@ -338,7 +335,7 @@ function Test-AgentApimAccess {
 function Test-MajorIncidentAlertFired([datetime]$Since) {
     $st   = Get-AetherionState
     $sub  = Get-AetherionSubscriptionId
-    $rule = $st.incidentAlertName; if (-not $rule) { $rule = 'aetherion-major-incident' }
+    $rule = Get-IncidentAlertName
     # timeRange only accepts a fixed set of values, so pick the smallest that covers $Since.
     $age = ((Get-Date).ToUniversalTime() - $Since).TotalHours
     $range = if ($age -le 1) { '1h' } elseif ($age -le 8) { '8h' } elseif ($age -le 24) { '1d' } else { '7d' }
@@ -358,7 +355,11 @@ function Test-MajorIncidentAlertFired([datetime]$Since) {
               [Globalization.DateTimeStyles]::AssumeUniversal
     foreach ($al in ($raw | ConvertFrom-Json).value) {
         $e = $al.properties.essentials
+        # Match the rule name AND this resource group: other attendees in the same
+        # subscription have look-alike rules, and the alert list is subscription-wide.
         if ($e.alertRule -notmatch [regex]::Escape($rule)) { continue }
+        if ($e.alertRule -notmatch [regex]::Escape("/resourcegroups/$($st.resourceGroup)/") -and
+            "$($e.targetResourceGroup)" -ne "$($st.resourceGroup)") { continue }
         if ($e.severity -ne 'Sev1') { continue }
         [datetime]$started = [datetime]::MinValue
         if ([datetime]::TryParse($e.startDateTime, [Globalization.CultureInfo]::InvariantCulture,
@@ -448,22 +449,47 @@ function Test-SkillRegistered([string]$Match = 'crew') {
     return [bool]($blob -match $Match)
 }
 
+# The Sev1 alert rule that belongs to THIS environment. Its name carries a suffix that
+# is unique per resource group (see infra/main.bicep). Many environments share one
+# subscription and an SRE Agent scans every alert in its subscription, so the response
+# plan must filter on this exact name or it would pick up other attendees' alerts.
+function Get-IncidentAlertName {
+    $n = (Get-AetherionState).incidentAlertName
+    if ([string]::IsNullOrWhiteSpace($n)) {
+        throw "Your state file has no alert name. Run ./scripts/attach-environment.ps1 -Force again."
+    }
+    return "$n"
+}
+
+# All the text a plan filters the title on. The plan stores it in three fields
+# (titleContains, titleContainsAny, titleContainsAll); read them all so a correctly
+# configured plan is never marked wrong because of which field the portal used.
+function Get-PlanTitleText($plan) {
+    $parts = @("$($plan.titleContains)") + @($plan.titleContainsAny | ForEach-Object { "$_" }) + @($plan.titleContainsAll | ForEach-Object { "$_" })
+    return (($parts | Where-Object { $_ }) -join ' ')
+}
+
 # Challenge 4: the Sev1 response plan, read from the same store the portal reads.
 # 'mergeEnabled' is the alert-reinvestigation cooldown; 'handlingAgent' empty
 # means no subagent is bound, which is what the challenge asks for.
+# 'TitleIsMine' is true only when 'Title contains' holds this environment's alert name.
 function Get-ResponsePlanSummary {
     $r = Invoke-SreData '/api/v1/incidentPlayground/filters'
     if ($null -eq $r) { return $null }
     $plans = @($r)
     if ($plans.Count -eq 0) { return @{ Count = 0 } }
-    $sev1 = $plans | Where-Object { $_.isEnabled -and ($_.priorities -contains 'Sev1') } | Select-Object -First 1
+    $mine = Get-IncidentAlertName
+    $sev1plans = @($plans | Where-Object { $_.isEnabled -and ($_.priorities -contains 'Sev1') })
+    $sev1 = $sev1plans | Where-Object { (Get-PlanTitleText $_) -like "*$mine*" } | Select-Object -First 1
+    if (-not $sev1) { $sev1 = $sev1plans | Select-Object -First 1 }
     return @{
         Count        = $plans.Count
         Found        = [bool]$sev1
         Id           = if ($sev1) { "$($sev1.id)" } else { '' }
         Autonomous   = [bool]($sev1 -and $sev1.agentMode -eq 'autonomous')
         NoSubagent   = [bool]($sev1 -and [string]::IsNullOrWhiteSpace($sev1.handlingAgent))
-        TitleFilters = [bool]($sev1 -and [string]::IsNullOrWhiteSpace($sev1.titleContains) -and @($sev1.titleNotContains).Count -eq 0)
+        TitleIsMine  = [bool]($sev1 -and (Get-PlanTitleText $sev1) -like "*$mine*")
+        NoExclusions = [bool]($sev1 -and @($sev1.titleNotContains | Where-Object { $_ }).Count -eq 0)
         CooldownOff  = [bool]($sev1 -and -not $sev1.mergeEnabled)
     }
 }
@@ -554,9 +580,16 @@ $script:Challenges = [ordered]@{
                 } "run mode: $(Get-AgentRunMode)")
             $code = $agent -and (Confirm-Verified 'Does Builder -> Code Access list your aetherion-airops-platform repo as Connected and Ready?' `
                 { Test-CodeRepoReady } (Get-CodeRepoDetail))
+            # Regulatory requirement: Azure OpenAI (EU Data Boundary), never Anthropic.
+            $provider = if ($agent) { $dm = (Get-AgentResource).properties.defaultModel; "$($dm.provider) / $($dm.name)" } else { '' }
+            $model = $agent -and (Confirm-Verified 'Is the agent on the Azure OpenAI model provider (not Anthropic)?' `
+                { if ([string]::IsNullOrWhiteSpace($provider.Trim(' /'))) { $null } else { $provider -notmatch 'Anthropic|Claude' } } "model: $provider")
+            if ($agent -and -not $model) {
+                Write-Host "  Regulatory requirement: the agent must use Azure OpenAI. Change it in the agent's settings." -ForegroundColor Yellow
+            }
             $sched = Confirm-Verified 'Have you created a scheduled daily health check?' { Test-ScheduledTaskExists }
             $base = Confirm-SelfAttest 'Have you recorded a healthy baseline you could compare a future incident against?'
-            @{ Pass = ($allOk -and $agent -and $apim -and $ctx -and $conn -and $code -and $base -and $sched); Detail = "platform healthy=$allOk, agentExists=$agent, apimAccess=$apim, logsConnected=$ctx, codeConnected=$code, agent connected=$conn, baseline=$base, schedule=$sched" }
+            @{ Pass = ($allOk -and $agent -and $apim -and $ctx -and $conn -and $model -and $code -and $base -and $sched); Detail = "platform healthy=$allOk, agentExists=$agent, modelProvider=$model, apimAccess=$apim, logsConnected=$ctx, codeConnected=$code, agent connected=$conn, baseline=$base, schedule=$sched" }
         }
     }
 
@@ -672,9 +705,14 @@ $script:Challenges = [ordered]@{
             Write-Host "place to let the agent run in AUTONOMOUS mode and fix it end-to-end without waiting"
             Write-Host "for per-action approval. Watch it detect, decide and act; you supervise the outcome."
             Write-Host ""
+            $alert = Get-IncidentAlertName
             Write-Host "Then productize the autonomy: wire a response plan on the agent filtered to" -ForegroundColor Gray
-            Write-Host "Sev1 and bound to the pre-provisioned 'aetherion-major-incident' alert, so the next"
-            Write-Host "major incident auto-triggers an investigation instead of waiting for a human."
+            Write-Host "Sev1 AND to YOUR alert, so the next major incident auto-triggers an investigation"
+            Write-Host "instead of waiting for a human."
+            Write-Host ""
+            Write-Host "  YOUR alert name (Title contains):  $alert" -ForegroundColor Green
+            Write-Host "  Other attendees share this subscription and have look-alike alerts. A plan that does" -ForegroundColor Yellow
+            Write-Host "  not filter on your exact name will react to theirs, and theirs to yours." -ForegroundColor Yellow
         }
         Check = {
             $ok     = (Test-ServiceHealthy 'baggage' 400)
@@ -695,10 +733,11 @@ $script:Challenges = [ordered]@{
                 Write-Host ""
                 Write-Host "  Checking your Sev1 response plan. Challenge 5 is graded on the alert firing." -ForegroundColor Gray
                 $rp = Get-ResponsePlanSummary
-                $pOn = Confirm-Verified 'Is your plan listed with Status On and Severity Sev1 (matching the pre-provisioned aetherion-major-incident alert)?' `
+                $alert = Get-IncidentAlertName
+                $pOn = Confirm-Verified 'Is your plan listed with Status On and Severity Sev1?' `
                 { if ($null -eq $rp) { $null } else { [bool]$rp.Found } } $(if ($rp -and $rp.Found) { "plan '$($rp.Id)'" } else { '' })
-                $pTitle = Confirm-Verified 'Are both title filters (contains / does not contain) empty?' `
-                { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.TitleFilters } }
+                $pTitle = Confirm-Verified "Is 'Title contains' set to YOUR alert name ($alert) and 'Title does not contain' empty?" `
+                { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.TitleIsMine -and $rp.NoExclusions } }
                 $pSub = Confirm-Verified 'Does Subagent name read "Set up", i.e. no subagent is bound to the plan?' `
                 { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.NoSubagent } }
                 $pAuto = Confirm-Verified 'Is the agent autonomy level on the plan set to Autonomous?' `
@@ -710,9 +749,9 @@ $script:Challenges = [ordered]@{
                 $plan = ($pOn -and $pTitle -and $pSub -and $pAuto -and $pCool -and $pQuick)
                 if (-not $plan) {
                     Write-Host ""
-                    Write-Host "  Fix the plan now. Every 'no' above is a way for the Sev1 alert to fire and" -ForegroundColor Yellow
-                    Write-Host "  your plan to ignore it, which you would not discover until Challenge 5 is" -ForegroundColor Yellow
-                    Write-Host "  already open and the board is red." -ForegroundColor Yellow
+                    Write-Host "  Fix the plan now. Every 'no' above is a way for your alert to fire and your plan" -ForegroundColor Yellow
+                    Write-Host "  to ignore it (or to react to someone else's alert), which you would not discover" -ForegroundColor Yellow
+                    Write-Host "  until Challenge 5 is open. Your alert name: $alert" -ForegroundColor Yellow
                 }
             }
             @{ Pass = ($ok -and $err -eq 0 -and (-not $canary) -and $auto -and $plan); Detail = "baggage healthy=$ok errorRate=$err% canaryStillServing=$canary autonomous=$auto platformConnected=$conn responsePlan=$plan" }
@@ -733,7 +772,7 @@ $script:Challenges = [ordered]@{
             Write-Host "and the API front door is failing legitimate traffic. Triage by impact and recover."
             Write-Host ""
             Write-Host "  YOU ARE NOT FIRST ON SCENE. Your Sev1 plan from Challenge 4 is armed at" -ForegroundColor Yellow
-            Write-Host "  AUTONOMOUS, so within a couple of minutes 'aetherion-major-incident' fires," -ForegroundColor Yellow
+            Write-Host "  AUTONOMOUS, so within a couple of minutes your alert ($(Get-IncidentAlertName)) fires," -ForegroundColor Yellow
             Write-Host "  auto-triggers the agent, and it starts changing things without asking you." -ForegroundColor Yellow
             Write-Host "  Find the thread it opened by itself and audit what it did before you touch" -ForegroundColor Yellow
             Write-Host "  anything. It will act on some tiers and deliberately hold on others." -ForegroundColor Yellow
@@ -744,7 +783,7 @@ $script:Challenges = [ordered]@{
             Write-Host "    18:14  Crew scheduling starts timing out under load"      -ForegroundColor Gray
             Write-Host "    18:17  The live flight board goes dark for all stations"  -ForegroundColor Gray
             Write-Host "    18:21  The API front door starts failing partner traffic" -ForegroundColor Gray
-            Write-Host "    18:23  'aetherion-major-incident' fires at Sev1 and auto-triggers the agent" -ForegroundColor Gray
+            Write-Host "    18:23  Your Sev1 alert fires and auto-triggers the agent" -ForegroundColor Gray
             Write-Host "    18:25  Major incident declared - you are incident commander" -ForegroundColor Gray
             Write-Host "    18:26  The agent is already acting on its own, unattended" -ForegroundColor Gray
         }
@@ -818,7 +857,11 @@ $script:Challenges = [ordered]@{
             { Test-RcaIssueFiled } $(if ($slug = Get-AppRepoSlug) { "repo: $slug" } else { '' })
             $mcp = Confirm-Verified 'Did you connect an MCP server and have the agent open a pull request on your fork through it?' `
             { Test-PullRequestOpened }
-            @{ Pass = ($allOk -and $done -and $pub -and $mcp); Detail = "platform healthy=$allOk, briefing + handover produced=$done, RCA published to repo=$pub, MCP pull request opened=$mcp" }
+            # The issue and the pull request are the stretch tasks: reported, not required.
+            if (-not ($pub -and $mcp)) {
+                Write-Host "  (Stretch tasks 5 and 6 are optional: the RCA issue and the pull request are not required to pass.)" -ForegroundColor Gray
+            }
+            @{ Pass = ($allOk -and $done); Detail = "platform healthy=$allOk, briefing + handover produced=$done | stretch: RCA issue=$pub, pull request=$mcp" }
         }
     }
 }

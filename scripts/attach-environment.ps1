@@ -85,6 +85,9 @@ if ((az group exists --name $lg) -ne 'true') {
     Write-Host "  start-challenge needs Contributor on it. Tell your facilitator." -ForegroundColor Yellow
 }
 
+if ([string]::IsNullOrWhiteSpace($state.incidentAlertName)) {
+    throw "This environment has no incident alert name in its deployment outputs. Tell your facilitator."
+}
 $state | ConvertTo-Json -Depth 5 | Set-Content -Path $envFile -Encoding UTF8
 Write-Host ""
 Write-Host "Attached. State saved to $envFile (git-ignored; do not share it)." -ForegroundColor Green
@@ -92,5 +95,7 @@ Write-Host "  Resource group: $ResourceGroup" -ForegroundColor Gray
 Write-Host "  AKS:            $($state.aksName)" -ForegroundColor Gray
 Write-Host "  Ops Center:     $(if ($state.httpsUrl) { $state.httpsUrl } else { "http://$gwIp/" })" -ForegroundColor Gray
 Write-Host "  Grafana:        $($state.grafanaEndpoint)" -ForegroundColor Gray
+Write-Host "  Your alert:     $($state.incidentAlertName)" -ForegroundColor Green
+Write-Host "                  (you need this exact name in Challenge 4; others share this subscription)" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Next: ./scripts/start-challenge.ps1 1" -ForegroundColor Cyan

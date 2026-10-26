@@ -324,9 +324,17 @@ resource grafanaAdmin 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 // Major-incident alerting (Challenge 5)
 // A fixed-severity (Sev 1) Azure Monitor alert on Application Insights failed
 // requests. The SRE Agent response plan attendees build in Challenge 4 filters
-// on Severity = Sev1, so this rule must be authored at that exact severity to be
-// caught. The action group makes the alert fully functional in the portal.
+// on Severity = Sev1 AND on this rule's name, so this rule must be authored at
+// that exact severity to be caught. The action group makes the alert fully
+// functional in the portal.
+//
+// The rule name carries a suffix that is unique per resource group. An SRE Agent
+// scans every alert in the subscription that holds its managed resource groups, so
+// when many environments share one subscription a common name would let one
+// attendee's alert trigger (and be acknowledged by) another attendee's agent.
+// uniqueString is stable for a given resource group, so redeploys keep the name.
 // -----------------------------------------------------------------------------
+var alertSuffix = take(uniqueString(resourceGroup().id), 6)
 resource incidentActionGroup 'Microsoft.Insights/actionGroups@2023-01-01' = {
   name: '${namePrefix}-incident-ag'
   location: 'global'
@@ -337,10 +345,10 @@ resource incidentActionGroup 'Microsoft.Insights/actionGroups@2023-01-01' = {
 }
 
 resource incidentAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
-  name: '${namePrefix}-major-incident'
+  name: '${namePrefix}-major-incident-${alertSuffix}'
   location: 'global'
   properties: {
-    description: 'Sev1 major incident: Application Insights failed requests spiking (Challenge 5 cross-tier cascade). Triggers the SRE Agent response plan filtered to Sev1.'
+    description: 'Sev1 major incident for this environment only: Application Insights failed requests spiking (Challenge 5 cross-tier cascade). The SRE Agent response plan filters on Sev1 and on the name of this rule.'
     severity: 1
     enabled: true
     scopes: [ appi.id ]

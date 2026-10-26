@@ -132,9 +132,18 @@ scripts need:
 ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group>
 ```
 
-It prints your Ops Center and Grafana addresses when it finishes. Note your
-**resource group name**: you need it in Challenge 1 to scope the agent, and you must
-scope the agent to **your** resource group only.
+It prints your Ops Center and Grafana addresses and **your alert name**. Note these two:
+
+| You need | Where | Why |
+|---|---|---|
+| **Resource group name** | Challenge 1 | Scope the agent to **your** group only |
+| **Alert name** (etherion-major-incident-xxxxxx) | Challenge 4 | Your response plan must filter on it, because other attendees in this subscription have look-alike alerts |
+
+You can print the alert name again at any time:
+
+```powershell
+(Get-Content ./scripts/.env.aetherion.json | ConvertFrom-Json).incidentAlertName
+```
 
 !!! tip "Use the wait. Read about the airline."
     Read **[Meet Aetherion](overview.md)** now: who you are, what the airline does, and
@@ -144,6 +153,10 @@ scope the agent to **your** resource group only.
 !!! warning "Work only in your own resource group"
     Other attendees share this subscription. Never scope the agent, run a script, or
     change a resource in a resource group that is not yours.
+
+!!! danger "Choose the Azure OpenAI model provider when you create the agent"
+    A regulatory requirement: **Azure OpenAI** (the GPT / ChatGPT models) is covered by EU Data Boundary
+    commitments. **Anthropic** is not (data may be processed in the United States). Challenge 1 shows where.
 
 ??? tip "If attach fails"
     - **Resource group not found:** check the exact name and that
