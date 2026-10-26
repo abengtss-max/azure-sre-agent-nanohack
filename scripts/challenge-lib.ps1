@@ -34,13 +34,6 @@ function Get-AetherionState {
     return Get-Content $script:EnvFile -Raw | ConvertFrom-Json
 }
 
-# The NanoHack edition is marked in the state file by attach-environment.ps1.
-# It drops the flight-board incident from challenge 3 and the optional cost tasks from
-# challenge 6; everything else behaves exactly as in the full MicroHack.
-function Test-NanoHack {
-    try { return ((Get-AetherionState).edition -eq 'nanohack') } catch { return $false }
-}
-
 function Get-AetherionGatewayIp {
     if (Test-Path $script:EnvFile) {
         $st = Get-AetherionState
@@ -142,7 +135,7 @@ function Get-HpaMax([string]$Service) {    $v = kubectl get hpa $Service -n $scr
     return [int]$v
 }
 
-# A second revision rolled out behind the same Service (challenge 6).
+# A second revision rolled out behind the same Service (challenge 4).
 function Test-CanaryPresent([string]$Service) {    $v = kubectl get deploy "$Service-v2" -n $script:NS -o jsonpath='{.spec.replicas}' 2>$null
     if ([string]::IsNullOrWhiteSpace($v)) { return $false }
     return ([int]$v -gt 0)
@@ -322,7 +315,7 @@ function Get-AgentContextGaps {
     return @('logs/Log Analytics')
 }
 
-# The agent can diagnose the APIM fault in challenge 7 but not remediate it
+# The agent can diagnose the APIM fault in challenge 5 but not remediate it
 # without this role, so catch a missing grant here rather than mid-incident.
 function Test-AgentApimAccess {
     $st = Get-AetherionState
@@ -384,17 +377,16 @@ function Test-MajorIncidentAlertFired([datetime]$Since) {
 # Storyline note: the check-in degradation is ONE ongoing incident spanning two
 # challenges. It is injected in challenge 2 (detect + investigate, read-only, no
 # fix) and only resolved in challenge 3 - so challenge 3 does NOT re-inject the
-# booking latency; it resolves it and adds the flight-board change on top.
+# booking latency; it only resolves it.
 #
-# Consolidation map (from the earlier 13-challenge layout):
-#   1  <- old 1 + 2   (onboard + baseline + proactive schedule)
-#   2  <- old 3 + 4   (detect + read-only investigation; fault stays open)
-#   3  <- old 5 + 6   (controlled recovery of check-in + flight-board change)
-#   4  <- old 7       (ground the agent on runbooks)
-#   5  <- old 8 + 9   (subagent + reusable skill)
-#   6  <- old 11 + 10 (bounded autonomy + cost governance)
-#   7  <- old 12      (major incident)
-#   8  <- old 13      (leadership briefing)
+# NanoHack numbering (the full MicroHack numbers in brackets):
+#   1 (1)  onboard + baseline
+#   2 (2)  detect + read-only investigation; the fault stays open
+#   3 (3)  controlled recovery of check-in
+#   4 (6)  bounded autonomy + Sev1 response plan
+#   5 (7)  major incident
+#   6 (8)  leadership briefing
+#   A (4), B (5): optional extras, selected with 'A' / 'B' (internal keys 7 and 8).
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 # Objective probes, built on the data-plane API above.
@@ -403,7 +395,7 @@ function Test-MajorIncidentAlertFired([datetime]$Since) {
 # ---------------------------------------------------------------------------
 
 # Challenge 1: the repo must be attached AND finished cloning. A repo stuck in
-# 'Cloning' looks connected in the portal but silently starves challenge 4.
+# 'Cloning' looks connected in the portal but silently starves extra A.
 function Test-CodeRepoReady {
     $r = Invoke-SreData '/api/v2/repos'
     if ($null -eq $r) { return $null }
@@ -431,7 +423,7 @@ function Test-ScheduledTaskExists {
     return [bool]($tasks.Count -gt 0)
 }
 
-# Challenge 5: the subagent exists, its tools are scoped rather than inherited,
+# Extra B: the subagent exists, its tools are scoped rather than inherited,
 # and - the point of the exercise - it holds no kubectl write tool.
 function Get-SubagentSummary {
     $r = Invoke-SreData '/api/v1/extendedAgent/agents?page=1&limit=200'
@@ -448,7 +440,7 @@ function Get-SubagentSummary {
     }
 }
 
-# Challenge 5: the authored skill is registered on the agent.
+# Extra B: the authored skill is registered on the agent.
 function Test-SkillRegistered([string]$Match = 'crew') {
     $r = Invoke-SreData '/api/v2/agent/skills?limit=200'
     if ($null -eq $r) { return $null }
@@ -456,7 +448,7 @@ function Test-SkillRegistered([string]$Match = 'crew') {
     return [bool]($blob -match $Match)
 }
 
-# Challenge 6: the Sev1 response plan, read from the same store the portal reads.
+# Challenge 4: the Sev1 response plan, read from the same store the portal reads.
 # 'mergeEnabled' is the alert-reinvestigation cooldown; 'handlingAgent' empty
 # means no subagent is bound, which is what the challenge asks for.
 function Get-ResponsePlanSummary {
@@ -482,7 +474,7 @@ function Get-AgentRunMode {
     return "$($a.properties.actionConfiguration.mode)"
 }
 
-# Challenge 8: the RCA and the pull request must exist on the attendee's copy of
+# Challenge 6: the RCA and the pull request must exist on the attendee's copy of
 # the application repo.
 # Uses the GitHub CLI because that is what the lab already assumes is installed;
 # returns $null (ask instead) when gh is missing or unauthenticated.
@@ -541,7 +533,7 @@ $script:Challenges = [ordered]@{
             }
             $apim = $agent -and (Test-AgentApimAccess)
             if ($agent -and -not $apim) {
-                Write-Host "  The agent cannot manage API Management, so challenge 7 would be unfixable." -ForegroundColor Yellow
+                Write-Host "  The agent cannot manage API Management, so challenge 5 would be unfixable." -ForegroundColor Yellow
                 Write-Host "  Run: ./scripts/grant-agent-apim-access.ps1" -ForegroundColor Yellow
             }
             $gaps = if ($agent) { Get-AgentContextGaps } else { @('agent') }
@@ -550,14 +542,14 @@ $script:Challenges = [ordered]@{
                 Write-Host "  Agent setup is incomplete, not connected to: $($gaps -join ', ')." -ForegroundColor Yellow
                 Write-Host "  Reopen the agent's setup wizard and finish those connections." -ForegroundColor Yellow
             }
-            # Review mode is what makes challenges 1-5 teachable, but challenge 6
+            # Review mode is what makes challenges 1-3 teachable, but challenge 4
             # deliberately switches to autonomous - so stop demanding review once the
             # attendee has legitimately got that far, or re-running this check fails.
             $conn = $agent -and (Confirm-Verified 'Is your SRE Agent scoped to the resource group and running in Review mode?' `
                 {
                     $m = Get-AgentRunMode
                     if (-not $m) { $null }
-                    elseif (Get-ChallengeStartTime 6) { $true }
+                    elseif (Get-ChallengeStartTime 4) { $true }
                     else { $m -eq 'review' }
                 } "run mode: $(Get-AgentRunMode)")
             $code = $agent -and (Confirm-Verified 'Does Builder -> Code Access list your aetherion-airops-platform repo as Connected and Ready?' `
@@ -581,7 +573,7 @@ $script:Challenges = [ordered]@{
         }
         Check = {
             $done = Confirm-SelfAttest 'Have you confirmed the check-in degradation AND formed a read-only root-cause hypothesis backed by at least two evidence sources (no fix yet)?'
-            # Banked so challenge 7 can show the attendee how much cheaper the same
+            # Banked so challenge 5 can show the attendee how much cheaper the same
             # failure class was the second time, instead of asking them to remember.
             $mins = $null
             if ($done) {
@@ -589,7 +581,7 @@ $script:Challenges = [ordered]@{
                 if ($t0) {
                     $mins = [int][math]::Round(([DateTime]::UtcNow - $t0).TotalMinutes)
                     Set-ProgressValue 'crew-minutes-cold' "$mins"
-                    Write-Host "  Time on this incident: ${mins} min - banked for the comparison in challenge 7." -ForegroundColor Gray
+                    Write-Host "  Time on this incident: ${mins} min - banked for the comparison in challenge 5." -ForegroundColor Gray
                 }
             }
             @{ Pass = $done; Detail = "symptom observed + read-only hypothesis formed=$done, minutes=$mins" }
@@ -597,38 +589,23 @@ $script:Challenges = [ordered]@{
     }
 
     3 = @{
-        Title = 'Controlled Recovery and Change Correlation'
+        Title = 'Controlled Recovery'
         Kind  = 'fault'
         Start = {
-            if (Test-NanoHack) {
-                Write-Host "The check-in incident from challenge 2 is still open. Recover it under human" -ForegroundColor Yellow
-                Write-Host "approval (Review / on-behalf-of) with the least disruptive safe action."
-                return
-            }
-            Invoke-Fault 'flight-ops' 'badimage'
-            Write-Host "Two things at once. First, recover the open check-in incident with the least" -ForegroundColor Yellow
-            Write-Host "disruptive safe action under human approval (Review / on-behalf-of)."
-            Write-Host ""
-            Write-Host "INCIDENT P1: moments later the live flight board goes dark for every station" -ForegroundColor Red
-            Write-Host "shortly after a change rolled out. Correlate with deployment / rollout history,"
-            Write-Host "then recover with a reversible rollback."
+            # No new fault: this continues the check-in incident that challenge 2 opened.
+            Write-Host "The check-in incident from challenge 2 is still open. Recover it under human" -ForegroundColor Yellow
+            Write-Host "approval (Review / on-behalf-of) with the least disruptive safe action."
         }
         Check = {
             $okBook   = (Test-ServiceHealthy 'booking' 400)
             $latBook  = Get-ServiceLatencyMs 'booking'
             $cacheOk  = (Get-EnvOverride 'booking' 'REDIS_HOST') -eq ''
-            if (Test-NanoHack) {
-                return @{ Pass = ($okBook -and $cacheOk); Detail = "booking healthy=$okBook (p95 ${latBook}ms) cacheEndpointRestored=$cacheOk" }
-            }
-            $okFlight = (Test-ServiceHealthy 'flight-ops')
-            $tagFlight = Get-ImageTag 'flight-ops'
-            $pass = ($okBook -and $cacheOk -and $okFlight -and $tagFlight -eq 'latest')
-            @{ Pass = $pass; Detail = "booking healthy=$okBook (p95 ${latBook}ms) cacheEndpointRestored=$cacheOk | flight-ops healthy=$okFlight image=:$tagFlight" }
+            @{ Pass = ($okBook -and $cacheOk); Detail = "booking healthy=$okBook (p95 ${latBook}ms) cacheEndpointRestored=$cacheOk" }
         }
     }
 
-    4 = @{
-        Title = "Give the Agent Aetherion's Operational Knowledge"
+    7 = @{
+        Title = "Extra A: Give the Agent Aetherion's Operational Knowledge"
         Kind  = 'fault'
         Start = {
             Invoke-Fault 'crew-scheduling' 'slow-query'
@@ -650,8 +627,8 @@ $script:Challenges = [ordered]@{
         }
     }
 
-    5 = @{
-        Title = 'Engineer the Agent: Specialist Subagent and Reusable Skill'
+    8 = @{
+        Title = 'Extra B: Engineer the Agent: Specialist Subagent and Reusable Skill'
         Kind  = 'config'
         Start = {
             Write-Host "The platform is stable - the right time to invest in tooling." -ForegroundColor Gray
@@ -685,8 +662,8 @@ $script:Challenges = [ordered]@{
         }
     }
 
-    6 = @{
-        Title = 'Autonomous Recovery and Cost-Aware Governance'
+    4 = @{
+        Title = 'Autonomous Recovery and Sev1 Plan'
         Kind  = 'fault'
         Start = {
             Invoke-Fault 'baggage' 'canary'
@@ -695,10 +672,7 @@ $script:Challenges = [ordered]@{
             Write-Host "place to let the agent run in AUTONOMOUS mode and fix it end-to-end without waiting"
             Write-Host "for per-action approval. Watch it detect, decide and act; you supervise the outcome."
             Write-Host ""
-            Write-Host "Then govern the cost: review the agent's own AAU consumption and design a" -ForegroundColor Gray
-            Write-Host "cost-aware operating model that preserves reliability and investigation quality."
-            Write-Host ""
-            Write-Host "Finally, productize the autonomy: wire a response plan on the agent filtered to" -ForegroundColor Gray
+            Write-Host "Then productize the autonomy: wire a response plan on the agent filtered to" -ForegroundColor Gray
             Write-Host "Sev1 and bound to the pre-provisioned 'aetherion-major-incident' alert, so the next"
             Write-Host "major incident auto-triggers an investigation instead of waiting for a human."
         }
@@ -708,32 +682,18 @@ $script:Challenges = [ordered]@{
             $canary = Test-CanaryPresent 'baggage'
             $auto = Confirm-Verified 'Did the agent remediate baggage while running in Autonomous mode (you supervised, did not fix it by hand)?' `
             { $m = Get-AgentRunMode; if (-not $m) { $null } else { $m -eq 'autonomous' } } "run mode: $(Get-AgentRunMode)"
-            # "Did you write a cost model" was answerable yes by anyone who had read the
-            # task. Asking for the parts that make it reviewable is still self-attested,
-            # but it cannot be satisfied without having actually looked at the figures.
-            # NanoHack treats the cost tasks as optional, so they are not graded.
-            if (Test-NanoHack) { $cost = $true }
-            else {
-                $cFig  = Confirm-SelfAttest 'Did you read Settings -> Agent Consumption and write down the two largest consumers with their real figures?'
-                $cLev  = Confirm-SelfAttest 'Does your operating model name at least three concrete levers, each with a figure and a stated trade-off?'
-                $cFloor = Confirm-SelfAttest 'Does it state an explicit reliability floor you will not trade away for cost?'
-                $cost = ($cFig -and $cLev -and $cFloor)
-            }
-            if (-not $cost) {
-                Write-Host "  A cost model with no figures and no floor is an opinion. Challenge 8 asks you to" -ForegroundColor Yellow
-                Write-Host "  defend this one to a director - go back to Tasks 3 and 4 before you do." -ForegroundColor Yellow
-            }
+
             $conn = Test-IncidentPlatformConnected
             if (-not $conn) {
                 Write-Host "  Azure Monitor is not connected as an incident platform, so no response plan can exist." -ForegroundColor Yellow
                 Write-Host "  Incidents -> Triggers + response plans -> Connect an incident platform -> Azure Monitor." -ForegroundColor Yellow
             }
             # Read from the same store the portal reads, so a plan that looks right but
-            # would never fire is caught here rather than in the middle of challenge 7.
+            # would never fire is caught here rather than in the middle of challenge 5.
             $plan = $false
             if ($conn) {
                 Write-Host ""
-                Write-Host "  Checking your Sev1 response plan. Challenge 7 is graded on the alert firing." -ForegroundColor Gray
+                Write-Host "  Checking your Sev1 response plan. Challenge 5 is graded on the alert firing." -ForegroundColor Gray
                 $rp = Get-ResponsePlanSummary
                 $pOn = Confirm-Verified 'Is your plan listed with Status On and Severity Sev1 (matching the pre-provisioned aetherion-major-incident alert)?' `
                 { if ($null -eq $rp) { $null } else { [bool]$rp.Found } } $(if ($rp -and $rp.Found) { "plan '$($rp.Id)'" } else { '' })
@@ -751,15 +711,15 @@ $script:Challenges = [ordered]@{
                 if (-not $plan) {
                     Write-Host ""
                     Write-Host "  Fix the plan now. Every 'no' above is a way for the Sev1 alert to fire and" -ForegroundColor Yellow
-                    Write-Host "  your plan to ignore it, which you would not discover until Challenge 7 is" -ForegroundColor Yellow
+                    Write-Host "  your plan to ignore it, which you would not discover until Challenge 5 is" -ForegroundColor Yellow
                     Write-Host "  already open and the board is red." -ForegroundColor Yellow
                 }
             }
-            @{ Pass = ($ok -and $err -eq 0 -and (-not $canary) -and $auto -and $cost -and $plan); Detail = "baggage healthy=$ok errorRate=$err% canaryStillServing=$canary autonomous=$auto cost-model=$cost platformConnected=$conn responsePlan=$plan" }
+            @{ Pass = ($ok -and $err -eq 0 -and (-not $canary) -and $auto -and $plan); Detail = "baggage healthy=$ok errorRate=$err% canaryStillServing=$canary autonomous=$auto platformConnected=$conn responsePlan=$plan" }
         }
     }
 
-    7 = @{
+    5 = @{
         Title = 'Final Incident: Restore Global Check-In Before Peak Departure'
         Kind  = 'fault'
         Start = {
@@ -772,7 +732,7 @@ $script:Challenges = [ordered]@{
             Write-Host "before peak departures. The flight board is dark, crew and check-in are degraded,"
             Write-Host "and the API front door is failing legitimate traffic. Triage by impact and recover."
             Write-Host ""
-            Write-Host "  YOU ARE NOT FIRST ON SCENE. Your Sev1 plan from Challenge 6 is armed at" -ForegroundColor Yellow
+            Write-Host "  YOU ARE NOT FIRST ON SCENE. Your Sev1 plan from Challenge 4 is armed at" -ForegroundColor Yellow
             Write-Host "  AUTONOMOUS, so within a couple of minutes 'aetherion-major-incident' fires," -ForegroundColor Yellow
             Write-Host "  auto-triggers the agent, and it starts changing things without asking you." -ForegroundColor Yellow
             Write-Host "  Find the thread it opened by itself and audit what it did before you touch" -ForegroundColor Yellow
@@ -794,7 +754,7 @@ $script:Challenges = [ordered]@{
             $latCrew   = Get-ServiceLatencyMs 'crew-scheduling'
             $cpuBook   = Get-CpuLimitMilli 'booking'
             $apimOk    = Test-ApimHealthy
-            $since     = Get-ChallengeStartTime 7
+            $since     = Get-ChallengeStartTime 5
             if (-not $since) { $since = [DateTime]::UtcNow.AddHours(-4) }
             $fired     = Test-MajorIncidentAlertFired $since
             $s         = Get-AetherionStatus
@@ -802,7 +762,7 @@ $script:Challenges = [ordered]@{
             foreach ($p in $s.services.PSObject.Properties) { if (-not $p.Value.ok) { $allOk = $false } }
             if (-not $fired) {
                 Write-Host "  No Sev1 'major incident' alert fired since this challenge started - the auto-trigger path did not exercise." -ForegroundColor Yellow
-                Write-Host "  Check the Sev1 response plan from challenge 6, then re-run start-challenge 7." -ForegroundColor Yellow
+                Write-Host "  Check the Sev1 response plan from challenge 4, then re-run start-challenge 5." -ForegroundColor Yellow
             }
             $pass = ($allOk -and $apimOk -and $tagFlight -eq 'latest' -and $okCrew -and $cpuBook -ge 500 -and $fired)
             if ($pass -and $s.overall -ne 'operational') {
@@ -811,24 +771,24 @@ $script:Challenges = [ordered]@{
                 # steady-state budget. Say so, or 'PASS ... overall=degraded' reads as a bug.
                 Write-Host "  Board still reads '$($s.overall)': every service is serving, but the peak-departure" -ForegroundColor Gray
                 Write-Host "  surge is still running and crew is above the 400ms steady-state budget (graded here" -ForegroundColor Gray
-                Write-Host "  against the 800ms incident ceiling). Challenge 8 drops the load back to normal." -ForegroundColor Gray
+                Write-Host "  against the 800ms incident ceiling). Challenge 6 drops the load back to normal." -ForegroundColor Gray
             }
             if ($pass) {
                 $cold = Get-ProgressValue 'crew-minutes-cold'
-                $t0 = Get-ChallengeStartTime 7
+                $t0 = Get-ChallengeStartTime 5
                 if ($cold -and $t0) {
                     $warm = [int][math]::Round(([DateTime]::UtcNow - $t0).TotalMinutes)
                     Write-Host ""
                     Write-Host "  Same failure class, second time round: ${cold} min in challenge 2, ${warm} min here." -ForegroundColor Cyan
                     Write-Host "  That gap is what the agent's memory and your runbooks bought you." -ForegroundColor Cyan
-                    Write-Host "  Take the number to challenge 8 - it is the one figure leadership will remember." -ForegroundColor Cyan
+                    Write-Host "  Take the number to challenge 6 - it is the one figure leadership will remember." -ForegroundColor Cyan
                 }
             }
             @{ Pass = $pass; Detail = "overall=$($s.overall) apimOk=$apimOk flight=:$tagFlight crew=${latCrew}ms bookingCpu=${cpuBook}m alertFired=$fired" }
         }
     }
 
-    8 = @{
+    6 = @{
         Title = 'Boarding Resumes: Brief Airline Leadership'
         Kind  = 'config'
         Start = {
@@ -852,7 +812,7 @@ $script:Challenges = [ordered]@{
             $s = Get-AetherionStatus
             $allOk = $true
             foreach ($p in $s.services.PSObject.Properties) { if (-not $p.Value.ok) { $allOk = $false } }
-            if (-not $allOk) { return @{ Pass = $false; Detail = "platform not fully healthy yet (overall=$($s.overall)) - resolve challenge 7 first" } }
+            if (-not $allOk) { return @{ Pass = $false; Detail = "platform not fully healthy yet (overall=$($s.overall)) - resolve challenge 5 first" } }
             $done = Confirm-SelfAttest 'Have you produced an executive leadership briefing AND an engineering RCA handover for the major incident?'
             $pub = Confirm-Verified 'Did the agent publish the RCA as an issue on your copy of aetherion-airops-platform?' `
             { Test-RcaIssueFiled } $(if ($slug = Get-AppRepoSlug) { "repo: $slug" } else { '' })
@@ -863,7 +823,27 @@ $script:Challenges = [ordered]@{
     }
 }
 
-function Get-MaxChallenge { return ($script:Challenges.Keys | Measure-Object -Maximum).Maximum }
+# The numbered path is 1..6. Keys 7 and 8 are the optional extras A and B.
+function Get-MaxChallenge { return 6 }
+
+function ConvertTo-ChallengeKey([string]$Value) {
+    switch -Regex ($Value.Trim()) {
+        '^[Aa]$' { return 7 }
+        '^[Bb]$' { return 8 }
+        '^\d+$'  { return [int]$Value }
+        default  { throw "Unknown challenge '$Value'. Use 1..$(Get-MaxChallenge), or A / B for the optional extras." }
+    }
+}
+
+# What the attendee types (and sees): 1..6, or A / B.
+function Get-ChallengeArg([int]$Number) {
+    switch ($Number) { 7 { return 'A' } 8 { return 'B' } default { return "$Number" } }
+}
+
+function Get-ChallengeLabel([int]$Number) {
+    if ($Number -ge 7) { return "Extra $(Get-ChallengeArg $Number)" }
+    return "Challenge $Number"
+}
 
 function Get-ChallengeByNumber([int]$Number) {
     # Look up by KEY. An [ordered] dictionary treats an int indexer as a positional
@@ -879,12 +859,12 @@ function Get-ChallengeByNumber([int]$Number) {
 # ---------------------------------------------------------------------------
 function Start-AetherionChallenge([int]$Number) {
     if (-not $script:Challenges.Contains($Number)) {
-        throw "Unknown challenge '$Number'. Valid range: 1..$(Get-MaxChallenge)."
+        throw "Unknown challenge '$(Get-ChallengeArg $Number)'. Use 1..$(Get-MaxChallenge), or A / B."
     }
     $ch = Get-ChallengeByNumber $Number
 
     Write-Host ""
-    Write-Host "=== Challenge $Number : $($ch.Title) ===" -ForegroundColor Cyan
+    Write-Host "=== $(Get-ChallengeLabel $Number) : $($ch.Title) ===" -ForegroundColor Cyan
     Write-Host ""
     # The agent's identity is created with the agent, so this cannot live in Bicep.
     # Idempotent and silent when the agent does not exist yet.
@@ -896,27 +876,27 @@ function Start-AetherionChallenge([int]$Number) {
         Write-Host "Investigate with the Ops Center + your SRE Agent. Do NOT look at the fault scripts." -ForegroundColor Gray
     }
     Write-Host "When you believe it is resolved, verify with:" -ForegroundColor Gray
-    Write-Host "  ./scripts/check-challenge.ps1 $Number" -ForegroundColor Green
+    Write-Host "  ./scripts/check-challenge.ps1 $(Get-ChallengeArg $Number)" -ForegroundColor Green
     Write-Host ""
 }
 
 function Test-AetherionChallenge([int]$Number) {
     if (-not $script:Challenges.Contains($Number)) {
-        throw "Unknown challenge '$Number'. Valid range: 1..$(Get-MaxChallenge)."
+        throw "Unknown challenge '$(Get-ChallengeArg $Number)'. Use 1..$(Get-MaxChallenge), or A / B."
     }
     $ch = Get-ChallengeByNumber $Number
     Write-Host ""
-    Write-Host "=== Grading challenge $Number : $($ch.Title) ===" -ForegroundColor Cyan
+    Write-Host "=== Grading $((Get-ChallengeLabel $Number).ToLower()) : $($ch.Title) ===" -ForegroundColor Cyan
     $result = & $ch.Check
 
     Write-Host ""
     Write-Host "  $($result.Detail)" -ForegroundColor Gray
     Write-Host ""
     if ($result.Pass) {
-        Write-Host "  PASS - challenge $Number resolved." -ForegroundColor Green
+        Write-Host "  PASS - $((Get-ChallengeLabel $Number).ToLower()) resolved." -ForegroundColor Green
         # Nothing advanced this before, so 'unlocked' sat at 1 for the whole hack.
-        if ((Get-Unlocked) -lt ($Number + 1)) { Set-Unlocked ($Number + 1) }
-        if (-not $script:Challenges.Contains($Number + 1)) {
+        if ($Number -lt (Get-MaxChallenge) -and (Get-Unlocked) -lt ($Number + 1)) { Set-Unlocked ($Number + 1) }
+        if ($Number -eq (Get-MaxChallenge)) {
             Write-Host "  That was the final challenge - you have restored Aetherion AirOps. Well flown." -ForegroundColor Green
         }
         Write-Host ""

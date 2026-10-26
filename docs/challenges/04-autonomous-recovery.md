@@ -1,9 +1,9 @@
-# Challenge 6 · Autonomous Recovery and Cost-Aware Governance
+# Challenge 4 · Autonomous Recovery and Cost-Aware Governance
 
-!!! abstract "Challenge 06 of 08 · Act IV: Autonomous"
+!!! abstract "Challenge 04 of 06 · Act III: Autonomous"
     **Run mode:** Autonomous (bounded) · **Governance:** bounded blast radius, no per-action approval · **Time:** ~30 min (+15 min for the optional cost tasks)
 
-    **Stage:** Foundation → Operations → Engineering → **Autonomous** → Major Incident
+    **Stage:** Foundation → Operations → **Autonomous** → Major Incident
 
 **Situation.** Every write so far has waited for your approval. Now a minor issue
 appears: the **baggage** service returns intermittent errors to a slice of traffic.
@@ -15,12 +15,12 @@ make more of it.
 **Mission.** Let the agent recover the baggage service autonomously within
 guardrails, design a cost-aware operating model for its Azure Agent Unit (AAU)
 usage, and arm a **Sev1** response plan so the next major incident auto-triggers an
-investigation, before you reach Challenge 7.
+investigation, before you reach Challenge 5.
 
 !!! example "Start this challenge"
 
     ```powershell
-    ./scripts/start-challenge.ps1 6   # open the incident
+    ./scripts/start-challenge.ps1 4   # open the incident
     ```
 
     Give it a couple of minutes. The errors only show up once enough traffic has
@@ -32,9 +32,9 @@ investigation, before you reach Challenge 7.
 2. **Decide the bounds, then hand over.** Judge whether this incident is safe to automate, switch to **Autonomous** mode, let the agent fix it end-to-end, then review the action log.
 3. **Optional · See where AAUs go.** Inspect the agent's consumption by thread type and purpose.
 4. **Optional · Design a cost-aware model.** Name concrete reductions without losing reliability or investigation quality.
-5. **Arm the Sev1 response plan.** Connect Azure Monitor as an incident platform, then bind a **Sev1** plan to the pre-provisioned `aetherion-major-incident` alert so the next major incident auto-triggers. **Challenge 7 does not work without this** — do it before you move on.
+5. **Arm the Sev1 response plan.** Connect Azure Monitor as an incident platform, then bind a **Sev1** plan to the pre-provisioned `aetherion-major-incident` alert so the next major incident auto-triggers. **Challenge 5 does not work without this** — do it before you move on.
 
-![Challenge 6 storyboard: Sam, Priya and Aria review autonomous recovery and cost governance](../assets/storyboard/img-challenge-6.webp){ .story-panel loading=lazy }
+![Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery and cost governance](../assets/storyboard/img-challenge-6.webp){ .story-panel loading=lazy }
 
 ### Suggested Azure SRE Agent prompt
 
@@ -49,7 +49,7 @@ investigation, before you reach Challenge 7.
 - The agent detects the baggage errors, executes a sanctioned fix autonomously, the service returns to healthy, and you can explain why it was safe to automate: small blast radius, a reversible and well-understood remedy, a service that is degraded rather than down, and a run mode you chose deliberately.
 - *(Optional, Tasks 3 and 4)* You've reviewed real consumption data and produced a written, defensibly balanced operating model: the two largest consumers with their actual figures, at least three named levers each with a trade-off, and an explicit reliability floor. Cost-aware, not merely cheapest. The check does not require it.
 - A **Sev1 major-incident response plan** is active on the agent (bound to the pre-provisioned `aetherion-major-incident` alert), ready to auto-trigger the agent when the next major incident fires.
-- `check-challenge.ps1 6` passes.
+- `check-challenge.ps1 4` passes.
 
 ??? warning "Ground truth only"
     Don't invent AAU rates, prices, or savings figures. Use only values present in
@@ -61,10 +61,10 @@ investigation, before you reach Challenge 7.
     Run this when you're done. It grades the real end state, then walks your
     response plan setting by setting. Answer those honestly: a plan that looks
     right and never fires is the one failure that doesn't surface until
-    Challenge 7 is already open.
+    Challenge 5 is already open.
 
     ```powershell
-    ./scripts/check-challenge.ps1 6
+    ./scripts/check-challenge.ps1 4
     ```
 
 ??? tip "Hints"
@@ -82,7 +82,7 @@ investigation, before you reach Challenge 7.
     model fit, and plan/schedule noise are the biggest levers. Aim for a *balanced*
     model, not the cheapest. Then wire the **Sev1** response plan now, matching the
     pre-provisioned `aetherion-major-incident` alert's severity exactly, or you'll be
-    wiring it by hand while the board is red in Challenge 7.
+    wiring it by hand while the board is red in Challenge 5.
 
 ??? question "Stuck? Step-by-step for each task"
     Give each task a genuine attempt first, and skim the hints above. When you want
@@ -134,8 +134,8 @@ investigation, before you reach Challenge 7.
         - **A reliability floor** stated explicitly: the thing you will not trade
           away to save AAUs. Cheapest is not the target.
 
-        Keep it. Challenge 8 asks you to defend it to a director, and
-        `check-challenge.ps1 6` asks you about both parts.
+        Keep it: it is useful material for the leadership briefing in Challenge 6.
+        `check-challenge.ps1 4` does not grade it.
 
     ??? note "Task 5 · Arm the Sev1 response plan"
         **Connect an incident platform first.** Response plans do not exist until
@@ -172,10 +172,10 @@ investigation, before you reach Challenge 7.
 
         !!! tip "Why not route it to your AKS specialist?"
             The **Response subagent** dropdown is populated by any subagent you
-            built (Challenge 5 is an optional extra), so it is tempting to select
+            built (Extra B is an optional extra), so it is tempting to select
             `aks-triage` here if you have one. Don't.
 
-            Challenge 7's incident spans AKS, API Management **and** PostgreSQL.
+            Challenge 5's incident spans AKS, API Management **and** PostgreSQL.
             Handing the auto-triggered investigation to an AKS-only specialist
             scopes it to one tier of a four-tier incident. Leave it empty so the
             main agent commands the whole board, and delegate to the specialist
@@ -187,7 +187,7 @@ investigation, before you reach Challenge 7.
         !!! warning "Turn the cooldown off for this workshop"
             **Alert reinvestigation cooldown** defaults to enabled at 3 hours: the
             plan skips reinvestigation if the same plan already started one inside
-            that window. Sensible in production, wrong here. Re-run Challenge 7
+            that window. Sensible in production, wrong here. Re-run Challenge 5
             and the plan silently will not fire the second time.
 
         !!! danger "Choose Autonomous, and understand what you are choosing"
@@ -200,16 +200,16 @@ investigation, before you reach Challenge 7.
             **Autonomous** once you trust its tool selection. You are promoting it
             after one supervised autonomous recovery in this challenge, which is
             faster than you should move on a real platform. That is a deliberate
-            trade so Challenge 7 can show you what unattended response looks like.
+            trade so Challenge 5 can show you what unattended response looks like.
 
         **Autonomy level is per plan**, separate from the agent's own run mode. At
         **Autonomous**, the auto-triggered investigation can mitigate without waiting
         for you. It will not fix everything: it acts where the fix is unambiguous and
-        reversible, and leaves the judgement calls. Challenge 7 is built around that
+        reversible, and leaves the judgement calls. Challenge 5 is built around that
         split, and your first job there is to audit what it decided to do alone.
 
-        Do this **now**. Challenge 7 depends on it auto-triggering, and
-        `check-challenge.ps1 6` will ask you about each of the six settings above
+        Do this **now**. Challenge 5 depends on it auto-triggering, and
+        `check-challenge.ps1 4` will ask you about each of the six settings above
         one at a time. Every one of them is a way to end up with a plan that is
         listed, looks correct, and quietly matches nothing.
 
@@ -222,6 +222,6 @@ investigation, before you reach Challenge 7.
 !!! success "Up next: the final major incident"
     Your Sev1 plan is armed at **Autonomous**. When everything breaks at once, the agent triggers itself and starts working the incident before anyone pages you. You arrive second, and your first job is to audit what it already did.
 
-    [Proceed to Challenge 7 · Final Major Incident →](07-major-incident.md){ .md-button .md-button--primary }
+    [Proceed to Challenge 5 · Final Major Incident →](05-major-incident.md){ .md-button .md-button--primary }
 
 ---

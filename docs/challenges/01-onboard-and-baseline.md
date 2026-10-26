@@ -1,9 +1,9 @@
 # Challenge 1 · Onboard the Agent and Establish the Baseline
 
-!!! abstract "Challenge 01 of 08 · Act I: Foundation"
+!!! abstract "Challenge 01 of 06 · Act I: Foundation"
     **Run mode:** Review · **Access:** scoped to one resource group · **Time:** ~45 min
 
-    **Stage:** **Foundation** → Operations → Engineering → Autonomous → Major Incident
+    **Stage:** **Foundation** → Operations → Autonomous → Major Incident
 
 **Situation:** You are **Sam Rivera**, on your first shift as a reliability engineer
 at Aetherion AirOps. Every service tile is green. Beside you is **Aria**, the Azure
@@ -113,7 +113,7 @@ more sense.*
             **Your account** and sign in. Code Access only *reads* the repo, so
             OAuth is enough, and it refreshes itself. Don't spend the PAT you
             created during setup here — that one is for the GitHub MCP connector
-            in Challenge 8, and if it expires overnight this connection dies with
+            in Challenge 6, and if it expires overnight this connection dies with
             it. *Bring your own GitHub App* is for org-managed identities and is
             not needed.
 
@@ -134,9 +134,9 @@ more sense.*
           for the cluster's nodes — leave it out, nothing here needs it.
 
         Two of the five cards are deliberately left for later. **Incidents** is
-        connected in Challenge 6; connecting it now also creates a quickstart
+        connected in Challenge 4; connecting it now also creates a quickstart
         response plan you would have to clean up before the final incident.
-        **Knowledge files** are loaded in Challenge 4.
+        **Knowledge files** are loaded in Extra A.
 
         !!! tip "Finish setup before you start chatting"
             When the agent finishes deploying, the portal opens a **Team onboarding**
@@ -145,7 +145,7 @@ more sense.*
             with.
 
             Give it the full picture first, so Challenge 3 can correlate a rollback
-            to a commit and Challenge 4 can read container logs:
+            to a commit and Extra A can read container logs:
 
             - **Builder → Code Access** lists `github.com` as **Connected** and your
               `aetherion-airops-platform` copy as **Ready**, with a recent sync time.
@@ -172,7 +172,7 @@ more sense.*
         > Which log sources and code repositories are you connected to right now?
 
         It should name `aetherion-law` and your repo. If it names neither, the
-        **Code** and **Logs** connections did not save, and Challenges 3 and 4 will
+        **Code** and **Logs** connections did not save, and Challenge 3 and Extra A will
         underperform for reasons that look like agent weakness rather than setup.
 
     ??? note "Task 4 · Capture the baseline"

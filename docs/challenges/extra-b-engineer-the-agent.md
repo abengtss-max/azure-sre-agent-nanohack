@@ -1,12 +1,12 @@
-# Challenge 5 · Engineer the Agent: Specialist Subagent and Reusable Skill
+# Extra B · Engineer the Agent: Specialist Subagent and Reusable Skill
 
 !!! info "Optional extra"
     This challenge is optional in the NanoHack. Do it if you finish early. Nothing later depends on it.
 
-!!! abstract "Challenge 05 of 08 · Act III: Agent Engineering"
+!!! abstract "Extra B · Optional extra"
     **Run mode:** Review · **Focus:** builder, no incident to fix · **Time:** ~45 min
 
-    **Stage:** Foundation → Operations → **Engineering** → Autonomous → Major Incident
+    **Stage:** Optional. Nothing later depends on it.
 
 **Situation.** The platform is stable, which is the right time to invest in tooling.
 You've repeated the same Kubernetes triage and the same crew query-path recovery
@@ -20,15 +20,15 @@ guardrails intact.
 !!! example "Start this challenge"
 
     ```powershell
-    ./scripts/start-challenge.ps1 5   # open / set up this challenge
+    ./scripts/start-challenge.ps1 B   # open / set up this challenge
     ```
 
-    Challenge 5 injects no fault, so the board stays green while you build.
+    Extra B injects no fault, so the board stays green while you build.
 
 ### Tasks
 
 1. **Build the specialist.** Create an AKS triage subagent for the `aetherion` namespace, **scope it to the eight tools it needs**, verify what it actually got, then invoke it to summarize namespace health and likely causes.
-2. **Encode the skill.** Capture the crew query-path recovery from Challenge 4 as a reusable skill, guardrails intact, and confirm it loads.
+2. **Encode the skill.** Capture the crew query-path recovery from Extra A as a reusable skill, guardrails intact, and confirm it loads.
 3. **Know when to use which.** Decide whether the new skill belongs to the specialist or the main agent, act on that decision, and be able to say when you'd reach for the subagent (delegate to it to investigate) versus the skill (a procedure the agent can draw on).
 
 ??? tip "You don't have to type either of these from scratch"
@@ -50,7 +50,7 @@ guardrails intact.
     those eight tools and not the other 46, and why the guardrails are worded the
     way they are — not the typing.
 
-![Challenge 5 storyboard: Sam and Aria engineer a specialist subagent and reusable skill](../assets/storyboard/img-challenge-5.webp){ .story-panel loading=lazy }
+![Extra B storyboard: Sam and Aria engineer a specialist subagent and reusable skill](../assets/storyboard/img-challenge-5.webp){ .story-panel loading=lazy }
 
 ### Suggested Azure SRE Agent prompt
 
@@ -78,7 +78,7 @@ guardrails intact.
 - You've invoked it for a scoped investigation that produces genuinely useful triage.
 - A reusable skill captures the sanctioned recovery, loads/applies correctly, and matches the runbook guardrails.
 - You decided **who owns that skill** and acted on it: it stays with the main agent, not the read-only AKS specialist, and you can give the reason.
-- You can explain when to reach for the subagent versus the skill, and `check-challenge.ps1 5` passes.
+- You can explain when to reach for the subagent versus the skill, and `check-challenge.ps1 B` passes.
 
 !!! success "Verify your work"
 
@@ -86,7 +86,7 @@ guardrails intact.
     so the check asks you to confirm what you built:
 
     ```powershell
-    ./scripts/check-challenge.ps1 5
+    ./scripts/check-challenge.ps1 B
     ```
 
 ??? tip "Hints"
@@ -97,14 +97,14 @@ guardrails intact.
     constraint is a polite request.
 
     Work out its tool list from evidence, not taste. Look at what an AKS investigation
-    actually used in Challenges 2 to 4, and give it exactly that. Judge the result by
+    actually used in Challenges 2 and 3 and Extra A, and give it exactly that. Judge the result by
     whether its output would speed up a real AKS incident, and by whether it is now
     *incapable* of doing the things you never wanted it to do.
 
-    **Encode the recovery.** For the skill, reuse the exact steps from Challenge 4 as
+    **Encode the recovery.** For the skill, reuse the exact steps from Extra A as
     the backbone and bake in the guardrails (diagnose which layer is saturated, repair
     the query path, never delete or restart the database). Be careful not to encode
-    "scale it" as the answer — Challenge 4 is precisely the case where scaling cannot
+    "scale it" as the answer — Extra A is precisely the case where scaling cannot
     work.
 
     Skills encode a procedure the agent can draw on; subagents are delegated to and
@@ -196,7 +196,7 @@ guardrails intact.
 
         Open the **YAML** tab in the dialog and paste the file's contents over
         whatever is there. These are the eight tools it grants, which are what an AKS
-        triage investigation actually used across Challenges 2 to 4:
+        triage investigation actually used across Challenges 2 and 3 and Extra A:
 
         | Tool | Source | Why the specialist needs it |
         |---|---|---|
@@ -206,8 +206,8 @@ guardrails intact.
         | `system-mcp-monitor_monitor_resource_log_query` | **MCP** | Container logs |
         | `system-mcp-monitor_monitor_activitylog_list` | **MCP** | Correlate platform-level changes |
         | `QueryLogAnalyticsSearch` | Log Query | Search the workspace when metrics are not enough |
-        | `SearchIncidentKnowledge` | Knowledge Base | The runbooks you grounded in Challenge 4 |
-        | `SearchMemory` | Knowledge Base | Recall earlier incidents. Challenge 7 depends on this |
+        | `SearchIncidentKnowledge` | Knowledge Base | The runbooks you grounded in Extra A |
+        | `SearchMemory` | Knowledge Base | Recall earlier incidents. Challenge 5 depends on this |
 
         **Now look at what you deliberately left out**, because the exclusions are
         the design:
@@ -275,7 +275,7 @@ guardrails intact.
 
             - `handoff_description`: when the main agent should delegate to this
               specialist. Worth writing, because it is what makes the subagent
-              usable in Challenge 7.
+              usable in Challenge 5.
             - `agent_type` sets the *kind* of subagent: `Autonomous`, `Orchestrator`
               or `Activity`. The portal hardcodes new subagents to `Autonomous`,
               and it is **not** the Review / Autonomous run mode. That is a
@@ -289,7 +289,7 @@ guardrails intact.
         question: would this have sped up a real AKS incident?
 
         !!! tip "You'll meet this subagent again"
-            In Challenge 6 the response plan's **Response subagent** dropdown is
+            In Challenge 4 the response plan's **Response subagent** dropdown is
             populated by exactly what you build here. Whether it is the right thing
             to route a major incident to is a decision you'll make there.
 
@@ -393,7 +393,7 @@ guardrails intact.
         Then select **Create**.
 
         The guardrails are the point of this task. A skill that says "crew is slow,
-        add replicas" would be actively harmful here. Challenge 4 is precisely the
+        add replicas" would be actively harmful here. Extra A is precisely the
         case where scaling cannot work. Encoding *why not* is what makes it worth
         keeping.
 
@@ -440,7 +440,7 @@ guardrails intact.
             — and this exact skill would belong to it and to nothing else. Same
             skill, different owner, because the owner's remit and tools changed.
 
-        The trap is assuming that things built together belong together. Challenge 7
+        The trap is assuming that things built together belong together. Challenge 5
         uses both, through deliberately different paths: you **delegate** to the
         subagent for AKS triage, and you **name** the skill to the main agent for the
         crew fix.
@@ -456,7 +456,7 @@ guardrails intact.
             registered, enabled and well described; it simply wasn't reached for
             unprompted.
 
-            Practical consequence: in Challenge 7, **name the skill** when you want
+            Practical consequence: in Challenge 5, **name the skill** when you want
             it used rather than assuming it will fire. Treat a skill as a procedure
             you can call on, not a guaranteed reflex.
 
@@ -469,6 +469,6 @@ guardrails intact.
 !!! success "Up next: let the agent run autonomously"
     Now let the agent recover on its own for a small, bounded issue, then make sure it stays cost-effective at scale.
 
-    [Proceed to Challenge 6 · Autonomous & Cost →](06-autonomous-and-cost.md){ .md-button .md-button--primary }
+    [Proceed to Challenge 4 · Autonomous & Cost →](04-autonomous-recovery.md){ .md-button .md-button--primary }
 
 ---

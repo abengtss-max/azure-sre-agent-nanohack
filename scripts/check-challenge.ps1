@@ -8,16 +8,17 @@
 #
 # Usage:
 #   ./scripts/check-challenge.ps1 1
-#   ./scripts/check-challenge.ps1 -Number 5
+#   ./scripts/check-challenge.ps1 -Number B
 # =============================================================================
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$Number
+    # 1..6, or A / B for the optional extras
+    [string]$Number
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'challenge-lib.ps1')
 
-$passed = Test-AetherionChallenge -Number $Number
+$passed = Test-AetherionChallenge -Number (ConvertTo-ChallengeKey $Number)
 if (-not $passed) { exit 1 }
 exit 0

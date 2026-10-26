@@ -38,7 +38,7 @@ New to the agent? Skim the optional primer **[Meet the SRE Agent](getting-starte
 !!! info "What you need before you start"
     Your facilitator has already provisioned your Aetherion environment in your own
     resource group. You need **PowerShell 7**, **Azure CLI**, **kubectl**, **Git** and the
-    **GitHub CLI**, plus a **GitHub personal access token** for Challenge 8.
+    **GitHub CLI**, plus a **GitHub personal access token** for Challenge 6.
     [Set up your environment](getting-started/environment.md) walks through all of it.
 
 ## The journey
@@ -57,13 +57,13 @@ New to the agent? Skim the optional primer **[Meet the SRE Agent](getting-starte
 
     Detect and investigate an incident read-only, then recover under human approval.
 
--   __Act IV · Autonomous__ <span class="aet-badge phase">Automate</span>
+-   __Act III · Autonomous__ <span class="aet-badge phase">Automate</span>
 
     ---
 
     Let the agent remediate autonomously within bounds and arm a Sev1 response plan.
 
--   __Act V · Major Incident__ <span class="aet-badge phase">Command</span>
+-   __Act IV · Major Incident__ <span class="aet-badge phase">Command</span>
 
     ---
 

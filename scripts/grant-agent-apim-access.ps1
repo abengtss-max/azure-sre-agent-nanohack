@@ -5,7 +5,7 @@
 # The agent's user-assigned identity is created with the agent, not by the
 # infrastructure deployment, so this cannot live in main.bicep. Without it the
 # agent can diagnose an edge policy fault but cannot remediate it, and the major
-# incident in Challenge 7 has no reachable fix.
+# incident in Challenge 5 has no reachable fix.
 
 param(
     [string]$AgentName,

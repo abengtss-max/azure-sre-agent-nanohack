@@ -108,15 +108,15 @@ nav:
       - Act II · Human-Guided Operations:
           - 02 · Detect & Investigate: challenges/02-detect-and-investigate.md
           - 03 · Controlled Recovery: challenges/03-controlled-recovery.md
-      - Act IV · Autonomous:
-          - 06 · Autonomous Recovery & Sev1 Plan: challenges/06-autonomous-and-cost.md
-      - Act V · Major Incident:
-          - 07 · Final Major Incident: challenges/07-major-incident.md
-          - 08 · Leadership Briefing: challenges/08-leadership-briefing.md
+      - Act III · Autonomous:
+          - 04 · Autonomous Recovery & Sev1 Plan: challenges/04-autonomous-recovery.md
+      - Act IV · Major Incident:
+          - 05 · Final Major Incident: challenges/05-major-incident.md
+          - 06 · Leadership Briefing: challenges/06-leadership-briefing.md
       - Finish: challenges/finish.md
   - Optional extras:
-      - 04 · Ground the Agent: challenges/04-ground-the-agent.md
-      - 05 · Engineer the Agent (Subagent + Skill): challenges/05-engineer-the-agent.md
+      - Extra A · Ground the Agent: challenges/extra-a-ground-the-agent.md
+      - Extra B · Engineer the Agent (Subagent + Skill): challenges/extra-b-engineer-the-agent.md
   - Reference:
       - Architecture: reference/architecture.md
       - Service Catalog: reference/service-catalog.md

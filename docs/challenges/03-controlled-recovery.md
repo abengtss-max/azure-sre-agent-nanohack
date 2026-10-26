@@ -1,11 +1,11 @@
 # Challenge 3 · Controlled Recovery
 
-!!! abstract "Challenge 03 of 08 · Act II: Human-Guided Operations"
+!!! abstract "Challenge 03 of 06 · Act II: Human-Guided Operations"
     **Run mode:** Review → approved write · **Governance:** every action approved by you
 
     **Time:** ~25 min
 
-    **Stage:** Foundation → **Operations** → Engineering → Autonomous → Major Incident
+    **Stage:** Foundation → **Operations** → Autonomous → Major Incident
 
 **Situation.** Your check-in hypothesis from Challenge 2 is solid and
 **Elena Vasquez**, Aetherion's operations director, wants it fixed **safely**,
@@ -113,7 +113,7 @@ you let it near production.
             It says **"Agent permissions will be used to complete this action."**
             The write runs as the agent's own managed identity, not as you. So the
             change is attributed in the Activity Log to the agent, not to the person
-            who approved it. Worth remembering in Challenge 8, when you're asked to
+            who approved it. Worth remembering in Challenge 6, when you're asked to
             produce change evidence and explain who did what.
 
         One instruction queues **one** action: approving the check-in fix queues
@@ -132,7 +132,7 @@ you let it near production.
 
             Nothing is broken. It's what happens when a fix is applied without
             recording why, and it's the reason your change log stops being evidence.
-            You'll want this in the Challenge 8 handover.
+            You'll want this in the Challenge 6 handover.
 
         !!! tip "Optional · ask it to draw what it just told you"
             Once check-in is back, try:
@@ -145,7 +145,7 @@ you let it near production.
             people who join late understand the shape of the incident without
             reading a single line of your investigation.
 
-            You will render a formal PDF in Challenge 8. This is the version you
+            You will render a formal PDF in Challenge 6. This is the version you
             produce **while the incident is still open**, which is usually when it
             is worth the most.
 
@@ -158,6 +158,6 @@ you let it near production.
 !!! success "Up next: let the agent act on its own"
     Every write so far waited for your approval. Next, a minor incident is safe enough to hand to the agent.
 
-    [Proceed to Challenge 6 · Autonomous Recovery →](06-autonomous-and-cost.md){ .md-button .md-button--primary }
+    [Proceed to Challenge 4 · Autonomous Recovery →](04-autonomous-recovery.md){ .md-button .md-button--primary }
 
 ---

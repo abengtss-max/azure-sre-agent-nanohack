@@ -1,12 +1,12 @@
-# Challenge 7 · Final Incident: Restore Global Check-In Before Peak Departure
+# Challenge 5 · Final Incident: Restore Global Check-In Before Peak Departure
 
-!!! abstract "Challenge 07 of 08 · Act V: Major Incident"
+!!! abstract "Challenge 05 of 06 · Act IV: Major Incident"
     **Run mode:** Review + bounded automation · **Governance:** you decide what is approved and what is automated · **Time:** ~60 min
 
-    **Stage:** Foundation → Operations → Engineering → Autonomous → **Major Incident**
+    **Stage:** Foundation → Operations → Autonomous → **Major Incident**
 
 !!! danger "Before you start: is your Sev1 plan armed?"
-    This challenge depends on the response plan you built in Challenge 6. Open
+    This challenge depends on the response plan you built in Challenge 4. Open
     **Incidents → Triggers + response plans** and confirm one plan shows
     **Status: On** and **Severity: Sev1**. If it doesn't, fix that first — the agent
     will never pick the incident up, and Task 1 has nothing to hand over.
@@ -16,7 +16,7 @@ a passenger surge: the flight board is dark, crew scheduling is timing out, chec
 has slowed to a crawl, and the API front door is failing legitimate partner and
 mobile traffic. The risk gauge is pinned. Everything you built today is now in play.
 
-**You are not first on scene.** The Sev1 plan you armed in Challenge 6 matched the
+**You are not first on scene.** The Sev1 plan you armed in Challenge 4 matched the
 alert before anyone paged you, and the agent has been working the incident
 unattended. Your first job is not to fix something. It is to find out what has
 already been changed in your absence.
@@ -42,7 +42,7 @@ by service.
 !!! example "Start this challenge"
 
     ```powershell
-    ./scripts/start-challenge.ps1 7   # open the incident
+    ./scripts/start-challenge.ps1 5   # open the incident
     ```
 
     Four faults land at once and the board takes two or three minutes to reflect
@@ -53,7 +53,7 @@ by service.
 1. **Take handover from the agent.** Find the thread the Sev1 alert opened by itself, read what the agent has already changed unattended, and verify it independently before you trust it.
 2. **Read the whole board.** Order the remaining work by business impact (situational awareness and legal-to-fly first), not the loudest alert.
 3. **Check the agent's memory.** Ask whether a similar incident has happened and let session insights surface the earlier RCA.
-4. **Delegate and recover.** If you built the optional specialist subagent and crew recovery skill (Challenge 5), hand AKS triage to the subagent and reuse the skill. If not, direct the main agent yourself, keeping every action governed.
+4. **Delegate and recover.** If you built the optional specialist subagent and crew recovery skill (Extra B), hand AKS triage to the subagent and reuse the skill. If not, direct the main agent yourself, keeping every action governed.
 5. **Localize the front door.** Use the direct-vs-APIM comparison and treat the policy change as customer-facing.
 6. **Verify every service.** Confirm each fix from telemetry, then the whole platform back to green.
 
@@ -63,11 +63,11 @@ by service.
     plan matches incoming alerts **by severity**, so your filter must be `Sev1` to
     catch it; a broader filter fires on everything, a mismatched one catches nothing.
 
-    **This one is graded.** `check-challenge.ps1 7` marks the platform's end state
+    **This one is graded.** `check-challenge.ps1 5` marks the platform's end state
     *and* confirms a Sev1 major-incident alert actually fired since you started the
     challenge. Driving the whole incident by hand is not enough on its own.
 
-![Challenge 7 storyboard: Sam, Aria and Elena restore global check-in before peak departure](../assets/storyboard/img-challenge-7.webp){ .story-panel loading=lazy }
+![Challenge 5 storyboard: Sam, Aria and Elena restore global check-in before peak departure](../assets/storyboard/img-challenge-7.webp){ .story-panel loading=lazy }
 
 ### Suggested Azure SRE Agent prompt
 
@@ -92,14 +92,14 @@ decide whether it's the right one for an airline at peak departure.
 - You can state exactly what the agent changed without your approval, and you verified it from the cluster rather than from its summary.
 - All remaining failing services are triaged by priority and restored with sanctioned, reversible actions.
 - The API front door serves legitimate traffic again, and every fix is verified from telemetry/health before closing.
-- The platform is healthy and `check-challenge.ps1 7` passes.
+- The platform is healthy and `check-challenge.ps1 5` passes.
 
 !!! success "Verify your work"
 
     Run this when you're done. It grades the real end state:
 
     ```powershell
-    ./scripts/check-challenge.ps1 7
+    ./scripts/check-challenge.ps1 5
     ```
 
 ??? tip "Hints"
@@ -196,14 +196,14 @@ decide whether it's the right one for an airline at peak departure.
         > platform before? Recall what the root cause was and which fix worked.
 
         If you saved a hypothesis in Challenge 2 or grounded the runbooks in
-        Challenge 4, session insights should surface the earlier RCA and the fix.
+        Extra A, session insights should surface the earlier RCA and the fix.
         That is the point of the exercise: the second incident should cost less
         than the first.
 
     ??? note "Task 4 · Delegate and recover"
         !!! note "Optional extras"
             The `aks-triage` subagent and the `crew-query-path-recovery` skill come from
-            Challenge 5, which is an optional extra. If you skipped it, ask the main
+            Extra B (optional). If you skipped it, ask the main
             agent to do the same work: it has the same tools, just no specialist.
 
         Name both the subagent and the skill explicitly. Neither fires on its own.
@@ -214,7 +214,7 @@ decide whether it's the right one for an airline at peak departure.
         > `aetherion` namespace are unhealthy, and why?
 
         Expect it to investigate and then **hand back rather than fix**. You scoped
-        it without `RunKubectlWriteCommand` in Challenge 5, so it physically cannot
+        it without `RunKubectlWriteCommand` in Extra B, so it physically cannot
         change the cluster. It reports; you and the main agent act on it. That split
         is deliberate, and under incident pressure it is worth noticing that you do
         not have to trust a prompt to keep it in its lane.
@@ -223,7 +223,7 @@ decide whether it's the right one for an airline at peak departure.
 
         > Use the `crew-query-path-recovery` skill to restore crew scheduling.
 
-        Crew is failing the same way it did in Challenge 4, so the skill carries.
+        Crew is failing the same way it did in Extra A, so the skill carries.
         Asking the agent to "act as" a specialist does **not** invoke the subagent,
         it only adopts the persona.
 
@@ -233,12 +233,12 @@ decide whether it's the right one for an airline at peak departure.
         !!! tip "Time the crew tier specifically"
             Note the minutes from starting on crew scheduling to the point it is
             healthy again. This is the same failure class you worked cold in
-            Challenge 2 and diagnosed in Challenge 4 — but now the agent has your
+            Challenge 2 and diagnosed in Extra A — but now the agent has your
             runbooks, a skill written for exactly this, and a memory of the earlier
             incident.
 
             Compare it with the number you wrote down in Challenge 2. Whatever the
-            gap is, that is the finding you take to Challenge 8. If it is smaller
+            gap is, that is the finding you take to Challenge 6. If it is smaller
             than you expected, that is worth reporting honestly too.
 
     ??? note "Task 5 · Localize the front door"
@@ -289,6 +289,6 @@ decide whether it's the right one for an airline at peak departure.
 !!! success "Up next: brief airline leadership"
     The incident is technically closed; now leadership needs it closed formally.
 
-    [Proceed to Challenge 8 · Leadership Briefing →](08-leadership-briefing.md){ .md-button .md-button--primary }
+    [Proceed to Challenge 6 · Leadership Briefing →](06-leadership-briefing.md){ .md-button .md-button--primary }
 
 ---

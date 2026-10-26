@@ -19,7 +19,7 @@ need `pwsh` installed and the `winget` step replaced with your own package manag
 | Azure CLI | 2.60 | required |
 | kubectl | any recent | required |
 | Git | any recent | required |
-| GitHub CLI (`gh`) | any recent | optional, but the steps below and Challenge 8 give `gh` one-liners, and the Challenge 8 grader uses it to confirm your work instead of asking you |
+| GitHub CLI (`gh`) | any recent | optional, but the steps below and Challenge 6 give `gh` one-liners, and the Challenge 6 grader uses it to confirm your work instead of asking you |
 
 ```powershell
 winget install --id Microsoft.PowerShell --exact --accept-source-agreements --accept-package-agreements
@@ -45,8 +45,8 @@ investigates.
 
 | | What it is | You get it by | Used for |
 |---|---|---|---|
-| **Lab clone** | This workshop: challenges, scripts, runbooks, the subagent and skill files | `git clone` | Running `start-challenge` / `check-challenge`, and the `knowledge/` files in the optional Challenge 4 |
-| **Your app repo** | The Aetherion AirOps application source | **Use this template** | The repo you connect the **SRE Agent** to, and the one it writes to in Challenge 8 |
+| **Lab clone** | This workshop: challenges, scripts, runbooks, the subagent and skill files | `git clone` | Running `start-challenge` / `check-challenge`, and the `knowledge/` files in the optional Extra A |
+| **Your app repo** | The Aetherion AirOps application source | **Use this template** | The repo you connect the **SRE Agent** to, and the one it writes to in Challenge 6 |
 
 **a) Clone the lab repo.** It drives the hack (challenges + scripts):
 
@@ -71,7 +71,7 @@ You'll connect the SRE Agent to **your copy** in Challenge 1.
 
 ??? tip "Why a template and not a fork"
     A fork would work, but GitHub turns **Issues off on every new fork** and
-    Challenge 8 has the agent file the incident RCA as an issue. A template copy
+    Challenge 6 has the agent file the incident RCA as an issue. A template copy
     arrives with Issues already enabled, so that failure never happens.
 
     Creating it under your **personal account** also avoids the token-approval
@@ -82,7 +82,7 @@ You'll connect the SRE Agent to **your copy** in Challenge 1.
     Kubernetes **rollout history**, and reads the repo only to answer *"what does
     the manifest declare"*.
 
-**c) Create a GitHub Personal Access Token now.** Challenge 8 has the agent write
+**c) Create a GitHub Personal Access Token now.** Challenge 6 has the agent write
 back to your repo — it files the incident RCA as an issue and opens a pull request
 — and the GitHub MCP connector it uses for that accepts **a PAT only**. There is no
 OAuth option on that connector.
@@ -103,7 +103,7 @@ and fill it in like this:
 | **Repository permissions → Issues** | **Read and write** — file the RCA |
 
 Click **Generate token** and **copy it now** — GitHub shows it once. Keep it in
-your password manager until Challenge 8.
+your password manager until Challenge 6.
 
 Prefer a classic token? **[github.com/settings/tokens/new](https://github.com/settings/tokens/new)**
 with the top-level **`repo`** scope works too.

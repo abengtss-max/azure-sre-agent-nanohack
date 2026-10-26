@@ -50,7 +50,7 @@ else {
     Write-Host "  WARNING: could not restore the crew roster index - crew scheduling will stay slow." -ForegroundColor Yellow
 }
 
-# Return the load generator to its normal level (challenges 2 & 7 set surge).
+# Return the load generator to its normal level (challenges 2 & 5 set surge).
 & (Join-Path $PSScriptRoot "deploy-loadgen.ps1") -Mode normal 2>$null | Out-Null
 Write-Host "  k6 load -> normal (25 VUs)" -ForegroundColor Gray
 
@@ -59,7 +59,7 @@ if (Test-Path $envFile) {
     $policy = '<policies><inbound><base /></inbound><backend><base /></backend><outbound><base /></outbound><on-error><base /></on-error></policies>'
     Write-Host "Restoring default APIM product policy..." -ForegroundColor Cyan
     if (-not (Set-AetherionApimProductPolicy -ResourceGroup $state.resourceGroup -ApimName $state.apimName -PolicyXml $policy)) {
-        Write-Host "  WARNING: APIM product policy reset failed (a backend override from Challenge 7 may persist)." -ForegroundColor Yellow
+        Write-Host "  WARNING: APIM product policy reset failed (a backend override from Challenge 5 may persist)." -ForegroundColor Yellow
     }
 
     # The db-firewall fault deletes this rule. Without it every service loses the

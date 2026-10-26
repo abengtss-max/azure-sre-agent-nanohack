@@ -9,14 +9,15 @@
 #
 # Usage:
 #   ./scripts/start-challenge.ps1 1
-#   ./scripts/start-challenge.ps1 -Number 5
+#   ./scripts/start-challenge.ps1 -Number B
 # =============================================================================
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$Number
+    # 1..6, or A / B for the optional extras
+    [string]$Number
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'challenge-lib.ps1')
 
-Start-AetherionChallenge -Number $Number
+Start-AetherionChallenge -Number (ConvertTo-ChallengeKey $Number)

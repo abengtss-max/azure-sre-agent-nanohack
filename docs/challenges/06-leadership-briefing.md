@@ -1,9 +1,9 @@
-# Challenge 8 · Boarding Resumes: Brief Airline Leadership
+# Challenge 6 · Boarding Resumes: Brief Airline Leadership
 
-!!! abstract "Challenge 08 of 08 · Act V: Major Incident"
+!!! abstract "Challenge 06 of 06 · Act IV: Major Incident"
     **Run mode:** Review · **Access:** read-only summarization, plus governed writes back to your repo · **Time:** ~45 min (+20 for the stretch tasks)
 
-    **Stage:** Foundation → Operations → Engineering → Autonomous → **Major Incident**
+    **Stage:** Foundation → Operations → Autonomous → **Major Incident**
 
 **Situation.** The platform is stable and the peak departure bank is away safely. A
 major incident isn't closed when the tiles go green; it's closed when leadership
@@ -18,10 +18,10 @@ incident starts from what you learned in this one.
 !!! example "Start this challenge"
 
     ```powershell
-    ./scripts/start-challenge.ps1 8   # open / set up this challenge
+    ./scripts/start-challenge.ps1 6   # open / set up this challenge
     ```
 
-    Challenge 8 injects no fault, so the platform stays green while you write.
+    Challenge 6 injects no fault, so the platform stays green while you write.
 
 ### Tasks
 
@@ -35,7 +35,7 @@ incident starts from what you learned in this one.
 *Tasks 5 and 6 are **stretch**. They need the GitHub PAT you created during setup. If
 the day is running short, finish tasks 1–4 and treat these as take-home.*
 
-![Challenge 8 storyboard: Sam and Elena brief airline leadership as boarding resumes](../assets/storyboard/img-challenge-8.webp){ .story-panel loading=lazy }
+![Challenge 6 storyboard: Sam and Elena brief airline leadership as boarding resumes](../assets/storyboard/img-challenge-8.webp){ .story-panel loading=lazy }
 
 ### Suggested Azure SRE Agent prompt
 
@@ -54,8 +54,8 @@ the day is running short, finish tasks 1–4 and treat these as take-home.*
 - The platform is healthy at close.
 - The leadership briefing covers impact, root cause, recovery, cost/risk, and lessons learned; the engineering RCA handover captures actions, verification, remaining risk, and change evidence from rollout history and the Activity Log.
 - The agent produced a **downloadable PDF** of the leadership briefing (with a timeline chart) via its Python sandbox.
-- Symptom, root cause, contributing factors, immediate mitigation, and permanent corrective action are clearly separated, and `check-challenge.ps1 8` passes.
-- *Stretch:* the agent **filed the RCA as an issue on your repo**, and with an **MCP server connected** and scoped against the 80-tool budget, **branched, committed and opened a pull request** improving the runbook that failed during Challenge 7.
+- Symptom, root cause, contributing factors, immediate mitigation, and permanent corrective action are clearly separated, and `check-challenge.ps1 6` passes.
+- *Stretch:* the agent **filed the RCA as an issue on your repo**, and with an **MCP server connected** and scoped against the 80-tool budget, **branched, committed and opened a pull request** improving the runbook that failed during Challenge 5.
 
 !!! success "Verify your work"
 
@@ -63,7 +63,7 @@ the day is running short, finish tasks 1–4 and treat these as take-home.*
     this when you're done to complete the hack:
 
     ```powershell
-    ./scripts/check-challenge.ps1 8
+    ./scripts/check-challenge.ps1 6
     ```
 
 ??? tip "Hints"
@@ -104,7 +104,7 @@ the day is running short, finish tasks 1–4 and treat these as take-home.*
         !!! tip "Answer the question the director will actually ask"
             *"What did this buy us?"* You have two numbers for it: the minutes to a
             defensible hypothesis in Challenge 2, working cold, and the minutes to
-            recover the crew tier in Challenge 7, with runbooks, a skill and the
+            recover the crew tier in Challenge 5, with runbooks, a skill and the
             agent's memory of the earlier incident in place.
 
             Add them to the briefing yourself — the agent cannot know them:
@@ -224,7 +224,7 @@ the day is running short, finish tasks 1–4 and treat these as take-home.*
 
     ??? note "Task 6 · Connect an MCP server and open the pull request"
         The agent has five ways to be extended: skills and subagents (you built both
-        in Challenge 5), Python tools (it just rendered your PDF with one), hooks, and
+        in Extra B), Python tools (it just rendered your PDF with one), hooks, and
         **MCP servers**. MCP is the one you have not touched, and it is how the agent
         reaches anything Microsoft did not build a connector for.
 
@@ -302,12 +302,12 @@ the day is running short, finish tasks 1–4 and treat these as take-home.*
         > Using your GitHub MCP tools, create a branch called
         > `rca/crew-verification` on `<your-org>/aetherion-airops-platform`, commit a
         > change to the crew-scheduling runbook that adds the verification step we
-        > were missing during Challenge 7, and open a pull request against `main`
+        > were missing during Challenge 5, and open a pull request against `main`
         > that references the RCA issue you filed. Show me the diff before you push.
 
         Approve it in Review mode, then open the PR on GitHub. **The agent changed a
         file in your repository.** That is the loop closing: it read the repo in
-        Challenge 1 and it improves the repo in Challenge 8.
+        Challenge 1 and it improves the repo in Challenge 6.
 
         !!! tip "Check the connection health while you are here"
             **Builder → Connectors** shows live status for each server. The agent

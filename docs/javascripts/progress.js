@@ -2,9 +2,9 @@
 (function () {
   "use strict";
 
-  // NanoHack runs six of the eight MicroHack challenges, in this order. 4 and 5 are
-  // optional extras: they can be marked done but are never required or counted.
-  var PATH = [1, 2, 3, 6, 7, 8];
+  // NanoHack has six challenges, numbered 1-6. The optional extras (A and B) are not
+  // numbered, so they are never tracked, required or counted.
+  var PATH = [1, 2, 3, 4, 5, 6];
   var TOTAL = PATH.length;
   var KEY = "nanohack:progress:v1";
 

@@ -321,9 +321,9 @@ resource grafanaAdmin 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 }
 
 // -----------------------------------------------------------------------------
-// Major-incident alerting (Challenge 7)
+// Major-incident alerting (Challenge 5)
 // A fixed-severity (Sev 1) Azure Monitor alert on Application Insights failed
-// requests. The SRE Agent response plan attendees build in Challenge 6 filters
+// requests. The SRE Agent response plan attendees build in Challenge 4 filters
 // on Severity = Sev1, so this rule must be authored at that exact severity to be
 // caught. The action group makes the alert fully functional in the portal.
 // -----------------------------------------------------------------------------
@@ -340,7 +340,7 @@ resource incidentAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   name: '${namePrefix}-major-incident'
   location: 'global'
   properties: {
-    description: 'Sev1 major incident: Application Insights failed requests spiking (Challenge 7 cross-tier cascade). Triggers the SRE Agent response plan filtered to Sev1.'
+    description: 'Sev1 major incident: Application Insights failed requests spiking (Challenge 5 cross-tier cascade). Triggers the SRE Agent response plan filtered to Sev1.'
     severity: 1
     enabled: true
     scopes: [ appi.id ]

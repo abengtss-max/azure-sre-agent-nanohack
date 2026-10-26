@@ -97,20 +97,19 @@ just an operator's call — it is decided by **execution**, **governance**,
 
 Read down the list and you are also reading the agent's arc: it starts read-only
 and supervised, then recovers under your approval, and only then is trusted to
-act on its own — still inside limits you set. Challenge numbers match the full
-MicroHack, so the numbering skips 4 and 5 (those are the optional extras).
+act on its own — still inside limits you set.
 
 | # | Challenge | What you practice |
 |---|-----------|-------------------|
 | 1 | Onboard the Agent and Establish the Baseline | Connect the agent read-only, capture a baseline + a daily proactive health check |
 | 2 | Detect and Investigate Without Touching Production | Detect a symptom, then read-only telemetry/log correlation and a defensible hypothesis |
 | 3 | Controlled Recovery | Human-approved remediation of the check-in incident |
-| 6 | Autonomous Recovery and Sev1 Plan | Let the agent fix a bounded incident on its own, then arm the Sev1 response plan |
-| 7 | Final Incident: Restore Global Check-In Before Peak Departure | End-to-end multi-fault response as incident commander |
-| 8 | Boarding Resumes: Brief Airline Leadership | Incident summary and leadership handover |
+| 4 | Autonomous Recovery and Sev1 Plan | Let the agent fix a bounded incident on its own, then arm the Sev1 response plan |
+| 5 | Final Incident: Restore Global Check-In Before Peak Departure | End-to-end multi-fault response as incident commander |
+| 6 | Boarding Resumes: Brief Airline Leadership | Incident summary and leadership handover |
 
-Optional extras if you finish early: **4** (give the agent Aetherion's operational
-knowledge) and **5** (a specialist subagent and a reusable skill).
+Optional extras if you finish early: **Extra A** (give the agent Aetherion's operational
+knowledge) and **Extra B** (a specialist subagent and a reusable skill).
 
 ---
 

@@ -19,8 +19,8 @@ az account set --subscription "<subscription-id>"
 ./scripts/check-challenge.ps1 <N>     # verify it
 ```
 
-You run six challenges, in this order: **1, 2, 3, 6, 7, 8**. Challenges 4 and 5 are
-optional extras if you finish early.
+You run six challenges, numbered **1 to 6**. The two optional extras, **A** and **B**, are
+for if you finish early (`./scripts/start-challenge.ps1 A`).
 
 > This is a fictional, non-production teaching environment. It models an operational
 > platform, not safety-of-flight avionics.

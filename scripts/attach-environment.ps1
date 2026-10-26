@@ -50,7 +50,6 @@ $state = [ordered]@{
     resourceGroup = $ResourceGroup
     location      = $rg.location
     namePrefix    = $namePrefix
-    edition       = 'nanohack'
 }
 foreach ($k in $dep.properties.outputs.PSObject.Properties.Name) {
     $state[$k] = $dep.properties.outputs.$k.value

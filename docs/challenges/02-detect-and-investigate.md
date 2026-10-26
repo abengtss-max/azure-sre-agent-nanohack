@@ -1,9 +1,9 @@
 # Challenge 2 · Detect and Investigate Without Touching Production
 
-!!! abstract "Challenge 02 of 08 · Act II: Human-Guided Operations"
+!!! abstract "Challenge 02 of 06 · Act II: Human-Guided Operations"
     **Run mode:** Review · **Access:** read-only investigation · **Time:** ~40 min
 
-    **Stage:** Foundation → **Operations** → Engineering → Autonomous → Major Incident
+    **Stage:** Foundation → **Operations** → Autonomous → Major Incident
 
 **Situation:** Online check-in has slowed to a crawl. Requests that used to be
 instant now take seconds, and the **booking / check-in** tile has gone amber just as
@@ -141,9 +141,9 @@ is really teaching.
             on paper or in the thread.
 
             You are investigating this failure class cold, with an agent that
-            knows nothing about Aetherion yet. In Challenge 7 you meet the same
+            knows nothing about Aetherion yet. In Challenge 5 you meet the same
             class again, by which point the agent has your runbooks, a specialist
-            subagent and a memory of today. Challenge 8 asks you what that was
+            subagent and a memory of today. Challenge 6 asks you what that was
             worth, and this is the only chance to capture the *before* number.
 
 ### Reference

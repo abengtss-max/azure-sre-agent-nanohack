@@ -53,14 +53,14 @@ and let the agent investigate.
     provisioner printed, and delete the stale environments with
     `./scripts/99-teardown.ps1`.
 
-??? question "Knowledge files stay stuck and never reach Indexed (Challenge 4)"
+??? question "Knowledge files stay stuck and never reach Indexed (Extra A)"
     Bulk upload can partially fail without reporting it. Open **Builder → Knowledge
     Sources** and check every file individually reached **Indexed**; re-upload any
     that didn't, one at a time. An un-indexed runbook is invisible to the agent, so
     the advice stays generic and the challenge looks broken when it isn't.
 
-??? question "The Sev1 response plan never fires (Challenge 6 → 7)"
-    This is the failure that only surfaces once Challenge 7 is already open. Check
+??? question "The Sev1 response plan never fires (Challenge 4 → 7)"
+    This is the failure that only surfaces once Challenge 5 is already open. Check
     **Incidents → Triggers + response plans**:
 
     - **Status** must be **On**, and **Severity** must be exactly **Sev1** — a
@@ -68,16 +68,16 @@ and let the agent investigate.
     - **Azure Monitor** must be connected as an incident platform.
     - No leftover **quickstart** plan should be competing with yours.
 
-    Fix it, then re-run `./scripts/start-challenge.ps1 7`.
+    Fix it, then re-run `./scripts/start-challenge.ps1 5`.
 
-??? question "GitHub writes fail in Challenge 8"
+??? question "GitHub writes fail in Challenge 6"
     The GitHub MCP connector accepts a **PAT only**, and the token you created during
     setup expires quickly by design. Confirm it hasn't expired, and that it is scoped
     to *your* `aetherion-airops-platform` copy with **Contents**, **Pull requests**
     and **Issues** set to read and write. A token missing one of those fails at the
     step that needs it, not at connection time.
 
-??? question "The agent runs out of tools after adding an MCP server (Challenge 8)"
+??? question "The agent runs out of tools after adding an MCP server (Challenge 6)"
     Tools are capped at an **80-tool budget** across the agent. A full MCP server can
     consume most of it on its own. Disable the tools you don't need on the connector
     so the agent keeps the Azure and Kubernetes tools the rest of the day depends on.

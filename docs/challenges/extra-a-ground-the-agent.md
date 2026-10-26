@@ -1,12 +1,12 @@
-# Challenge 4 · Give the Agent Aetherion's Operational Knowledge
+# Extra A · Give the Agent Aetherion's Operational Knowledge
 
 !!! info "Optional extra"
     This challenge is optional in the NanoHack. Do it if you finish early. Nothing later depends on it.
 
-!!! abstract "Challenge 04 of 08 · Act II: Human-Guided Operations"
+!!! abstract "Extra A · Optional extra"
     **Run mode:** Review → approved write · **Governance:** every action approved by you · **Time:** ~40 min
 
-    **Stage:** Foundation → **Operations** → Engineering → Autonomous → Major Incident
+    **Stage:** Optional. Nothing later depends on it.
 
 **Situation.** Crew scheduling is failing and **Marco Bianchi** on the crew desk
 can't confirm who is legal to fly the evening wave. The services that share its
@@ -21,7 +21,7 @@ non-destructive remediation and verify service is restored.
 !!! example "Start this challenge"
 
     ```powershell
-    ./scripts/start-challenge.ps1 4   # open the incident
+    ./scripts/start-challenge.ps1 A   # open the incident
     ```
 
     Crew scheduling degrades within two or three minutes. Its database-backed
@@ -35,7 +35,7 @@ non-destructive remediation and verify service is restored.
 2. **Ground the agent.** Load Aetherion's `knowledge/` runbooks, then re-ask the remediation question and watch the advice change.
 3. **Apply the sanctioned fix.** Repair the query path the runbook points to (never delete the database), then confirm crew scheduling recovers.
 
-![Challenge 4 storyboard: Marco, Sam and Aria ground the agent in Aetherion's runbooks](../assets/storyboard/img-challenge-4.webp){ .story-panel loading=lazy }
+![Extra A storyboard: Marco, Sam and Aria ground the agent in Aetherion's runbooks](../assets/storyboard/img-challenge-4.webp){ .story-panel loading=lazy }
 
 ### Suggested Azure SRE Agent prompt
 
@@ -55,14 +55,14 @@ it has. Task 2 gives it Aetherion's own operating rules and asks again.
 
 - You can name the **origin**, the service whose queries are saturating the shared database, and explain why its neighbours are suffering without being at fault.
 - The grounded agent cites the runbook guardrail (repair the query path, never delete the database) and you apply that non-destructive fix under approval.
-- `/api/crew` is back **inside the 400 ms latency budget while the roster rush is still running**. That is what `check-challenge.ps1 4` grades. A tile that is merely answering again is not a pass.
+- `/api/crew` is back **inside the 400 ms latency budget while the roster rush is still running**. That is what `check-challenge.ps1 A` grades. A tile that is merely answering again is not a pass.
 
 !!! success "Verify your work"
 
     Run this when you're done. It grades the real end state:
 
     ```powershell
-    ./scripts/check-challenge.ps1 4
+    ./scripts/check-challenge.ps1 A
     ```
 
 ??? tip "Hints"
@@ -205,7 +205,7 @@ it has. Task 2 gives it Aetherion's own operating rules and asks again.
             shows you what it would write. Answering "Skip" only declines the
             runbook edit — your remediation plan is unaffected.
 
-            Worth noticing either way: this is Challenge 8's closing set piece —
+            Worth noticing either way: this is Challenge 6's closing set piece —
             *open a pull request that fixes the runbook that failed you* — arriving
             four challenges early, on the agent's own initiative. The formal
             version, with the change reviewed on your repo, is Task 6 there.
@@ -219,6 +219,6 @@ it has. Task 2 gives it Aetherion's own operating rules and asks again.
 !!! success "Up next: make investigation & recovery reusable"
     You've worked several AKS incidents the same way, so it's time to build a specialist and encode a recovery so both are reusable.
 
-    [Proceed to Challenge 5 · Engineer the Agent →](05-engineer-the-agent.md){ .md-button .md-button--primary }
+    [Proceed to Extra B · Engineer the Agent →](extra-b-engineer-the-agent.md){ .md-button .md-button--primary }
 
 ---

@@ -92,7 +92,7 @@ Check "Sev1 major-incident alert rule exists and is enabled" {
 }
 
 # Without request telemetry the Sev1 failed-requests alert can never fire, so
-# challenge 7 would silently never auto-trigger. Ingestion lags a few minutes.
+# challenge 5 would silently never auto-trigger. Ingestion lags a few minutes.
 Check "Request telemetry reaching Application Insights" {
     $q = 'requests | where timestamp > ago(30m) | summarize n=count()'
     for ($i = 0; $i -lt 10; $i++) {

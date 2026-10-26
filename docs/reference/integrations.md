@@ -21,7 +21,7 @@ the agent back to your own environment.
 
 | Integration | Role |
 |-------------|------|
-| **Azure Monitor / Application Insights / Log Analytics** *(used in this hack)* | Primary signal plane: metrics, traces, logs, and the **Sev1 alert** that triggers a response plan in Challenge 7. |
+| **Azure Monitor / Application Insights / Log Analytics** *(used in this hack)* | Primary signal plane: metrics, traces, logs, and the **Sev1 alert** that triggers a response plan in Challenge 5. |
 | **Grafana** *(used in this hack)* | Dashboards for autoscaling and latency correlation. |
 | **Datadog · Dynatrace · Splunk** | Ingest signals from third-party observability platforms where they are the team's system of record. |
 
@@ -34,7 +34,7 @@ paging, and corrective work stay in the systems your team already uses.
 ## How to think about integrations in this hack
 
 - **Ground first.** Point the agent at the code and runbooks that define "correct"
-  before you point it at dashboards. Challenge 3 and Challenge 7 both lean on
+  before you point it at dashboards. Challenge 3 and Challenge 5 both lean on
   change correlation.
 - **Signals in, actions out.** Monitoring integrations tell the agent *something is
   wrong*; ticketing/paging integrations make sure the *right humans* are looped in

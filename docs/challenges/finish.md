@@ -47,4 +47,4 @@ lesson in miniature:
 
 ---
 
-*Want to go further? Try the optional extras: [Challenge 4](04-ground-the-agent.md) and [Challenge 5](05-engineer-the-agent.md).*
+*Want to go further? Try the optional extras: [Extra A](extra-a-ground-the-agent.md) and [Extra B](extra-b-engineer-the-agent.md).*

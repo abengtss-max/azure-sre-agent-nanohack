@@ -109,7 +109,7 @@ In the agent, run **Set up your agent** (**Full setup**) and connect three sourc
     Do **not** choose *Subscription* or *Management group* scope. Resource-group
     scope keeps the agent focused on just this application.
 
-> **Knowledge** is connected later, in Challenge 4, not here.
+> **Knowledge** is connected later, in Extra A, not here.
 
 ---
 
@@ -145,7 +145,7 @@ Reference: [Manage roles and permissions](https://learn.microsoft.com/en-us/azur
 2. **Review** (default): the agent proposes a plan and waits for your approval
    before any write. Use this for Acts I-III.
 3. **Autonomous:** the agent executes approved classes of action without pausing.
-   Only switch a **specific, validated** fault to Autonomous (Challenge 6).
+   Only switch a **specific, validated** fault to Autonomous (Challenge 4).
 4. Changing run mode is approved by the **SRE Agent Administrator** role.
 
 ---
@@ -225,11 +225,11 @@ Reference: [Team onboarding & memory](https://learn.microsoft.com/en-us/azure/sr
 4. **Scope the Tools panel deliberately.** Left alone the subagent inherits all
    46 tools, which makes it a persona rather than a specialist. Selecting tools
    *replaces* the inherited set instead of adding to it, so your list has to be
-   complete, not a highlight reel. Challenge 5 gives the exact eight tools and
+   complete, not a highlight reel. Extra B gives the exact eight tools and
    the reason for each. Instructions are advisory; the tool list is what is
    actually enforced.
 5. **Leave Skills inherited while you build.** Who owns which skill is a
-   deliberate decision you make in Challenge 5, Task 3.
+   deliberate decision you make in Extra B, Task 3.
 6. **Create**, then use it by asking the main agent to **delegate to it by name**
    ("delegate this to your `aks-triage` subagent"). Asking the agent to "act as"
    a specialist does not invoke the subagent. It just adopts the persona.

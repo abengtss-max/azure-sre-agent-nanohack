@@ -13,7 +13,7 @@ any underlined acronym to see its meaning in place.
 | **Blast radius** | How much of the system an incident, or a fix, can affect. Good remediation keeps it as small as possible. |
 | **RBAC** | Role-Based Access Control, Azure's permission model. Roles (e.g. Reader) decide what an identity is allowed to do. |
 | **Managed identity** | An Azure identity for a workload (here, the agent) so it can authenticate to Azure without stored secrets. |
-| **AAU** | Azure Agent Unit, the consumption unit for SRE Agent usage. Managing AAUs keeps the agent cost-effective (Challenge 6). |
+| **AAU** | Azure Agent Unit, the consumption unit for SRE Agent usage. Managing AAUs keeps the agent cost-effective (Challenge 4). |
 | **OBO** | On-behalf-of: an action running under your credentials rather than the agent's. **Not available in this environment** — every action here runs as the agent's own managed identity, which is why scoping that identity matters. |
 | **Review mode** | Run mode where the agent proposes a plan and waits for explicit human approval before any write. The default. |
 | **Autonomous mode** | Run mode where the agent executes approved classes of action without pausing. Used only for well-understood, validated faults. |
