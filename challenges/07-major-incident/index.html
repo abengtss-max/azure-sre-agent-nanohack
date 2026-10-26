@@ -1,0 +1,2189 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on NanoHack (3-4 hours): use the Azure SRE Agent to detect, investigate and recover live incidents on the Aetherion AirOps Tier-0 aviation platform.">
+      
+      
+        <meta name="author" content="Aetherion AirOps Reliability Engineering">
+      
+      
+        <link rel="canonical" href="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/07-major-incident/">
+      
+      
+        <link rel="prev" href="../06-autonomous-and-cost/">
+      
+      
+        <link rel="next" href="../08-leadership-briefing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/aetherion-airops-favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>07 · Final Major Incident - Azure SRE Agent NanoHack</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  
+    
+  
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Azure SRE Agent NanoHack">
+  <meta property="og:title" content="07 · Final Major Incident · Azure SRE Agent NanoHack">
+  <meta property="og:description" content="Hands-on NanoHack (3-4 hours): use the Azure SRE Agent to detect, investigate and recover live incidents on the Aetherion AirOps Tier-0 aviation platform.">
+  <meta property="og:image" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/assets/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/07-major-incident/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="07 · Final Major Incident · Azure SRE Agent NanoHack">
+  <meta name="twitter:description" content="Hands-on NanoHack (3-4 hours): use the Azure SRE Agent to detect, investigate and recover live incidents on the Aetherion AirOps Tier-0 aviation platform.">
+  <meta name="twitter:image" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/assets/og-cover.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/aetherion-airops-favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/aetherion-airops-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="../../assets/aetherion-airops-favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/aetherion-airops-apple-touch-icon.png">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#challenge-7-final-incident-restore-global-check-in-before-peak-departure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Azure SRE Agent NanoHack" class="md-header__button md-logo" aria-label="Azure SRE Agent NanoHack" data-md-component="logo">
+      
+  <img src="../../assets/sre-agent-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Azure SRE Agent NanoHack
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              07 · Final Major Incident
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abengtss-max/azure-sre-agent-nanohack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abengtss-max/azure-sre-agent-nanohack
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/environment/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Set up
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Meet Aetherion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-onboard-and-baseline/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Challenges
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04-ground-the-agent/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Optional extras
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Azure SRE Agent NanoHack" class="md-nav__button md-logo" aria-label="Azure SRE Agent NanoHack" data-md-component="logo">
+      
+  <img src="../../assets/sre-agent-logo.png" alt="logo">
+
+    </a>
+    Azure SRE Agent NanoHack
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abengtss-max/azure-sre-agent-nanohack" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abengtss-max/azure-sre-agent-nanohack
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meet Aetherion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Challenges
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Challenges
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Act I · Foundation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Act I · Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-onboard-and-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Onboard & Baseline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Act II · Human-Guided Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Act II · Human-Guided Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-detect-and-investigate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Detect & Investigate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-controlled-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Controlled Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Act IV · Autonomous
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Act IV · Autonomous
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-autonomous-and-cost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Autonomous Recovery & Sev1 Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Act V · Major Incident
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Act V · Major Incident
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Final Major Incident
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Final Major Incident
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggested Azure SRE Agent prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-leadership-briefing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Leadership Briefing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../finish/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Finish
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optional extras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Optional extras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-ground-the-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Ground the Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-engineer-the-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Engineer the Agent (Subagent + Skill)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/service-catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/integrations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & browser storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primers (optional)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Primers (optional)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/sre-agent-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meet the SRE Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/portal-walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure portal walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggested Azure SRE Agent prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="challenge-7-final-incident-restore-global-check-in-before-peak-departure">Challenge 7 · Final Incident: Restore Global Check-In Before Peak Departure<a class="headerlink" href="#challenge-7-final-incident-restore-global-check-in-before-peak-departure" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">Challenge 07 of 08 · Act V: Major Incident</p>
+<p><strong>Run mode:</strong> Review + bounded automation · <strong>Governance:</strong> you decide what is approved and what is automated · <strong>Time:</strong> ~60 min</p>
+<p><strong>Stage:</strong> Foundation → Operations → Engineering → Autonomous → <strong>Major Incident</strong></p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Before you start: is your Sev1 plan armed?</p>
+<p>This challenge depends on the response plan you built in Challenge 6. Open
+<strong>Incidents → Triggers + response plans</strong> and confirm one plan shows
+<strong>Status: On</strong> and <strong>Severity: Sev1</strong>. If it doesn't, fix that first — the agent
+will never pick the incident up, and Task 1 has nothing to hand over.</p>
+</div>
+<p><strong>Situation.</strong> Minutes before peak departures, several services fail together under
+a passenger surge: the flight board is dark, crew scheduling is timing out, check-in
+has slowed to a crawl, and the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is failing legitimate partner and
+mobile traffic. The risk gauge is pinned. Everything you built today is now in play.</p>
+<p><strong>You are not first on scene.</strong> The Sev1 plan you armed in Challenge 6 matched the
+alert before anyone paged you, and the agent has been working the incident
+unattended. Your first job is not to fix something. It is to find out what has
+already been changed in your absence.</p>
+<details class="note">
+<summary>Incident timeline</summary>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>18:07</td>
+<td>A change rolls out to flight-ops</td>
+</tr>
+<tr>
+<td>18:12</td>
+<td>Check-in / booking latency begins to climb</td>
+</tr>
+<tr>
+<td>18:14</td>
+<td>Crew scheduling starts timing out under load</td>
+</tr>
+<tr>
+<td>18:17</td>
+<td>The live flight board goes dark for all stations</td>
+</tr>
+<tr>
+<td>18:21</td>
+<td>The API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> starts failing partner traffic</td>
+</tr>
+<tr>
+<td>18:23</td>
+<td><code>aetherion-major-incident</code> fires at <strong>Sev1</strong> and auto-triggers the agent</td>
+</tr>
+<tr>
+<td>18:25</td>
+<td>Major incident declared. You are incident commander</td>
+</tr>
+<tr>
+<td>18:26</td>
+<td>The agent is already acting on its own in a thread it opened itself</td>
+</tr>
+</tbody>
+</table>
+</details>
+<p><strong>Mission.</strong> Take handover from the agent, then bring Aetherion AirOps back to full
+health before peak departure: verify what it changed without you, triage the rest by
+business tier, remediate within the runbook guardrails, and verify recovery service
+by service.</p>
+<div class="admonition example">
+<p class="admonition-title">Start this challenge</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">7</span>   <span class="c"># open the incident</span>
+</code></pre></div>
+<p>Four faults land at once and the board takes two or three minutes to reflect
+all of them. Don't start triaging from a half-drawn picture.</p>
+</div>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Take handover from the agent.</strong> Find the thread the Sev1 alert opened by itself, read what the agent has already changed unattended, and verify it independently before you trust it.</li>
+<li><strong>Read the whole board.</strong> Order the remaining work by business impact (situational awareness and legal-to-fly first), not the loudest alert.</li>
+<li><strong>Check the agent's memory.</strong> Ask whether a similar incident has happened and let session insights surface the earlier RCA.</li>
+<li><strong>Delegate and recover.</strong> If you built the optional specialist subagent and crew recovery skill (Challenge 5), hand <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to the subagent and reuse the skill. If not, direct the main agent yourself, keeping every action governed.</li>
+<li><strong>Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>.</strong> Use the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison and treat the policy change as customer-facing.</li>
+<li><strong>Verify every service.</strong> Confirm each fix from telemetry, then the whole platform back to green.</li>
+</ol>
+<details class="note">
+<summary>Why Sev1?</summary>
+<p>The environment pre-provisions a fixed <strong>Sev1</strong> Azure Monitor alert
+(<code>aetherion-major-incident</code>, on <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed requests). A response
+plan matches incoming alerts <strong>by severity</strong>, so your filter must be <code>Sev1</code> to
+catch it; a broader filter fires on everything, a mismatched one catches nothing.</p>
+<p><strong>This one is graded.</strong> <code>check-challenge.ps1 7</code> marks the platform's end state
+<em>and</em> confirms a Sev1 major-incident alert actually fired since you started the
+challenge. Driving the whole incident by hand is not enough on its own.</p>
+</details>
+<p><img alt="Challenge 7 storyboard: Sam, Aria and Elena restore global check-in before peak departure" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-7.webp" /></p>
+<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<div class="admonition quote">
+<p class="admonition-title">Paste into the <code>[Sev1] aetherion-major-incident</code> thread</p>
+<p>You picked this incident up before I did. List every action you have already
+taken without my approval, and how I can verify each one. Then tell me what is
+still broken, and what you recommend I deal with first.</p>
+</div>
+<details class="warning">
+<summary>Paste it into the right thread</summary>
+<p>This prompt only works <strong>inside the thread the response plan opened by itself</strong>.
+Started in a fresh chat it has no incident to refer to, so it answers about
+whatever it worked on last — validated: pasted into a new thread it reported on
+the <em>previous</em> challenge's baggage canary and declared traffic healthy while
+the flight board was 100% down. Open the <code>[Sev1] aetherion-major-incident</code>
+thread first (Task 1), then ask.</p>
+</details>
+<p>The second half is the part you own. It will give you an order; your job is to
+decide whether it's the right one for an airline at peak departure.</p>
+<h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>You can state exactly what the agent changed without your approval, and you verified it from the cluster rather than from its summary.</li>
+<li>All remaining failing services are triaged by priority and restored with sanctioned, reversible actions.</li>
+<li>The API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> serves legitimate traffic again, and every fix is verified from telemetry/health before closing.</li>
+<li>The platform is healthy and <code>check-challenge.ps1 7</code> passes.</li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">Verify your work</p>
+<p>Run this when you're done. It grades the real end state:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">7</span>
+</code></pre></div>
+</div>
+<details class="tip">
+<summary>Hints</summary>
+<p><strong>Triage, don't firefight.</strong> Don't fix the first red tile you see; read the whole
+board and order by business tier. You've solved every one of these failure classes
+already: delegate <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to your specialist and apply your crew recovery skill
+if you built them, otherwise direct the main agent.</p>
+<p><strong>Is it the service, or the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>?</strong> If the backend is healthy when you hit it
+directly but clients still fail, the problem is at the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>, not the
+services. Treat the policy change as customer-facing.</p>
+<p>Expect the board to get <em>worse</em> once the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is fixed: with traffic flowing
+again, the degradations further back become visible. That is normal in a layered
+incident. Restoring the edge doesn't create new faults, it reveals the ones the
+outage was masking.</p>
+<p><strong>How an experienced incident commander would have scoped it.</strong> If the agent's
+account is scattered, this is how someone who has run a major incident would ask
+for it:</p>
+<blockquote>
+<p>Read the whole Aetherion board and give me an incident-command triage: list every
+service still failing, order remediation by business tier (situational awareness
+and legal-to-fly first), and for each name the sanctioned, reversible fix. Have we
+seen a similar crew-scheduling / check-in incident before? Pull the earlier RCA
+from session memory.</p>
+</blockquote>
+<p>Two things in there are doing the work: <strong>order by business tier</strong>, which stops you
+fixing whatever is loudest, and <strong>pull the earlier RCA from memory</strong>, which is the
+difference between solving crew scheduling for the first time and the second.</p>
+</details>
+<details class="question">
+<summary>Stuck? Step-by-step for each task</summary>
+<p>Give each task a genuine attempt first, and skim the hints above. When you want
+the exact clicks, open the matching task below.</p>
+<details class="note">
+<summary>Task 1 · Take handover from the agent</summary>
+<p>The agent started before you did. Treat this exactly like taking handover
+from a colleague who has been on the incident for ten minutes.</p>
+<p><strong>Find the thread it opened by itself.</strong> In the agent's chat list, look for
+a thread whose title starts with <code>[Sev1] aetherion-major-incident</code>. You did
+not create it. The response plan did, off the alert.</p>
+<p><strong>Read what it already changed.</strong> Ask it directly, in that thread:</p>
+<blockquote>
+<p>You picked this incident up before I did. List every action you have
+already taken without my approval, what each one changed, and how I can
+verify it. Then list what you deliberately did not act on, and why.</p>
+</blockquote>
+<p><strong>Verify it yourself. Do not take its word for it.</strong> The whole point of
+autonomy is that you audit the outcome, not the intention:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">rollout</span> <span class="nb">history </span><span class="n">deployment</span><span class="p">/</span><span class="n">flight-ops</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">get</span> <span class="n">deploy</span> <span class="n">flight-ops</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s1">'{.spec.template.spec.containers[0].image}{"\n"}'</span>
+</code></pre></div>
+<p>Expect it to have acted on <strong>some</strong> tiers and not others. It moves where the
+fix is unambiguous and reversible, and holds where the call is a judgement.
+Those held tiers are your work.</p>
+<div class="admonition tip">
+<p class="admonition-title">If no thread was auto-created</p>
+<p>The plan did not match. Open <strong>Incidents → Triggers + response plans</strong>
+and confirm your Sev1 plan shows <strong>Status: On</strong> and <strong>Severity: Sev1</strong>,
+that <strong>Subagent name</strong> reads <em>Set up</em> (none bound), and that no leftover
+<strong>quickstart</strong> plan is competing with it. Fix it, then re-run the start
+command so the alert fires again. You can still command the incident by
+hand, but the alert has to fire for this challenge to pass.</p>
+</div>
+</details>
+<details class="note">
+<summary>Task 2 · Read the whole board</summary>
+<ul>
+<li>Open the Operations Center and list every failing service. Order remediation
+  by business tier: situational awareness (flight board) and legal-to-fly
+  (crew) first, not by whichever alert is loudest.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">The board cannot see your <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></p>
+<p>The Operations Center polls each service <strong>directly</strong>, inside the
+cluster. It has no view of API Management. So the board can read fully
+green while every partner and mobile customer is getting a 500 at the
+edge, which is exactly what happens in this incident.</p>
+<p>Validated: an agent told to "read the whole board" recovered all four
+in-cluster faults, declared the incident stable, and never mentioned the
+<abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> once. It was not wrong about the board. The board was
+incomplete.</p>
+<p>Treat the internal board and the customer-facing path as two separate
+questions, and always ask the second one. That is Task 5.</p>
+</div>
+</details>
+<details class="note">
+<summary>Task 3 · Check the agent's memory</summary>
+<p>Ask it directly, in the same thread as the investigation:</p>
+<blockquote>
+<p>Have you investigated a crew-scheduling or check-in slowdown on this
+platform before? Recall what the root cause was and which fix worked.</p>
+</blockquote>
+<p>If you saved a hypothesis in Challenge 2 or grounded the runbooks in
+Challenge 4, session insights should surface the earlier RCA and the fix.
+That is the point of the exercise: the second incident should cost less
+than the first.</p>
+</details>
+<details class="note">
+<summary>Task 4 · Delegate and recover</summary>
+<div class="admonition note">
+<p class="admonition-title">Optional extras</p>
+<p>The <code>aks-triage</code> subagent and the <code>crew-query-path-recovery</code> skill come from
+Challenge 5, which is an optional extra. If you skipped it, ask the main
+agent to do the same work: it has the same tools, just no specialist.</p>
+</div>
+<p>Name both the subagent and the skill explicitly. Neither fires on its own.</p>
+<p>For the <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> tier:</p>
+<blockquote>
+<p>Delegate this to your <code>aks-triage</code> subagent: which workloads in the
+<code>aetherion</code> namespace are unhealthy, and why?</p>
+</blockquote>
+<p>Expect it to investigate and then <strong>hand back rather than fix</strong>. You scoped
+it without <code>RunKubectlWriteCommand</code> in Challenge 5, so it physically cannot
+change the cluster. It reports; you and the main agent act on it. That split
+is deliberate, and under incident pressure it is worth noticing that you do
+not have to trust a prompt to keep it in its lane.</p>
+<p>For the crew tier:</p>
+<blockquote>
+<p>Use the <code>crew-query-path-recovery</code> skill to restore crew scheduling.</p>
+</blockquote>
+<p>Crew is failing the same way it did in Challenge 4, so the skill carries.
+Asking the agent to "act as" a specialist does <strong>not</strong> invoke the subagent,
+it only adopts the persona.</p>
+<ul>
+<li>Keep actions governed and follow the runbooks: fix the layer that is
+  actually saturated, never delete the database.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Time the crew tier specifically</p>
+<p>Note the minutes from starting on crew scheduling to the point it is
+healthy again. This is the same failure class you worked cold in
+Challenge 2 and diagnosed in Challenge 4 — but now the agent has your
+runbooks, a skill written for exactly this, and a memory of the earlier
+incident.</p>
+<p>Compare it with the number you wrote down in Challenge 2. Whatever the
+gap is, that is the finding you take to Challenge 8. If it is smaller
+than you expected, that is worth reporting honestly too.</p>
+</div>
+</details>
+<details class="note">
+<summary>Task 5 · Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></summary>
+<ul>
+<li>Compare backend health <strong>directly</strong> (<code>http://&lt;gateway-ip&gt;/api/status</code>)
+  against the same call <strong>through <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr></strong>. If direct returns 200 but <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr>
+  fails, the fault is the <strong>edge policy</strong>, not the service; treat the change
+  as customer-facing.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Run the comparison from your machine, not the agent</p>
+<p>The agent's sandbox egress can block the public gateway IP and
+<code>*.azure-api.net</code>, so an external probe it runs itself comes back as a
+proxy-generated <code>403</code> before the request ever reaches Azure. Validated:
+the agent repaired the policy correctly and then reported it could not
+confirm the fix externally.</p>
+<p>Do the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison yourself, and treat the agent's
+"external check failed" as a tooling limit rather than evidence the fix
+did not land. Confirm from the policy XML plus your own call:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$st</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="p">./</span><span class="n">scripts</span><span class="p">/.</span><span class="n">env</span><span class="p">.</span><span class="n">aetherion</span><span class="p">.</span><span class="n">json</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"http://</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">gatewayIp</span><span class="p">)</span><span class="s2">/api/status"</span><span class="p">).</span><span class="n">StatusCode</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">apimGatewayUrl</span><span class="p">)</span><span class="s2">/aetherion/api/status"</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   <span class="n">-Headers</span> <span class="p">@{</span> <span class="s1">'Ocp-Apim-Subscription-Key'</span> <span class="p">=</span> <span class="nv">$st</span><span class="p">.</span><span class="n">apimSubscriptionKey</span> <span class="p">}).</span><span class="n">StatusCode</span>
+</code></pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Why it can fix this at all</p>
+<p>Everywhere else today the agent has held write access to Kubernetes and
+nothing else. It can repair the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> because its identity also
+holds <strong>API Management Service Contributor</strong>, scoped to the API
+Management service alone rather than the resource group.</p>
+<p>Narrow enough to fix this, too narrow to touch anything else. That is
+what least privilege looks like when it is actually load-bearing: had it
+been scoped to the resource group, the same repair would have carried the
+authority to change every resource in the environment.</p>
+</div>
+</details>
+<details class="note">
+<summary>Task 6 · Verify every service</summary>
+<ul>
+<li>Confirm each fix from telemetry / health before closing, then check the
+  whole platform is green and <code>/api/flights</code> responds.</li>
+</ul>
+</details>
+</details>
+<h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response">Automate incident response</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response-plans">Incident response plans</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/execute-mitigations">Review and approve mitigations</a></li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">Up next: brief airline leadership</p>
+<p>The incident is technically closed; now leadership needs it closed formally.</p>
+<p><a class="md-button md-button--primary" href="../08-leadership-briefing/">Proceed to Challenge 8 · Leadership Briefing →</a></p>
+</div>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../06-autonomous-and-cost/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 06 · Autonomous Recovery &amp; Sev1 Plan">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                06 · Autonomous Recovery & Sev1 Plan
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../08-leadership-briefing/" class="md-footer__link md-footer__link--next" aria-label="Next: 08 · Leadership Briefing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                08 · Leadership Briefing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "navigation.instant", "navigation.instant.progress", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/consent.js"></script>
+      
+        <script src="../../javascripts/progress.js"></script>
+      
+    
+  </body>
+</html>
