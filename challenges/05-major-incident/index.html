@@ -1823,7 +1823,9 @@ changed, triage the rest by business tier, remediate within the runbook guardrai
 <p class="admonition-title">Start this challenge</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">5</span>
 </code></pre></div>
-<p>Four faults land at once and the board takes two or three minutes to show all of them. Your alert fires a
+<p>If your Sev1 alert from Challenge 4 is still firing, the script <strong>waits (up to about 6 minutes) for it to clear</strong>,
+because a new alert, and so a new agent thread, only appears after the old one resolves. That is normal.
+Then four faults land at once and the board takes two or three minutes to show all of them. Your alert fires a
 few minutes later. Do not triage from a half-drawn picture.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>

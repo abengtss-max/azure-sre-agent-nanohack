@@ -1786,6 +1786,11 @@ yours, so an agent can take (and acknowledge) someone else's incident. Your plan
 <p>It looks like <code>aetherion-major-incident-a1b2c3</code>. It is also in the portal under <strong>Monitor → Alerts →
 Alert rules</strong>, in your resource group.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Your Sev1 alert may fire during this challenge</p>
+<p>The baggage errors count as failed requests, so your alert can fire here too. If your agent opens a
+[Sev1] thread for it after you arm the plan, that is expected. Challenge 5 waits for it to clear before it starts.</p>
+</div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Confirm the symptom.</strong> Verify the baggage errors in the Ops Center and telemetry, so you know what "recovered" looks like.</li>
