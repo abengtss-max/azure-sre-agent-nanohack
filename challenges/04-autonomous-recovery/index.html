@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#challenge-4-autonomous-recovery-and-cost-aware-governance" class="md-skip">
+        <a href="#challenge-4-autonomous-recovery-and-sev1-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -942,10 +942,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1757,163 +1757,104 @@
   
 
 
-<h1 id="challenge-4-autonomous-recovery-and-cost-aware-governance">Challenge 4 · Autonomous Recovery and Cost-Aware Governance<a class="headerlink" href="#challenge-4-autonomous-recovery-and-cost-aware-governance" title="Permanent link">&para;</a></h1>
+<h1 id="challenge-4-autonomous-recovery-and-sev1-plan">Challenge 4 · Autonomous Recovery and Sev1 Plan<a class="headerlink" href="#challenge-4-autonomous-recovery-and-sev1-plan" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 04 of 06 · Act III: Autonomous</p>
-<p><strong>Run mode:</strong> Autonomous (bounded) · <strong>Governance:</strong> bounded <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, no per-action approval · <strong>Time:</strong> ~30 min (+15 min for the optional cost tasks)</p>
-<p><strong>Stage:</strong> Foundation → Operations → <strong>Autonomous</strong> → Major Incident</p>
+<p><strong>Time:</strong> ~30 min (+15 optional cost tasks) · <strong>Run mode:</strong> Autonomous, bounded · <strong>Access:</strong> no per-action approval</p>
 </div>
-<p><strong>Situation.</strong> Every write so far has waited for your approval. Now a minor issue
-appears: the <strong>baggage</strong> service returns intermittent errors to a slice of traffic.
-Bags still move, no flight is grounded, and the fix is one you've already seen. That's
-exactly when it's safe to let the agent run <strong>autonomously</strong> while you supervise.
-Meanwhile <strong>Priya Nair</strong> from FinOps wants to know what autonomy costs before you
-make more of it.</p>
-<p><strong>Mission.</strong> Let the agent recover the baggage service autonomously within
-guardrails, design a cost-aware operating model for its Azure Agent Unit (<abbr title="Agent Activity Unit — the consumption/billing unit for Azure SRE Agent usage.">AAU</abbr>)
-usage, and arm a <strong>Sev1</strong> response plan so the next major incident auto-triggers an
-investigation, before you reach Challenge 5.</p>
+<p><strong>Situation.</strong> Every write so far waited for your approval. Now a minor issue appears: the <strong>baggage</strong>
+service returns errors to a slice of traffic. Bags still move, no flight is grounded, and the fix is one
+you have already seen. That is exactly when it is safe to let the agent act <strong>autonomously</strong> while you
+supervise.</p>
+<p><strong>Mission.</strong> Let the agent recover baggage on its own within guardrails, then arm a <strong>Sev1 response plan
+for your own alert</strong>, so the next major incident triggers your agent before you reach Challenge 5.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>   <span class="c"># open the incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>
 </code></pre></div>
-<p>Give it a couple of minutes. The errors only show up once enough traffic has
-hit the affected slice for the board to average it.</p>
+<p>Give it a couple of minutes. The errors show once enough traffic has hit the affected slice.
+The script prints <strong>your alert name</strong>. Keep it: you need it in Task 4.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Your alert name is unique to you. Your plan must filter on it.</p>
+<p>Everyone in this subscription has a look-alike Sev1 alert, and <strong>each agent scans every alert in the
+subscription</strong>. A plan filtered only on <em>Sev1</em> reacts to other attendees' alerts, and theirs react to
+yours, so an agent can take (and acknowledge) someone else's incident. Your plan must set
+<strong>Title contains</strong> to <strong>your exact alert name</strong>. Find it with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">(</span><span class="nb">Get-Content</span> <span class="p">./</span><span class="n">scripts</span><span class="p">/.</span><span class="n">env</span><span class="p">.</span><span class="n">aetherion</span><span class="p">.</span><span class="n">json</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span><span class="p">).</span><span class="n">incidentAlertName</span>
+</code></pre></div>
+<p>It looks like <code>aetherion-major-incident-a1b2c3</code>. It is also in the portal under <strong>Monitor → Alerts →
+Alert rules</strong>, in your resource group.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Confirm the symptom.</strong> Verify the baggage errors in the Ops Center and telemetry so you know what "recovered" looks like.</li>
-<li><strong>Decide the bounds, then hand over.</strong> Judge whether this incident is safe to automate, switch to <strong>Autonomous</strong> mode, let the agent fix it end-to-end, then review the action log.</li>
-<li><strong>Optional · See where AAUs go.</strong> Inspect the agent's consumption by thread type and purpose.</li>
-<li><strong>Optional · Design a cost-aware model.</strong> Name concrete reductions without losing reliability or investigation quality.</li>
-<li><strong>Arm the Sev1 response plan.</strong> Connect Azure Monitor as an incident platform, then bind a <strong>Sev1</strong> plan to the pre-provisioned <code>aetherion-major-incident</code> alert so the next major incident auto-triggers. <strong>Challenge 5 does not work without this</strong> — do it before you move on.</li>
+<li><strong>Confirm the symptom.</strong> Verify the baggage errors in the Ops Center and telemetry, so you know what "recovered" looks like.</li>
+<li><strong>Decide the bounds, then hand over.</strong> Judge whether this incident is safe to automate, switch to <strong>Autonomous</strong>, let the agent fix it end to end, then review its action log.</li>
+<li><strong>Connect Azure Monitor.</strong> In <strong>Incidents</strong>, connect Azure Monitor as the incident platform, then delete the quickstart plan it creates.</li>
+<li><strong>Arm the Sev1 plan on your alert.</strong> Severity <strong>Sev1</strong>, <strong>Title contains</strong> = your alert name, Autonomous, no subagent, cooldown off. <strong>Challenge 5 does not work without this.</strong></li>
 </ol>
-<p><img alt="Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery and cost governance" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-6.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<p><img alt="Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-6.webp" /></p>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
 <p class="admonition-title">Paste into the agent chat</p>
-<p>The <code>baggage</code> service is returning intermittent errors to a slice of traffic
-while other requests succeed. Detect the fault, decide the sanctioned reversible
-fix, apply it autonomously, and report exactly what you changed and why it was
-safe to automate.</p>
+<p>The <code>baggage</code> service is returning intermittent errors to a slice of traffic while other requests
+succeed. Detect the fault, decide the sanctioned reversible fix, apply it autonomously, and report
+exactly what you changed and why it was safe to automate.</p>
 </div>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>The agent detects the baggage errors, executes a sanctioned fix autonomously, the service returns to healthy, and you can explain why it was safe to automate: small <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, a reversible and well-understood remedy, a service that is degraded rather than down, and a run mode you chose deliberately.</li>
-<li><em>(Optional, Tasks 3 and 4)</em> You've reviewed real consumption data and produced a written, defensibly balanced operating model: the two largest consumers with their actual figures, at least three named levers each with a trade-off, and an explicit reliability floor. Cost-aware, not merely cheapest. The check does not require it.</li>
-<li>A <strong>Sev1 major-incident response plan</strong> is active on the agent (bound to the pre-provisioned <code>aetherion-major-incident</code> alert), ready to auto-trigger the agent when the next major incident fires.</li>
-<li><code>check-challenge.ps1 4</code> passes.</li>
+<li>The agent fixed baggage autonomously, the service is healthy, and you can say why it was safe to automate: small <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, a reversible remedy, degraded rather than down, and a run mode you chose deliberately.</li>
+<li>One enabled <strong>Sev1</strong> plan exists, with <strong>Title contains</strong> set to <strong>your alert name</strong>, Autonomous, no subagent, and cooldown disabled. The quickstart plan is deleted.</li>
 </ul>
-<details class="warning">
-<summary>Ground truth only</summary>
-<p>Don't invent <abbr title="Agent Activity Unit — the consumption/billing unit for Azure SRE Agent usage.">AAU</abbr> rates, prices, or savings figures. Use only values present in
-the <a href="https://learn.microsoft.com/en-us/azure/sre-agent/pricing-billing">official docs</a>
-or your environment. Don't claim that stopping an agent ends all billing.</p>
-</details>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state, then walks your
-response plan setting by setting. Answer those honestly: a plan that looks
-right and never fires is the one failure that doesn't surface until
-Challenge 5 is already open.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>
 </code></pre></div>
+<p>It grades the end state, then walks your plan setting by setting. A plan that looks right but never fires
+is the one failure you would not see until Challenge 5 is open.</p>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Make autonomy safe.</strong> Confirm the symptom first; you can't judge an autonomous
-recovery without knowing what healthy looks like.</p>
-<p>What makes this one safe to automate isn't a permission setting. It's the shape of
-the incident: one degraded (not down) service, a remedy you can undo in seconds, and
-a <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr> you can describe in a sentence. Decide that <em>before</em> you switch mode,
-then switch to Autonomous and resist helping.</p>
-<p><strong>Cost model and the Sev1 plan.</strong> Optimize what you can measure: look at real
-consumption by thread type and purpose — consolidation, deleting unused pilots,
-model fit, and plan/schedule noise are the biggest levers. Aim for a <em>balanced</em>
-model, not the cheapest. Then wire the <strong>Sev1</strong> response plan now, matching the
-pre-provisioned <code>aetherion-major-incident</code> alert's severity exactly, or you'll be
-wiring it by hand while the board is red in Challenge 5.</p>
+<ul>
+<li>What makes this safe to automate is the <em>shape</em> of the incident, not a permission setting. Decide that <strong>before</strong> you switch mode, then resist helping.</li>
+<li>Set the plan severity to <strong>Sev1</strong> exactly, and <strong>Title contains</strong> to your full alert name. Anything broader catches other people's alerts; anything narrower misses yours.</li>
+<li>Leave the subagent empty so the main agent commands the whole board in Challenge 5.</li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first, and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
 <summary>Task 1 · Confirm the symptom</summary>
-<ul>
-<li>Check the <strong>baggage</strong> tile and telemetry (<abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed
-  requests) so you know the current error rate and what "recovered" means.</li>
-<li>Some requests succeed and some fail. Ask the agent what is different about
-  the ones that fail — the answer is in what sits behind the Service, not in
-  the Service itself.</li>
-<li><code>kubectl get pods -n aetherion -l app=baggage --show-labels</code> shows the same
-  thing directly, if you want to confirm the agent's account.</li>
-</ul>
+<p>Check the <strong>baggage</strong> tile and <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed requests. Some requests succeed and some fail:
+ask the agent what is different about the failing ones. The answer is behind the Service, not in it.
+<code>kubectl get pods -n aetherion -l app=baggage --show-labels</code> shows the same.</p>
 </details>
 <details class="note">
 <summary>Task 2 · Decide the bounds, then hand over</summary>
-<ul>
-<li>Write down the bounds first: what may the agent change, what must it never
-  touch, and how would you undo it? That judgement is the governance here.</li>
-<li>Set the run mode to <strong>Autonomous</strong> (on the response plan / task), then let
-  the agent detect → decide → fix on its own. Review the action log after.</li>
-</ul>
+<p>Write down what the agent may change, what it must never touch, and how you would undo it. Set the run
+mode to <strong>Autonomous</strong>, let it detect, decide and fix, then review the action log.</p>
 <div class="admonition note">
-<p class="admonition-title">\"Never delete\" applies to data, not to a bad revision</p>
-<p>Aetherion's guardrails forbid deleting <strong>data resources</strong>: databases,
-caches, storage. Removing a workload revision that shouldn't be serving
-is an ordinary, reversible rollback, and it is the sanctioned fix here.</p>
+<p class="admonition-title">\"Never delete\" means data, not a bad revision</p>
+<p>The guardrails forbid deleting <strong>data resources</strong> (databases, caches, storage). Removing a workload
+revision that should not be serving is an ordinary, reversible rollback and the sanctioned fix.</p>
 </div>
 </details>
 <details class="note">
-<summary>Task 3 · See where AAUs go</summary>
-<ul>
-<li>In the agent, open <strong>Settings → Agent Consumption</strong> and read the breakdown
-  by thread type (Chats, Incidents, Scheduled tasks, Triggers) and by thread.</li>
-<li><strong>Write down the two largest consumers and their actual figures.</strong> Task 4
-  is only worth doing against real numbers, and "incidents cost more than
-  chats" is a guess until you have looked.</li>
-</ul>
-</details>
-<details class="note">
-<summary>Task 4 · Design a cost-aware model</summary>
-<p>Produce something a finance partner could actually review, not an essay.
-Ask the agent for it, then correct it against what you saw in Task 3:</p>
-<blockquote>
-<p>Using my agent consumption figures, draft a cost-aware operating model
-as a table: each row a named lever, what it would save, and what it
-costs us in reliability, ownership, isolation or investigation quality.
-Add one line stating the floor we will not go below. Use only the
-figures I give you and do not invent numbers.</p>
-</blockquote>
-<p><strong>It has to contain, at minimum:</strong></p>
-<ul>
-<li><strong>Three named levers</strong> with a real figure attached to each — for example
-  consolidating workloads under one agent, deleting unused pilot agents,
-  matching the model to the task, or trimming noisy response plans and
-  schedules.</li>
-<li><strong>A reliability floor</strong> stated explicitly: the thing you will not trade
-  away to save AAUs. Cheapest is not the target.</li>
-</ul>
-<p>Keep it: it is useful material for the leadership briefing in Challenge 6.
-<code>check-challenge.ps1 4</code> does not grade it.</p>
-</details>
-<details class="note">
-<summary>Task 5 · Arm the Sev1 response plan</summary>
-<p><strong>Connect an incident platform first.</strong> Response plans do not exist until
-you do, and this catches people out.</p>
+<summary>Task 3 · Connect Azure Monitor</summary>
 <ol>
-<li><strong>Incidents</strong> in the left-hand menu → <strong>Triggers + response plans</strong>.</li>
-<li><strong>Connect an incident platform</strong> → <strong>Azure Monitor</strong> → <strong>Save</strong>. It
-   configures itself from your agent's scope, so there is nothing to fill in.
-   You'll see <strong>Azure Monitor is connected</strong> in the top right when it's done.</li>
-<li><strong>Delete the quickstart plan.</strong> Connecting a platform automatically
-   creates a default <strong>quickstart</strong> response plan. Leave it there and it
-   runs alongside yours, which can route the incident to the wrong agent
-   or process it twice. Select it and delete it before you continue.</li>
-<li><strong>+ Create a response plan</strong>.</li>
+<li><strong>Incidents</strong> → <strong>Triggers + response plans</strong> → <strong>Connect an incident platform</strong> → <strong>Azure Monitor</strong> → <strong>Save</strong>.</li>
+<li>Connecting creates a default <strong>quickstart</strong> plan for Sev3. <strong>Delete it</strong>: left in place it runs alongside
+   yours and can route an incident to the wrong place or process it twice.</li>
 </ol>
-<p>Fill it in as follows:</p>
+<div class="admonition warning">
+<p class="admonition-title">If it says it cannot assign a role</p>
+<p>The agent needs <strong>Monitoring Contributor</strong> on the subscription to scan alerts, and you only own your
+resource group. Tell your proctor: they run a script that grants it. Then retry.</p>
+</div>
+</details>
+<details class="note">
+<summary>Task 4 · Arm the Sev1 plan on your alert</summary>
+<p><strong>+ Create a response plan</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -1923,7 +1864,7 @@ you do, and this catches people out.</p>
 </thead>
 <tbody>
 <tr>
-<td>Incident response plan name</td>
+<td>Plan name</td>
 <td><code>aetherion-major-incident-sev1</code></td>
 </tr>
 <tr>
@@ -1931,12 +1872,16 @@ you do, and this catches people out.</p>
 <td><strong>Sev1</strong></td>
 </tr>
 <tr>
-<td>Title contains / does not contain</td>
+<td><strong>Title contains</strong></td>
+<td><strong>your exact alert name</strong> (for example <code>aetherion-major-incident-a1b2c3</code>)</td>
+</tr>
+<tr>
+<td>Title does not contain</td>
 <td>leave empty</td>
 </tr>
 <tr>
 <td><strong>Response subagent</strong></td>
-<td><strong>leave empty</strong></td>
+<td>leave empty</td>
 </tr>
 <tr>
 <td><strong>Agent autonomy level</strong></td>
@@ -1944,71 +1889,37 @@ you do, and this catches people out.</p>
 </tr>
 <tr>
 <td><strong>Alert reinvestigation cooldown</strong></td>
-<td><strong>disable it</strong></td>
+<td><strong>disable</strong> (it defaults to 3 hours and would silently block a re-run)</td>
 </tr>
 </tbody>
 </table>
-<p>Then <strong>Next</strong> to see <strong>Incidents preview</strong>, and create.</p>
-<p><strong>Severity is the whole match.</strong> The environment pre-provisions
-<code>aetherion-major-incident</code> at <strong>Sev1</strong>, so a plan filtered to anything else
-catches nothing and a broader plan fires on everything. Leave the title
-filters empty. They are an extra way to miss the alert, not an extra
-safeguard.</p>
-<div class="admonition tip">
-<p class="admonition-title">Why not route it to your <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> specialist?</p>
-<p>The <strong>Response subagent</strong> dropdown is populated by any subagent you
-built (Extra B is an optional extra), so it is tempting to select
-<code>aks-triage</code> here if you have one. Don't.</p>
-<p>Challenge 5's incident spans <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr>, API Management <strong>and</strong> PostgreSQL.
-Handing the auto-triggered investigation to an <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr>-only specialist
-scopes it to one tier of a four-tier incident. Leave it empty so the
-main agent commands the whole board, and delegate to the specialist
-<em>within</em> the incident instead.</p>
-<p>Deciding <em>not</em> to use a tool you just built is a real operational
-judgement, and this is the moment to make it.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Turn the cooldown off for this workshop</p>
-<p><strong>Alert reinvestigation cooldown</strong> defaults to enabled at 3 hours: the
-plan skips reinvestigation if the same plan already started one inside
-that window. Sensible in production, wrong here. Re-run Challenge 5
-and the plan silently will not fire the second time.</p>
-</div>
-<div class="admonition danger">
-<p class="admonition-title">Choose Autonomous, and understand what you are choosing</p>
-<p>Selecting <strong>Autonomous</strong> shows an information icon. Open it and read the
-<strong><abbr title="SRE Agent run mode where it executes approved classes of action without pausing for each step.">Autonomous mode</abbr> acknowledgment</strong> before you accept: it covers the
-agent's boundaries, the model's limitations, and the fact that scoping
-its access and reviewing its outcomes remain your responsibility.</p>
-<p>In production you would start at <strong>Review</strong> and only promote a plan to
-<strong>Autonomous</strong> once you trust its tool selection. You are promoting it
-after one supervised autonomous recovery in this challenge, which is
-faster than you should move on a real platform. That is a deliberate
-trade so Challenge 5 can show you what unattended response looks like.</p>
-</div>
-<p><strong>Autonomy level is per plan</strong>, separate from the agent's own run mode. At
-<strong>Autonomous</strong>, the auto-triggered investigation can mitigate without waiting
-for you. It will not fix everything: it acts where the fix is unambiguous and
-reversible, and leaves the judgement calls. Challenge 5 is built around that
-split, and your first job there is to audit what it decided to do alone.</p>
-<p>Do this <strong>now</strong>. Challenge 5 depends on it auto-triggering, and
-<code>check-challenge.ps1 4</code> will ask you about each of the six settings above
-one at a time. Every one of them is a way to end up with a plan that is
-listed, looks correct, and quietly matches nothing.</p>
+<p>Then <strong>Next</strong> and create. The thread title will read <code>[Sev1] &lt;your alert name&gt;</code>.</p>
+</details>
+<details class="note">
+<summary>Optional · Where do the AAUs go?</summary>
+<p>Open <strong>Settings → Agent Consumption</strong>, note the two largest consumers with real figures, then ask:</p>
+<blockquote>
+<p>Using my consumption figures, draft a cost-aware operating model as a table: each row a named lever,
+what it saves, and what it costs in reliability or investigation quality. End with the floor we will
+not go below. Use only my figures; invent no numbers.</p>
+</blockquote>
+<p>Aim for three levers with a trade-off each, and an explicit reliability floor. Cheapest is not the target.
+Not graded; useful for the Challenge 6 briefing. Use only
+<a href="https://learn.microsoft.com/en-us/azure/sre-agent/pricing-billing">official pricing</a>: do not claim that
+stopping an agent ends all billing.</p>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/run-modes">Run modes</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/pricing-billing">Pricing and billing</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response-plans">Incident response plans</a></li>
+<li><a href="https://sre.azure.com/docs/capabilities/azure-monitor-alerts">Azure Monitor alerts</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: the final major incident</p>
-<p>Your Sev1 plan is armed at <strong>Autonomous</strong>. When everything breaks at once, the agent triggers itself and starts working the incident before anyone pages you. You arrive second, and your first job is to audit what it already did.</p>
+<p class="admonition-title">Up next: the major incident</p>
+<p>Your plan is armed on your alert. In Challenge 5 several services fail at once, and your agent is already
+acting when you arrive.</p>
 <p><a class="md-button md-button--primary" href="../05-major-incident/">Proceed to Challenge 5 · Final Major Incident →</a></p>
 </div>
-<hr />
 
 
 

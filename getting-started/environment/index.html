@@ -1965,9 +1965,31 @@ given. It reads your environment and prepares the local files the challenge
 scripts need:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">attach-environment</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ResourceGroup</span> <span class="p">&lt;</span><span class="n">your-resource-group</span><span class="p">&gt;</span>
 </code></pre></div>
-<p>It prints your Ops Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> addresses when it finishes. Note your
-<strong>resource group name</strong>: you need it in Challenge 1 to scope the agent, and you must
-scope the agent to <strong>your</strong> resource group only.</p>
+<p>It prints your Ops Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> addresses and <strong>your alert name</strong>. Note these two:</p>
+<table>
+<thead>
+<tr>
+<th>You need</th>
+<th>Where</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Resource group name</strong></td>
+<td>Challenge 1</td>
+<td>Scope the agent to <strong>your</strong> group only</td>
+</tr>
+<tr>
+<td><strong>Alert name</strong> (etherion-major-incident-xxxxxx)</td>
+<td>Challenge 4</td>
+<td>Your response plan must filter on it, because other attendees in this subscription have look-alike alerts</td>
+</tr>
+</tbody>
+</table>
+<p>You can print the alert name again at any time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">(</span><span class="nb">Get-Content</span> <span class="p">./</span><span class="n">scripts</span><span class="p">/.</span><span class="n">env</span><span class="p">.</span><span class="n">aetherion</span><span class="p">.</span><span class="n">json</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span><span class="p">).</span><span class="n">incidentAlertName</span>
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Use the wait. Read about the airline.</p>
 <p>Read <strong><a href="../overview/">Meet Aetherion</a></strong> now: who you are, what the airline does, and
@@ -1978,6 +2000,11 @@ looking at.</p>
 <p class="admonition-title">Work only in your own resource group</p>
 <p>Other attendees share this subscription. Never scope the agent, run a script, or
 change a resource in a resource group that is not yours.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Choose the Azure OpenAI model provider when you create the agent</p>
+<p>A regulatory requirement: <strong>Azure OpenAI</strong> (the GPT / ChatGPT models) is covered by EU Data Boundary
+commitments. <strong>Anthropic</strong> is not (data may be processed in the United States). Challenge 1 shows where.</p>
 </div>
 <details class="tip">
 <summary>If attach fails</summary>
@@ -2030,7 +2057,7 @@ observability and the Azure <abbr title="Site Reliability Engineering — runnin
 <p>When attach finishes, open the Operations Center address it printed. You're ready
 when it loads with all tiles green.</p>
 <p>Check it on its own at any time:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">04-validate</span><span class="p">.</span><span class="n">ps1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">04-validate</span><span class="p">.</span><span class="n">ps1</span>
 </code></pre></div>
 <p><a class="md-button md-button--primary" href="../overview/">Meet Aetherion →</a></p>
 <hr />

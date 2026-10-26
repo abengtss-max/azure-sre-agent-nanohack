@@ -1180,10 +1180,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1689,10 +1689,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1742,226 +1742,113 @@
 
 
 <h1 id="extra-a-give-the-agent-aetherions-operational-knowledge">Extra A · Give the Agent Aetherion's Operational Knowledge<a class="headerlink" href="#extra-a-give-the-agent-aetherions-operational-knowledge" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Optional extra</p>
-<p>This challenge is optional in the NanoHack. Do it if you finish early. Nothing later depends on it.</p>
-</div>
 <div class="admonition abstract">
 <p class="admonition-title">Extra A · Optional extra</p>
-<p><strong>Run mode:</strong> Review → approved write · <strong>Governance:</strong> every action approved by you · <strong>Time:</strong> ~40 min</p>
-<p><strong>Stage:</strong> Optional. Nothing later depends on it.</p>
+<p><strong>Time:</strong> ~40 min · <strong>Run mode:</strong> Review, approved writes · <strong>Access:</strong> every action approved by you</p>
+<p>Do this if you finish early. Nothing later depends on it.</p>
 </div>
-<p><strong>Situation.</strong> Crew scheduling is failing and <strong>Marco Bianchi</strong> on the crew desk
-can't confirm who is legal to fly the evening wave. The services that share its
-database are wobbling too, so "the database is down" is the obvious call — and it's
-wrong. Out of the box the agent gives generic advice, and a generic "restart the
-database" is exactly what Aetherion's runbooks forbid.</p>
-<p><strong>Mission.</strong> Ground the <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent in Aetherion's architecture and runbooks so it
-recommends the sanctioned fix, then recover <code>crew-scheduling</code> with that
-non-destructive remediation and verify service is restored.</p>
+<p><strong>Situation.</strong> Crew scheduling is failing and <strong>Marco Bianchi</strong> on the crew desk cannot confirm who is legal to
+fly the evening wave. Services that share its database are wobbling too, so "the database is down" is the
+obvious call, and it is wrong. Out of the box the agent gives generic advice, and "restart the database" is
+exactly what Aetherion's runbooks forbid.</p>
+<p><strong>Mission.</strong> Ground the agent in Aetherion's runbooks so it recommends the sanctioned fix, then recover
+<code>crew-scheduling</code> with that non-destructive remediation.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">A</span>   <span class="c"># open the incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">A</span>
 </code></pre></div>
-<p>Crew scheduling degrades within two or three minutes. Its database-backed
-neighbours take longer — the server rides out the first few minutes on burst
-credits before the pressure starts spreading. Read the whole board before you
+<p>Crew scheduling degrades in two or three minutes and its neighbours follow. Read the whole board before you
 draw the <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Find the origin.</strong> Several database-backed services look unhappy. Work out which one is <em>causing</em> it and which are just sharing the damage.</li>
-<li><strong>Ground the agent.</strong> Load Aetherion's <code>knowledge/</code> runbooks, then re-ask the remediation question and watch the advice change.</li>
-<li><strong>Apply the sanctioned fix.</strong> Repair the query path the runbook points to (never delete the database), then confirm crew scheduling recovers.</li>
+<li><strong>Find the origin.</strong> Work out which service <em>causes</em> the database pressure and which merely share the damage.</li>
+<li><strong>Ground the agent.</strong> Load the <code>knowledge/</code> runbooks, then re-ask and watch the advice change.</li>
+<li><strong>Apply the sanctioned fix.</strong> Repair the query path the runbook points to (never delete the database) and confirm crew recovers.</li>
 </ol>
 <p><img alt="Extra A storyboard: Marco, Sam and Aria ground the agent in Aetherion's runbooks" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-4.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
-<p>This challenge uses <strong>two</strong> prompts, and the order matters. Ask the first one
-<strong>before</strong> you load anything, so you have something to compare against.</p>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
+<p>Ask this <strong>before</strong> you load anything, so you have something to compare against.</p>
 <div class="admonition quote">
-<p class="admonition-title">Task 1 · ask this first, ungrounded</p>
-<p><code>crew-scheduling</code> is timing out. The pods aren't CPU-bound and the database is
-not down. Work out what is saturating the shared database, and tell me what
-you would do about it.</p>
+<p class="admonition-title">Paste into the agent chat, ungrounded</p>
+<p><code>crew-scheduling</code> is timing out. The pods aren't CPU-bound and the database is not down. Work out what is
+saturating the shared database, and tell me what you would do about it.</p>
 </div>
-<p>Keep that answer. It is your control group: whatever the agent recommends here, it
-is reasoning from general practice and from your source code, because that is all
-it has. Task 2 gives it Aetherion's own operating rules and asks again.</p>
+<p>Keep that answer as your control. Task 2 asks again with the runbooks loaded.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>You can name the <strong>origin</strong>, the service whose queries are saturating the shared database, and explain why its neighbours are suffering without being at fault.</li>
-<li>The grounded agent cites the runbook guardrail (repair the query path, never delete the database) and you apply that non-destructive fix under approval.</li>
-<li><code>/api/crew</code> is back <strong>inside the 400 ms latency budget while the roster rush is still running</strong>. That is what <code>check-challenge.ps1 A</code> grades. A tile that is merely answering again is not a pass.</li>
+<li>You can name the <strong>origin</strong> service and explain why its neighbours suffer without being at fault.</li>
+<li>The grounded agent cites the runbook guardrail (repair the query path, never delete the database) and you apply that fix under approval.</li>
+<li><code>/api/crew</code> is back <strong>inside the 400 ms budget while the roster rush is still running</strong>. A tile that merely answers again is not a pass.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">A</span>
 </code></pre></div>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>How wide is the <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>?</strong> More than one service is unhappy, but they are
-not equally unhappy, and they have something in common. Ask what they share, then
-ask which of them is <em>using</em> that shared thing hardest. The one generating the
-load is the origin; the rest are collateral.</p>
-<p>Don't judge the neighbours on a single glance. They spike rather than sit
-uniformly slow, so one reading tells you very little — compare a few, against the
-baseline you took in Challenge 1.</p>
-<p>A database that is busy is not the same as a database that is broken.</p>
-<p><strong>Let the runbooks answer.</strong> Load the <code>knowledge/</code> Markdown files from your <strong>lab
-clone</strong> (the application repo doesn't carry them), then re-ask and watch the advice
-turn Aetherion-specific.</p>
-<p>Before you reach for a remedy, work out <strong>which layer is saturated</strong>. If the pods
-are comfortable and the database is not, adding pods or connections just sends more
-work to the part that is already at its limit.</p>
+<ul>
+<li>More than one service is unhappy, but not equally. Ask what they share, then which of them <em>uses</em> it hardest: that one is the origin. Compare several readings against your baseline, because the neighbours spike rather than sit slow.</li>
+<li>A busy database is not a broken one. If the pods are comfortable and the database is not, adding pods or connections only sends more work to the part already at its limit.</li>
+<li>Load the runbooks from your <strong>lab clone's</strong> <code>knowledge/</code> folder (the application repo does not carry them).</li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first, and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
 <summary>Task 1 · Find the origin</summary>
-<ul>
-<li>Read the Operations Center. <code>crew-scheduling</code> is in seconds, not
-  milliseconds. Its database-backed neighbours — <code>flight-ops</code>, <code>booking</code>,
-  <code>telemetry-ingest</code> — are still serving, but compare them against the
-  baseline you took in Challenge 1 and you'll find them spiking well above
-  it. <code>baggage</code>, the one service that touches no database, is flat.</li>
-<li>That is the shape of a shared-dependency problem: one service in real
-  trouble, its neighbours wobbling, and anything that doesn't share the
-  dependency completely unaffected. The wobble is what tells you the
-  database is involved; the fact that only one service is <em>in trouble</em>
-  tells you the database is not the culprit.</li>
-<li>Compare the layers. Ask the agent to put pod CPU next to the PostgreSQL
-  server's CPU. If the pods are comfortable and the database is not, the
-  constraint is the work being sent to it, not the workload itself.
-  (<code>kubectl top pods -n aetherion</code> and the server's metrics in the portal
-  will confirm it independently, if you want to see it yourself.)</li>
-<li>Now ask which service is sending that work. Only one is running a request
-  rush against a table it can no longer read efficiently.</li>
-</ul>
-<div class="admonition tip">
-<p class="admonition-title">Give it time before you judge the neighbours</p>
-<p>The neighbours don't degrade immediately. The database is a Burstable
-tier, so it absorbs the first few minutes on CPU credits and only starts
-spreading the pain once those run down. If you look within a couple of
-minutes of starting the challenge you'll see one red service and three
-healthy ones — which is a different, and wrong, conclusion.</p>
-</div>
+<p><code>crew-scheduling</code> is in seconds. Its database-backed neighbours (<code>flight-ops</code>, <code>booking</code>, <code>telemetry-ingest</code>)
+still serve but spike above your Challenge 1 baseline. <code>baggage</code>, which uses no database, stays flat. That is
+a shared-dependency problem: one service in trouble, neighbours wobbling.</p>
+<p>Ask the agent to put pod CPU next to the PostgreSQL server CPU (<code>kubectl top pods -n aetherion</code> confirms it).
+Comfortable pods and a saturated database mean the constraint is the work sent to it. Only one service is
+running a rush against a table it can no longer read efficiently. Give it a few minutes before you judge the
+neighbours: one early glance shows one red service and three healthy ones, which is the wrong conclusion.</p>
 </details>
 <details class="note">
 <summary>Task 2 · Ground the agent</summary>
-<ul>
-<li>In the agent, open <strong>Builder → Knowledge Sources</strong> and add Aetherion's
-  runbooks from your <strong>lab clone's</strong> <code>knowledge/</code> folder (architecture,
-  escalation, ops guide, platform standards, and the <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> / <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> / database
-  runbooks). The application repo does not contain them.</li>
-</ul>
+<p><strong>Builder → Knowledge Sources</strong>: add the runbooks from your lab clone's <code>knowledge/</code> folder.</p>
 <div class="admonition warning">
-<p class="admonition-title">Upload them one at a time, and don't trust the tick</p>
-<p>Uploading all seven at once can lose the last file: the indexer starts
-before the final upload lands, and the file it drops is
-<code>runbook-database.md</code> — the one this challenge needs. The Knowledge
-Sources page will still show it as <strong>Indexed</strong>.</p>
-<p>Add them individually, or add the others first and
-<code>runbook-database.md</code> on its own at the end. If the agent later answers
-without ever citing a runbook, delete that file and re-add it alone.</p>
+<p class="admonition-title">Add them one at a time, and do not trust the tick</p>
+<p>Uploading all seven together can lose the last file, <code>runbook-database.md</code>, which is the one you need,
+while the page still says <strong>Indexed</strong>. Add the others first and that one alone at the end. If the agent
+later answers without citing a runbook, delete it and re-add it alone.</p>
 </div>
-<ul>
-<li>
-<p>Now ask the remediation question again, in a <strong>new chat thread</strong>. A fresh
-  thread matters: in the old one the agent can simply restate its earlier
-  answer and look grounded when nothing has changed.</p>
+<p>Then ask again in a <strong>new chat thread</strong> (in the old one it can restate its earlier answer):</p>
 <blockquote>
-<p><code>crew-scheduling</code> is timing out. The pods aren't CPU-bound and the
-database is not down. Work out what is saturating the shared database,
-and tell me what you would do about it. Use the Aetherion runbooks I
-have loaded, cite the guardrail you are following, and do not delete or
-restart the database.</p>
+<p><code>crew-scheduling</code> is timing out. The pods aren't CPU-bound and the database is not down. Work out what is
+saturating the shared database. Use the Aetherion runbooks I loaded, cite the guardrail you follow, and do
+not delete or restart the database.</p>
 </blockquote>
-</li>
-</ul>
-<p>Compare it against the answer you kept from Task 1. You are looking for
-  the things only Aetherion knows: what you are forbidden from doing, what
-  the escalation path is, and why the obvious remedies are wrong here. If the
-  two answers are identical, the knowledge isn't reaching the agent — check
-  the indexing warning above before you go further.</p>
+<p>Compare with your control. You want what only Aetherion knows: what is forbidden, the escalation path, and why
+the obvious remedies are wrong. If the answers are identical, the knowledge is not reaching the agent.</p>
 </details>
 <details class="note">
 <summary>Task 3 · Apply the sanctioned fix</summary>
+<p>Follow the runbook: <strong>repair the query path</strong>. The autoscaler is not adding <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr> (pod CPU is below target),
+which rules out scaling and a wider <abbr title="A fixed set of reusable database connections; when it is exhausted, requests queue or fail.">connection pool</abbr>. The fix is a schema change, so keep the agent in <strong>Review</strong>,
+tell it to apply, and approve. Then confirm <code>/api/crew</code> is <strong>fast</strong>, not merely answering.</p>
 <ul>
-<li>Follow the runbook: <strong>repair the query path</strong>. Do <strong>not</strong> delete or restart
-  the database.</li>
-<li>Note what the autoscaler is doing. It is not adding <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>, because pod
-  CPU is below target: the pods are waiting, not working. That rules out
-  scaling as the remedy, and widening the <abbr title="A fixed set of reusable database connections; when it is exhausted, requests queue or fail.">connection pool</abbr> with it.</li>
-<li>The remedy is a schema change, so apply it under approval (keep the agent
-  in <strong>Review</strong> and approve the write). Then verify <code>/api/crew</code> is fast
-  again, not merely answering.</li>
+<li><strong>Expect two approvals.</strong> The fix runs as a Kubernetes Job, so you approve the Job and, separately, the
+  <code>postgres:16-alpine</code> image it pulls. The second card is not a duplicate.</li>
+<li><strong>It needs Code Access from Challenge 1.</strong> The agent applies the manifest from your copy over HTTPS at a
+  pinned commit. Other routes fail (stdin and its own checked-out copy are rejected).</li>
+<li>The agent may offer to <strong>update the runbook</strong> afterwards. <strong>Skip</strong> keeps the lab stable; <strong>Update runbook</strong>
+  shows what it would write.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Expect two approvals, not one</p>
-<p>The fix runs as a Kubernetes Job, so you approve the Job itself <strong>and</strong>
-the container image it pulls (<code>postgres:16-alpine</code>) as a separate step.
-The second card is not a duplicate of the first — running someone else's
-image against your database is its own decision, and the agent is right
-to ask twice.</p>
-</div>
-<p>Remember that the agent will describe the plan and wait. Tell it to apply
-before you expect an approval card.</p>
-<div class="admonition warning">
-<p class="admonition-title">This step needs Code Access from Challenge 1</p>
-<p>The agent applies the fix by pointing <code>kubectl</code> at the manifest <strong>in
-your copy</strong>, fetched over HTTPS at a pinned commit. Every other route
-fails, which is worth knowing before you watch it try them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Failed]    kubectl create -f -                      # stdin is rejected
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>[Failed]    kubectl create -f .../codeRefs/...       # its own checked-out copy is rejected
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>[Completed] kubectl create -f https://raw.githubusercontent.com/&lt;you&gt;/...
-</code></pre></div>
-<p>It has no cluster-admin credential to fall back on, by design. So if
-<strong>Builder → Code Access</strong> is not connected and synced, this task
-dead-ends: the agent produces the correct diagnosis and the correct
-manifest, then reports something like <em>"the managed Kubernetes channel
-drops manifests and the identity lacks <code>listClusterAdminCredential</code>"</em>.</p>
-<p>That is the symptom of a missing Challenge 1 step, not a broken
-remediation. Go back and connect the repo rather than granting the
-agent cluster-admin.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">It may offer to fix the runbook, unprompted</p>
-<p>Somewhere around here the agent often volunteers something like:</p>
-<blockquote>
-<p><strong>Runbook gap</strong> — <em>Should I add preflight checks and post-index
-verification steps to the crew roster maintenance runbook?</em>
-<strong>1. Update runbook</strong> · <strong>2. Skip</strong></p>
-</blockquote>
-<p>Nobody asked it to. It noticed that the runbook it just followed was
-missing steps it had to work out for itself, and offered to close the
-gap while the context was fresh.</p>
-<p>Either answer is fine here. <strong>Skip</strong> keeps today's runbook stable for
-the rest of the lab, which is the tidier choice; <strong>Update runbook</strong>
-shows you what it would write. Answering "Skip" only declines the
-runbook edit — your remediation plan is unaffected.</p>
-<p>Worth noticing either way: this is Challenge 6's closing set piece —
-<em>open a pull request that fixes the runbook that failed you</em> — arriving
-four challenges early, on the agent's own initiative. The formal
-version, with the change reviewed on your repo, is Task 6 there.</p>
-</div>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/connect-knowledge">Connect knowledge</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/memory">Memory and knowledge</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/execute-mitigations">Review and approve mitigations</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: make investigation &amp; recovery reusable</p>
-<p>You've worked several <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> incidents the same way, so it's time to build a specialist and encode a recovery so both are reusable.</p>
+<p class="admonition-title">Up next: make it reusable</p>
+<p>Build a specialist subagent and encode this recovery as a skill.</p>
 <p><a class="md-button md-button--primary" href="../extra-b-engineer-the-agent/">Proceed to Extra B · Engineer the Agent →</a></p>
 </div>
-<hr />
 
 
 

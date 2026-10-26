@@ -722,10 +722,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1760,265 +1760,122 @@
 <h1 id="challenge-1-onboard-the-agent-and-establish-the-baseline">Challenge 1 · Onboard the Agent and Establish the Baseline<a class="headerlink" href="#challenge-1-onboard-the-agent-and-establish-the-baseline" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 01 of 06 · Act I: Foundation</p>
-<p><strong>Run mode:</strong> Review · <strong>Access:</strong> scoped to one resource group · <strong>Time:</strong> ~45 min</p>
-<p><strong>Stage:</strong> <strong>Foundation</strong> → Operations → Autonomous → Major Incident</p>
+<p><strong>Time:</strong> ~45 min · <strong>Run mode:</strong> Review · <strong>Access:</strong> your resource group only</p>
 </div>
-<p><strong>Situation:</strong> You are <strong>Sam Rivera</strong>, on your first shift as a reliability engineer
-at Aetherion AirOps. Every service tile is green. Beside you is <strong>Aria</strong>, the Azure
-<abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent — a new teammate with no access to anything yet.</p>
-<p><strong>Mission:</strong> Connect the <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent scoped to your resource group in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>,
-capture a validated operational baseline, and schedule a proactive daily health
-check.</p>
-<p><em>New here? <a href="../../getting-started/overview/">Meet Aetherion</a> introduces the airline
-and the people you'll be working with — two minutes, and the rest of the day makes
-more sense.</em></p>
+<p><strong>Situation.</strong> You are <strong>Sam Rivera</strong>, on your first shift as a reliability engineer at
+Aetherion AirOps. Every tile is green. Beside you is <strong>Aria</strong>, the Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent: a new
+teammate with no access to anything yet.</p>
+<p><strong>Mission.</strong> Create the agent on the <strong>Azure OpenAI</strong> model provider, scope it to your resource
+group in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>, capture a healthy baseline, and schedule a daily health check.</p>
+<p><em>New here? <a href="../../getting-started/overview/">Meet Aetherion</a> takes two minutes.</em></p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">1</span>   <span class="c"># sets the scene (Challenge 1 injects no fault)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">1</span>
 </code></pre></div>
-<p>No fault is injected, so the board stays green. If your Operations Center is
-<strong>not</strong> all-green, reset first with <code>./scripts/reset-environment.ps1</code>.</p>
-<details class="warning">
-<summary>Baseline on a clean board</summary>
-<p>A baseline captured while the platform is degraded quietly breaks Challenges
-2 and 3, because every later comparison is measured against it. If the board
-was recently red, reset and let telemetry settle for a few minutes before you
-capture anything.</p>
-</details>
+<p>No fault is injected. If the Operations Center is not all green, run
+<code>./scripts/reset-environment.ps1</code> and wait a few minutes before you capture a baseline.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Model provider: select Azure OpenAI (GPT / ChatGPT). Never Anthropic.</p>
+<p>Regulatory requirement. The create wizard labels <strong>Azure OpenAI</strong> as <em>Covered by EU Data Boundary
+commitments</em>. <strong>Anthropic</strong> is labelled <em>Excluded from EU Data Boundary</em>: data may be processed in the
+United States. Check the label before you click <strong>Next</strong>. You can see and change the provider later in the
+agent's settings, so confirm it there too.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Check the board.</strong> Read the Operations Center once while it's green. That's your reference for the rest of the day.</li>
-<li><strong>Confirm telemetry is flowing.</strong> Open <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> and check that <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> and <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> are reporting.</li>
-<li><strong>Connect the agent.</strong> Create the <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent in your resource group and give it read access to your code, logs, and Azure resources, in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>. Point <strong>Code</strong> at your own copy of <code>aetherion-airops-platform</code> — <strong>never</strong> at the lab repo.</li>
-<li><strong>Capture the baseline.</strong> Ask the agent for a baseline of the <code>aetherion</code> namespace, then spot-check its numbers. Trust the measured latency; verify the configuration.</li>
-<li><strong>Put it on a schedule.</strong> Have the agent re-run that health check every morning so drift shows up before it turns into an incident.</li>
+<li><strong>Check the board.</strong> Read the Operations Center while it is green. That is your reference for the day.</li>
+<li><strong>Confirm telemetry.</strong> Open <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> and check that <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> and <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> are reporting.</li>
+<li><strong>Create the agent.</strong> In <strong>your</strong> resource group, on <strong>Azure OpenAI</strong>, in <strong>Review</strong> mode. Give it read access to your code, logs and resource group.</li>
+<li><strong>Capture the baseline.</strong> Ask the agent for a baseline of the <code>aetherion</code> namespace, then spot-check its numbers.</li>
+<li><strong>Schedule it.</strong> Have the agent re-run that check every morning so drift shows up early.</li>
 </ol>
 <p><img alt="Challenge 1 storyboard: Sam and Aria onboard the SRE Agent and read the baseline" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-1.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
 <p class="admonition-title">Paste into the agent chat</p>
-<p>Generate an operational baseline for the <code>aetherion</code> namespace, including:
-running services and ready <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts; dependencies (which services use
-PostgreSQL and Redis, and what sits behind the API); normal latency for the
-booking service (which serves check-in) and the flight board; and the top
-operational signals to watch.
-Support every finding with telemetry evidence, and make no changes.</p>
+<p>Generate an operational baseline for the <code>aetherion</code> namespace: running services and ready
+<abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>; dependencies (PostgreSQL, Redis, what sits behind the API); normal latency for
+<code>booking</code> (check-in) and the flight board; and the top signals to watch. Support every
+finding with telemetry and make no changes.</p>
 </div>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>All service tiles are healthy and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> shows live metrics.</li>
-<li>The agent is connected to your resource group in <strong>Review</strong> mode, can list every resource, and asks for approval before any change.</li>
-<li>You hold a validated baseline, captured while the platform was healthy, whose <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts and latency match the Ops Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>.</li>
-<li>A scheduled daily health check exists, with a sensible drift threshold.</li>
+<li>All tiles are healthy and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr> shows live metrics.</li>
+<li>The agent uses the <strong>Azure OpenAI</strong> provider, is scoped to <strong>your</strong> resource group only, and runs in <strong>Review</strong> mode.</li>
+<li>You hold a baseline captured while healthy, and its <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts and latency match the Ops Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>.</li>
+<li>A scheduled daily health check exists.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">1</span>
 </code></pre></div>
-<p>Two of the checks are yes/no questions about the agent connection and your
-baseline — answer them honestly, they aren't graded from the environment.</p>
+<p>Two of the checks are yes/no questions about the connection and your baseline. Answer honestly.</p>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Orientation &amp; the agent.</strong> Load the Operations Center first and let it settle.
-Create the agent in the <strong>same resource group</strong> as the platform, keep it at
-<abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr>/Review, and ask it an open question about the resource group to confirm
-scope. A write request should produce an approval prompt, not an action.</p>
-<p><strong>Baseline &amp; proactive.</strong> Ask one specific question about namespace health rather
-than browsing pod-by-pod, and cross-check <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts and latency against the
-tiles and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>. Keep the baseline somewhere you can find it again mid-incident,
-and schedule the same read-only check so the agent watches for drift on its own.</p>
+<ul>
+<li>Create the agent in the <strong>same resource group</strong> as the platform and keep it in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>.</li>
+<li>Ask one specific question about namespace health rather than browsing pod by pod.</li>
+<li>Trust measured latency; verify configuration values (CPU limits, <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts) yourself.</li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first and skim the hints above. When you
-want the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
-<summary>Task 1 · Check the board</summary>
-<ul>
-<li>Open the <strong>Operations Center</strong> (the provisioner prints its URL, and it's
-  already in your browser tabs from setup).</li>
-<li>Confirm every service tile is <strong>green</strong>. Note the overall state and a
-  couple of latency numbers. This is your healthy reference for the day.</li>
+<summary>Task 3 · Create the agent</summary>
+<ol>
+<li>Portal → <strong>Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</strong> → <strong>Create</strong>. <strong>Subscription</strong>: the one your facilitator gave you.
+   <strong>Resource group</strong>: <strong>your</strong> group (<code>rg-aetherion-nano-…</code>). <strong>Region</strong>: Sweden Central.</li>
+<li><strong>Agent name</strong>: <code>aetherion-sre-agent</code>. It must not share its first 15 characters with your resource group name.</li>
+<li><strong><abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr></strong>: <strong>Create new</strong> (the agent's own, separate from the app's).</li>
+<li><strong>Model provider</strong>: choose <strong>Azure OpenAI</strong> and confirm it says <em>Covered by EU Data Boundary commitments</em>.</li>
+<li><strong>Review + create</strong> → <strong>Create</strong>, then <strong>Full setup</strong> and connect:<ul>
+<li><strong>Code</strong> → <strong>GitHub</strong> → <strong>Your account</strong> → add <strong>your copy</strong> of <code>aetherion-airops-platform</code>.
+  Code Access only reads the repo, so do not spend your PAT here (it is for Challenge 6).</li>
+<li><strong>Logs</strong> → <strong><abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr> Workspace</strong> → the app's <strong><code>aetherion-law</code></strong> (not the agent's own <code>workspace…</code>).</li>
+<li><strong>Azure resources</strong> → <strong>Resource group</strong> → <strong>only your</strong> group, at <strong><abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr></strong>. Never <em>Subscription</em>; leave out the <code>MC_…</code> group.</li>
 </ul>
-</details>
-<details class="note">
-<summary>Task 2 · Confirm telemetry is flowing</summary>
-<ul>
-<li>Open <strong><abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr></strong> (Azure Managed <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>, linked from your resource group).</li>
-<li>Check the <strong><abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr></strong> and <strong><abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr></strong> panels are showing live
-  data. If a panel looks empty, give it a minute to collect data points.</li>
-</ul>
-</details>
-<details class="note">
-<summary>Task 3 · Connect the agent</summary>
-<p><strong>Create the agent.</strong> Portal → search <strong>Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</strong> → <strong>Create</strong>. On
-<strong>Basics</strong> set your subscription, your <strong>app resource group</strong>
-(<code>rg-aetherion-microhack-&lt;suffix&gt;</code>), a name (<code>aetherion-sre-agent</code>), and
-region. For <strong><abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr></strong> choose <strong>Create new</strong>: The agent
-provisions its own, separate from the app's. For <strong>model provider</strong>,
-<strong>Azure OpenAI</strong> is a good default (lower cost, EU data boundary). Then
-<strong>Review + create</strong> → <strong>Create</strong>.</p>
-<p><strong>Set up your agent</strong> is a separate step. <strong>Create</strong> alone grants no app
-access. Choose <strong>Full setup</strong> and connect:</p>
-<ul>
-<li>
-<p><strong>Code</strong> → <strong>GitHub</strong> → sign in → add <strong>your copy</strong> of <code>aetherion-airops-platform</code>.</p>
-<p>The <strong>Add repositories</strong> dialog offers three sign-in methods. Choose
-<strong>Your account</strong> and sign in. Code Access only <em>reads</em> the repo, so
-OAuth is enough, and it refreshes itself. Don't spend the PAT you
-created during setup here — that one is for the GitHub MCP connector
-in Challenge 6, and if it expires overnight this connection dies with
-it. <em>Bring your own GitHub App</em> is for org-managed identities and is
-not needed.</p>
+</li>
+<li>Leave <strong>Incidents</strong> and <strong>Knowledge</strong> for later. Connecting Incidents now adds a quickstart plan you would have to clean up.</li>
+</ol>
 <div class="admonition danger">
 <p class="admonition-title">Your copy, never the lab repo</p>
-<p>The lab repo holds the challenge material: the fault scripts, the
-answers and the runbooks. Connect the agent to it and it can read
-how every incident today is caused and cured, which spoils the
-whole hack. It must only ever see
+<p>The lab repo holds the answers and fault scripts. The agent must only see
 <code>&lt;your-account&gt;/aetherion-airops-platform</code>.</p>
 </div>
-</li>
-<li>
-<p><strong>Logs</strong> → <strong><abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr> Workspace</strong> → pick the app's <strong><code>aetherion-law</code></strong>.
-  The agent created its own workspace when you deployed it, named
-  <code>workspace&lt;random&gt;</code>; that one holds the agent's telemetry, not the
-  application's.</p>
-</li>
-<li><strong>Azure resources</strong> → <strong>Resource group</strong> → select <strong>only your app
-  resource group</strong> at the <strong><abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr></strong> level. Do <strong>not</strong> pick <em>Subscription</em>
-  or <em>Management group</em>. You'll also see an <code>MC_...</code> group that <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> created
-  for the cluster's nodes — leave it out, nothing here needs it.</li>
-</ul>
-<p>Two of the five cards are deliberately left for later. <strong>Incidents</strong> is
-connected in Challenge 4; connecting it now also creates a quickstart
-response plan you would have to clean up before the final incident.
-<strong>Knowledge files</strong> are loaded in Extra A.</p>
-<div class="admonition tip">
-<p class="admonition-title">Finish setup before you start chatting</p>
-<p>When the agent finishes deploying, the portal opens a <strong>Team onboarding</strong>
-chat and invites you to start talking to it. You can chat before the
-context connections are done — it will answer, just with less to work
-with.</p>
-<p>Give it the full picture first, so Challenge 3 can correlate a rollback
-to a commit and Extra A can read container logs:</p>
-<ul>
-<li><strong>Builder → Code Access</strong> lists <code>github.com</code> as <strong>Connected</strong> and your
-  <code>aetherion-airops-platform</code> copy as <strong>Ready</strong>, with a recent sync time.</li>
-<li><strong>Builder → Connectors</strong> shows a <strong><abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr></strong> connector.</li>
-</ul>
-<p>If either is missing, reopen the setup wizard from the agent's
-<strong>Overview</strong> and finish the connection you skipped.</p>
-</div>
-<p><strong>Keep <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr></strong> so the agent proposes actions and waits for approval.
-Its identity is granted Monitoring Contributor plus a reader bundle at
-setup, so the "won't change anything" guarantee comes from <strong><abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr></strong>,
-not from the role being read-only.</p>
-<p><strong>Confirm scope.</strong> Ask:</p>
-<blockquote>
-<p>List the resources in my resource group and summarize what this
-application does.</p>
-</blockquote>
-<p>Then ask it to <strong>restart a deployment</strong>. In <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr> it must ask for
-approval, not act.</p>
-<p><strong>Confirm the connections took.</strong> Ask the agent:</p>
-<blockquote>
-<p>Which log sources and code repositories are you connected to right now?</p>
-</blockquote>
-<p>It should name <code>aetherion-law</code> and your repo. If it names neither, the
-<strong>Code</strong> and <strong>Logs</strong> connections did not save, and Challenge 3 and Extra A will
-underperform for reasons that look like agent weakness rather than setup.</p>
+<p><strong>Check it took.</strong> Ask <em>"List the resources in my resource group"</em>, then <em>"Restart a deployment"</em>:
+in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr> it must ask for approval, not act. Ask <em>"Which log sources and repositories are you
+connected to?"</em> It should name <code>aetherion-law</code> and your repo. If <strong>Builder → Code Access</strong> shows your
+repo as <strong>Ready</strong> and <strong>Builder → Connectors</strong> lists <abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr>, you are set.</p>
+<p>The "won't change anything" guarantee comes from <strong><abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr></strong>, not from the role being read-only.</p>
 </details>
 <details class="note">
 <summary>Task 4 · Capture the baseline</summary>
-<ul>
-<li>With the board green, paste the baseline prompt (the <strong>Suggested Azure
-  <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt</strong> above) into the agent chat.</li>
-<li>When it answers, spot-check <strong>2-3 numbers</strong> (<abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts and check-in
-  / booking latency) against the Ops Center tiles and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>.</li>
-<li>If the board was recently degraded, reset and let telemetry settle first,
-  or the baseline will record the fault as "normal".</li>
-</ul>
-<div class="admonition tip">
-<p class="admonition-title">Verify config, trust metrics</p>
-<p>Measured values come straight from telemetry and are reliable.
-Configuration values — CPU requests, limits, <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> counts — are the
-ones that can get attributed to the wrong deployment when the agent is
-summarising several at once.</p>
-<p>That's hard to catch, because the metric beside it is real. "96m against
-a 100m request" reads as a service about to saturate; if the request is
-actually 250m, it's fine. Confirm before you act:</p>
+<p>Paste the prompt above with the board green. Spot-check 2 to 3 numbers (<abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>, <code>booking</code> latency)
+against the tiles and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>. To check a configuration value:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kubectl</span> <span class="n">get</span> <span class="n">deploy</span> <span class="n">gateway</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s1">'{.spec.template.spec.containers[0].resources}'</span>
 </code></pre></div>
-</div>
 </details>
 <details class="note">
-<summary>Task 5 · Put it on a schedule</summary>
-<p>You can schedule the baseline two ways, by asking in chat or from the
-<strong>Scheduled tasks</strong> page in the portal.</p>
-<p><strong>Option A: Ask the agent.</strong> Stay in the <strong>same chat thread</strong> as Task 4 —
-"this baseline" means the one it just measured, and in a fresh thread it
-will stop and ask you which numbers you mean:</p>
+<summary>Task 5 · Schedule it</summary>
+<p>In the <strong>same chat thread</strong> as Task 4, ask:</p>
 <blockquote>
-<p>Schedule this baseline to run every morning at 08:00 UTC and alert me on
-drift from normal.</p>
+<p>Schedule this baseline to run every morning at 08:00 UTC and alert me on drift from normal.</p>
 </blockquote>
-<p>It creates the scheduled task, converts that to a cron expression, and sets
-the drift conditions from the baseline it just measured.</p>
-<p>Include the time zone. If you leave it out the agent will not guess: it
-stops and asks <em>"At which time zone should the daily 08:00 baseline check
-run?"</em> and waits. Answer it and the task is created normally.</p>
-<p><strong>Option B: Configure it in the portal, step by step:</strong></p>
-<ol>
-<li>Open your <strong>Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</strong> resource, then select <strong>Scheduled tasks</strong>
-   in the left sidebar.</li>
-<li>Select <strong>Create task</strong> in the toolbar.</li>
-<li>Fill in the form:<ul>
-<li><strong>Task name</strong>: E.g. <code>Daily baseline health check</code>.</li>
-<li><strong>Task details</strong>: The instruction the agent runs each time, e.g.
-  <em>"Check the health of the <code>aetherion</code> namespace, compare <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr>
-  counts and check-in / booking latency against the recorded baseline,
-  and summarize any drift."</em></li>
-<li><strong>Frequency</strong>: <code>Daily</code> (<code>Weekly</code>, <code>Monthly</code>, or a <code>Custom cron</code> are
-  also available).</li>
-<li><strong>Time of day</strong>: E.g. <code>8:00 AM</code>.</li>
-</ul>
-</li>
-<li>Review the optional fields:<ul>
-<li><strong>Response custom agent</strong>: Leave empty to use the main agent.</li>
-<li><strong>Message grouping for updates</strong>: "Use same thread" keeps each day's
-  results together.</li>
-<li><strong>Agent autonomy level</strong>: The default is fine here; because the task
-  only asks the agent to check and summarize, it reports rather than
-  changing anything.</li>
-</ul>
-</li>
-<li>Select <strong>Create task</strong>. It appears in the list with status <strong>On</strong> and a
-   <strong>next run</strong> time.</li>
-<li>After the first run, select the task name to open its <strong>execution
-   history</strong>: Each run is a thread showing the plan, the tools used, and
-   the outcome. To change the schedule or wording later, select the task →
-   <strong>Edit task</strong> → <strong>Save</strong> (execution history is preserved).</li>
-</ol>
-<p><strong>Verify the thresholds</strong> it uses. On a clean baseline the booking path is
-sub-second, so an alert at "p95 &gt; 3 s" would miss real latency.</p>
+<p>Include the time zone or the agent will stop and ask. You can also use <strong>Scheduled tasks</strong> in the portal.</p>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/create-and-set-up">Create and set up the <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/complete-setup">Complete your setup</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/create-scheduled-task">Tutorial: Create and edit scheduled tasks</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/create-scheduled-task">Create and edit scheduled tasks</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: The first real symptom</p>
-<p>Challenge 2 injects the first incident, so your board will go from green to
-degraded. You'll know it's abnormal because you measured normal.</p>
-<p><a class="md-button md-button--primary" href="../02-detect-and-investigate/">Proceed to Challenge 2 · Detect &amp; Investigate →</a></p>
+<p class="admonition-title">Up next: the first real symptom</p>
+<p>Challenge 2 injects an incident. You will know it is abnormal because you measured normal.</p>
+<p><a class="md-button md-button--primary" href="../02-detect-and-investigate/">Proceed to Challenge 2 · Detect and Investigate →</a></p>
 </div>
-<hr />
 
 
 

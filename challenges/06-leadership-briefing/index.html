@@ -1067,10 +1067,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1760,405 +1760,151 @@
 <h1 id="challenge-6-boarding-resumes-brief-airline-leadership">Challenge 6 · Boarding Resumes: Brief Airline Leadership<a class="headerlink" href="#challenge-6-boarding-resumes-brief-airline-leadership" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 06 of 06 · Act IV: Major Incident</p>
-<p><strong>Run mode:</strong> Review · <strong>Access:</strong> read-only summarization, plus governed writes back to your repo · <strong>Time:</strong> ~45 min (+20 for the stretch tasks)</p>
-<p><strong>Stage:</strong> Foundation → Operations → Autonomous → <strong>Major Incident</strong></p>
+<p><strong>Time:</strong> ~25 min core (+20 min stretch) · <strong>Run mode:</strong> Review · <strong>Access:</strong> read-only summarization, plus governed writes to your repo</p>
 </div>
-<p><strong>Situation.</strong> The platform is stable and the peak departure bank is away safely. A
-major incident isn't closed when the tiles go green; it's closed when leadership
-understands it and the team has captured what to do differently.</p>
-<p><strong>Mission.</strong> Turn the shift's evidence into three artifacts: a concise leadership
-briefing, an engineering RCA handover that cleanly separates symptom, root cause,
-contributing factors, mitigation, permanent fix, recovery evidence and remaining
-risk, and a <strong>durable record published back into the repository</strong> so the next
-incident starts from what you learned in this one.</p>
+<p><strong>Situation.</strong> The platform is stable and the peak departure bank is away safely. A major incident is not
+closed when the tiles go green. It is closed when leadership understands it and the team has captured what
+to do differently.</p>
+<p><strong>Mission.</strong> Produce a concise leadership briefing, an engineering RCA handover that separates symptom,
+root cause, mitigation and remaining risk, and a downloadable PDF of the briefing. <em>Stretch:</em> publish the RCA
+back to your repository.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">6</span>   <span class="c"># open / set up this challenge</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">6</span>
 </code></pre></div>
-<p>Challenge 6 injects no fault, so the platform stays green while you write.</p>
+<p>No fault is injected, so the platform stays green while you write.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Assemble the evidence.</strong> Build one defensible narrative per incident from what you preserved through the shift.</li>
-<li><strong>Write the leadership briefing.</strong> Short, impact-first, non-technical, for the operations director.</li>
-<li><strong>Write the engineering RCA handover.</strong> Precise actions, verification, open risks, and change evidence for the next on-call.</li>
-<li><strong>Generate the executive PDF.</strong> Have the agent render the briefing (with a timeline chart) via its Python sandbox.</li>
-<li><strong>Publish the RCA back to the repo.</strong> Add the GitHub Connector and have the agent file the RCA as an issue on your copy of the application repo.</li>
-<li><strong>Connect an MCP server and open the PR.</strong> Add GitHub MCP, manage the tool budget, then have the agent branch, commit and raise a pull request that fixes the runbook that failed you.</li>
+<li><strong>Assemble the evidence.</strong> Build one defensible narrative from what you preserved during the shift.</li>
+<li><strong>Write the leadership briefing.</strong> Short, impact-first and non-technical, for the operations director.</li>
+<li><strong>Write the engineering RCA handover.</strong> Exact actions, how each was verified, open risks and change evidence.</li>
+<li><strong>Generate the PDF.</strong> Have the agent render the briefing, with a timeline chart, in its Python sandbox.</li>
+<li><strong>Stretch · File the RCA as an issue</strong> on your repo with the GitHub Connector.</li>
+<li><strong>Stretch · Open a pull request</strong> that fixes the runbook that failed you, through the GitHub MCP server.</li>
 </ol>
-<p><em>Tasks 5 and 6 are <strong>stretch</strong>. They need the GitHub PAT you created during setup. If
-the day is running short, finish tasks 1–4 and treat these as take-home.</em></p>
+<p><em>Tasks 5 and 6 need the GitHub token you created during setup. If time is short, finish 1 to 4.</em></p>
 <p><img alt="Challenge 6 storyboard: Sam and Elena brief airline leadership as boarding resumes" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-8.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
 <p class="admonition-title">Paste into the agent chat</p>
-<p>From today's preserved evidence and action plans, draft two separate artifacts:
-(1) a concise, impact-first <strong>leadership briefing</strong> (business impact, root cause,
-recovery, cost/risk, lessons learned) and (2) an <strong>engineering RCA handover</strong>
-(actions taken, how each was verified, open risks, and change evidence: rollout
-history with its recorded change causes for the workload changes, and the Azure
-<abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> for the API Management policy change). Then render the leadership
-briefing as a formatted <strong>PDF</strong> with an incident-timeline chart using your Python
-sandbox.</p>
+<p>From today's preserved evidence, draft two separate artifacts: (1) a concise, impact-first <strong>leadership
+briefing</strong> (business impact, root cause, recovery, risk, lessons) and (2) an <strong>engineering RCA handover</strong>
+(actions taken, how each was verified, open risks, and change evidence: rollout history with change causes,
+and the Azure <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> for the API Management policy change). Then render the briefing as a <strong>PDF</strong> with
+an incident-timeline chart using your Python sandbox.</p>
 </div>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The platform is healthy at close.</li>
-<li>The leadership briefing covers impact, root cause, recovery, cost/risk, and lessons learned; the engineering RCA handover captures actions, verification, remaining risk, and change evidence from rollout history and the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr>.</li>
-<li>The agent produced a <strong>downloadable PDF</strong> of the leadership briefing (with a timeline chart) via its Python sandbox.</li>
-<li>Symptom, root cause, contributing factors, immediate mitigation, and permanent corrective action are clearly separated, and <code>check-challenge.ps1 6</code> passes.</li>
-<li><em>Stretch:</em> the agent <strong>filed the RCA as an issue on your repo</strong>, and with an <strong>MCP server connected</strong> and scoped against the 80-tool budget, <strong>branched, committed and opened a pull request</strong> improving the runbook that failed during Challenge 5.</li>
+<li>The briefing covers impact, root cause, recovery, risk and lessons. The RCA separates symptom, root cause, mitigation and permanent fix, with change evidence from rollout history and the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr>.</li>
+<li>The agent produced a <strong>downloadable PDF</strong> with a timeline chart.</li>
+<li><em>Stretch:</em> the RCA exists as an issue on <strong>your</strong> repo, and a pull request improves the runbook that failed in Challenge 5.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>The platform health is graded; the briefing and RCA are yours to attest to. Run
-this when you're done to complete the hack:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">6</span>
 </code></pre></div>
+<p>Platform health is graded. The briefing is yours to attest to, and the issue and pull request are checked
+on your repo if you did the stretch.</p>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Evidence, and two audiences.</strong> Start from the evidence you preserved, not memory;
-let the agent's action plans jog the timeline. Write two documents, not one blended
-one: leadership wants impact and outcome; the next on-call wants exact actions,
-root-cause evidence, and open risks.</p>
-<p><strong>Close the loop.</strong> Feed the lessons learned back into the agent's knowledge /
-memory so a recurrence is handled faster next time. Then get it out of the agent
-entirely: a record that only lives in one agent's memory is still a single point of
-failure. Task 5 puts it in the repository, where the whole team, and the next agent,
-can find it.</p>
+<ul>
+<li>Start from the evidence you preserved, not memory. Write two documents: leadership wants impact; the next on-call wants exact actions and open risks.</li>
+<li>Feed the lessons back into the agent's memory, then get them out of the agent entirely: a record in one agent's memory is still a single point of failure.</li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first, and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
-<summary>Task 1 · Assemble the evidence</summary>
-<ul>
-<li>Pull the timeline together from what you preserved during the shift (agent
-  threads, action logs, <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr>, telemetry): one defensible narrative
-  per incident, not from memory.</li>
-</ul>
-</details>
-<details class="note">
-<summary>Task 2 · Write the leadership briefing</summary>
-<p>Paste this into the agent chat:</p>
+<summary>Task 2 · Leadership briefing</summary>
 <blockquote>
-<p>Write a briefing for the operations director about today's major
-incident. Lead with business impact, not technology. Cover: what
-passengers experienced and for how long, the root cause in plain
-language, how we recovered, the cost and residual risk, and the lessons
-we are taking forward. Keep it under one page and use no Kubernetes
-jargon.</p>
+<p>Write a briefing for the operations director about today's major incident. Lead with business impact.
+Cover what passengers experienced and for how long, the root cause in plain language, how we recovered,
+the cost and residual risk, and the lessons. Under one page, no Kubernetes jargon.</p>
 </blockquote>
-<p>Judge it the way the director would. If a sentence needs a platform
-engineer to translate it, send it back.</p>
+<p>If a sentence needs an engineer to translate it, send it back.</p>
 <div class="admonition tip">
-<p class="admonition-title">Answer the question the director will actually ask</p>
-<p><em>"What did this buy us?"</em> You have two numbers for it: the minutes to a
-defensible hypothesis in Challenge 2, working cold, and the minutes to
-recover the crew tier in Challenge 5, with runbooks, a skill and the
-agent's memory of the earlier incident in place.</p>
-<p>Add them to the briefing yourself — the agent cannot know them:</p>
-<blockquote>
-<p>Add a short section titled "What the agent changed about our
-response". Our time to a defensible hypothesis on the first
-incident was <strong>X minutes</strong>; on the same failure class later in the
-day, with your runbooks and skill in place, recovery took <strong>Y
-minutes</strong>. State the difference plainly, and be clear that this is
-one day's sample from one team, not a benchmark.</p>
-</blockquote>
-<p>Also open the agent's own <strong>Track incident value</strong> view and sanity-check
-your narrative against what it recorded. An anecdote is worth little
-when you get back to your own organisation; a number with an honest
-caveat is worth a great deal.</p>
+<p class="admonition-title">Answer \"what did this buy us?\"</p>
+<p>Add your two numbers yourself, because the agent cannot know them: minutes to a hypothesis in
+Challenge 2 (cold) against minutes to recover the crew tier in Challenge 5. State the difference plainly and
+say it is one day's sample from one team, not a benchmark.</p>
 </div>
 </details>
 <details class="note">
-<summary>Task 3 · Write the engineering RCA handover</summary>
-<p>Paste this into the agent chat:</p>
+<summary>Task 3 · Engineering RCA</summary>
 <blockquote>
-<p>Write an engineering RCA handover for the next on-call. List every
-action taken and how each one was verified, the remaining risk, and the
-change-correlation evidence with exact sources. Be precise enough that
-someone who was not here could audit it.</p>
+<p>Write an engineering RCA handover for the next on-call: every action taken and how it was verified, the
+remaining risk, and the change-correlation evidence with exact sources.</p>
 </blockquote>
-<ul>
-<li>Be specific about where that evidence lives. The workload changes are in
-  <strong>rollout history</strong> (<code>kubectl rollout history deploy/&lt;svc&gt; -n aetherion</code>)
-  with the change cause recorded against each revision; the API Management
-  policy change is in the <strong>Azure <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr></strong> as a
-  <code>Set Product policy configuration</code> operation. In-cluster changes never
-  reach the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr>, which is itself worth calling out as a gap in the
-  handover.</li>
-<li>If the agent reports that it found nothing, ask it to query the Activity
-  Log at <strong>subscription scope</strong> rather than filtering by resource group. The
-  API Management policy operation is not always attributed to the resource
-  group, so a resource-group-scoped query can come back empty even though
-  the events are there.</li>
-</ul>
+<p>Workload changes live in <strong>rollout history</strong> (<code>kubectl rollout history deploy/&lt;svc&gt; -n aetherion</code>). The API
+Management policy change is in the <strong>Azure <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr></strong> as <code>Set Product policy configuration</code>. In-cluster
+changes never reach the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr>, which is itself a gap worth stating. If the agent finds nothing, ask it
+to query the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> at <strong>subscription scope</strong>.</p>
 </details>
 <details class="note">
-<summary>Task 4 · Generate the executive PDF</summary>
-<p>Paste this into the agent chat:</p>
+<summary>Task 4 · PDF</summary>
 <blockquote>
-<p>Render the leadership briefing as a formatted PDF, including an incident
-timeline chart, using your Python sandbox. Give me a download link.</p>
+<p>Render the leadership briefing as a formatted PDF, including an incident timeline chart, using your
+Python sandbox. Give me a download link.</p>
 </blockquote>
-<p>The agent writes the file in its sandbox and returns a link. If the
-download fails, ask it to list the generated file and give you the link
-again, because the first link can expire.</p>
+<p>If the download fails, ask it to list the file and give the link again: the first link can expire.</p>
 </details>
 <details class="note">
-<summary>Task 5 · Publish the RCA back to the repo</summary>
-<p>In Challenge 1 you connected your repo so the agent could <strong>read</strong> it. It has
-been correlating deployments against that repo all day. It has no tool that
-writes a single character back to it.</p>
-<p>That is not a permissions oversight. GitHub attaches to the agent in three
-separate ways, and you have only set up the first:</p>
-<table>
-<thead>
-<tr>
-<th>Connection</th>
-<th>Where you set it up</th>
-<th>What it grants</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Code Access</strong></td>
-<td>Builder → Code Access</td>
-<td>Read, search, correlate. <strong>No write tools</strong></td>
-</tr>
-<tr>
-<td><strong>GitHub Connector</strong></td>
-<td>Builder → Connectors → Add connector</td>
-<td>Create issues, open and merge PRs, trigger Actions</td>
-</tr>
-<tr>
-<td><strong>GitHub MCP</strong></td>
-<td>Builder → Connectors → Add connector</td>
-<td>The full GitHub tool catalog, with approval policies</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition warning">
-<p class="admonition-title">'No writes' is a tool boundary, not a permission boundary</p>
-<p>Code Access gives the agent no <em>write tools</em>, but it does leave an OAuth
-credential in the sandbox clone. Validated during authoring: running in
-<strong>Autonomous</strong> mode with only Code Access configured, the agent read the
-token out of <code>.git/git-credentials</code> and filed the issue with <code>gh api</code>
-directly — no connector involved.</p>
-<p>So the thing actually holding the line here is <strong>run mode and approvals</strong>,
-not the absence of a connector. In <strong>Review</strong> mode that same shell command
-surfaces for your approval first. Set up the connector anyway: it is the
-governed, auditable path, and it is what the rest of this challenge builds
-on.</p>
-</div>
-<p><strong>Add the GitHub Connector.</strong></p>
+<summary>Task 5 · File the RCA as an issue (stretch)</summary>
+<p>Code Access (Challenge 1) lets the agent <strong>read</strong> your repo. Writing needs the <strong>GitHub Connector</strong>.</p>
 <ol>
-<li><strong>Builder</strong> → <strong>Connectors</strong> → <strong>Add connector</strong> → <strong>GitHub</strong>.</li>
-<li>Authenticate with <strong>OAuth</strong> (browser popup) or a fine-grained <strong>PAT</strong>.</li>
-<li>The token needs issue and pull-request scope, not just <code>repo</code> read. On a
-   fine-grained PAT that is <strong>Issues: Read and write</strong> and
-   <strong>Pull requests: Read and write</strong>.</li>
-<li>Select your copy, <code>&lt;your-account&gt;/aetherion-airops-platform</code>.</li>
-</ol>
-<div class="admonition tip">
-<p class="admonition-title">OAuth tokens keep themselves alive</p>
-<p>GitHub OAuth tokens expire after about eight hours, but the agent
-refreshes them ahead of expiry on its own. You will not get logged out
-mid-workshop.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Issues are already enabled</p>
-<p>You created your repo from a <strong>template</strong>, so Issues came on by default
-and this step just works. Had you forked instead, GitHub would have
-turned Issues off and the agent would report
-<code>HTTP 410 Issues are disabled for this repository</code> — a repository
-setting, not an agent or token problem.</p>
-</div>
-<p><strong>Now have it file the RCA.</strong> Paste this into the agent chat:</p>
+<li><strong>Builder → Connectors → Add connector → GitHub</strong>. Authenticate with OAuth or a fine-grained PAT with
+   <strong>Issues</strong> and <strong>Pull requests</strong>: Read and write. Select <strong>your</strong> copy of <code>aetherion-airops-platform</code>.</li>
+<li>
+<p>Ask:</p>
 <blockquote>
-<p>Publish the engineering RCA you just wrote as a GitHub issue on
-<code>https://github.com/&lt;your-org&gt;/aetherion-airops-platform</code>. Title it
-<code>RCA: major incident - global check-in degradation</code>. In the body include
-the timeline, the root cause per affected service, every action taken and
-how it was verified, and a checklist of the corrective actions you would
-recommend. Label it <code>incident</code>.</p>
+<p>Publish the engineering RCA as a GitHub issue on <code>https://github.com/&lt;your-account&gt;/aetherion-airops-platform</code>.
+Title it <code>RCA: major incident - global check-in degradation</code>. Include the timeline, root cause per
+service, every action and how it was verified, and a checklist of corrective actions. Label it <code>incident</code>.</p>
 </blockquote>
-<p>You are in <strong>Review</strong> mode, so the write is proposed and you approve it. Read
-what it is about to publish before you do. This is going into a repository
-with your name on it.</p>
-<p><strong>Filing an issue records what happened. It does not change what happens
-next.</strong> For that you need to change a file, and the GitHub Connector cannot
-do it: creating a pull request through the connector requires <strong>the source
-branch to already exist with the changes committed</strong>. It opens a PR between
-branches that are already there. It does not create a branch and commit files
-for you.</p>
-<p>That missing capability is the whole point of Task 6.</p>
-</details>
-<details class="note">
-<summary>Task 6 · Connect an MCP server and open the pull request</summary>
-<p>The agent has five ways to be extended: skills and subagents (you built both
-in Extra B), Python tools (it just rendered your PDF with one), hooks, and
-<strong>MCP servers</strong>. MCP is the one you have not touched, and it is how the agent
-reaches anything Microsoft did not build a connector for.</p>
-<p><strong>The Model Context Protocol</strong> is an open standard. An MCP server wraps a
-service and exposes its capabilities as tools the agent discovers and calls.
-The agent ships connectors for GitHub, Datadog, Splunk, New Relic, Dynatrace
-and Elasticsearch, and will talk to any custom server you point it at.</p>
-<p>You are connecting GitHub, because it is the one you already have credentials
-for and it is the one that unblocks the PR.</p>
-<p><strong>Connect it.</strong></p>
-<ol>
-<li><strong>Builder</strong> → <strong>Connectors</strong> → <strong>Add connector</strong>.</li>
-<li>Choose the <strong>GitHub</strong> partner card. Transport is <strong>Streamable-HTTP</strong> and
-   the URL is prefilled.</li>
-<li>Provide a <strong>Personal Access Token</strong>. For partner connectors the auth
-   method is fixed, so there is no OAuth option here — you supply the
-   credential.</li>
-<li>Connect.</li>
+</li>
+<li>
+<p>In <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr> you approve the write. Read it first: it goes into a repository with your name on it.</p>
+</li>
 </ol>
 <div class="admonition warning">
-<p class="admonition-title">The token needs write scope, and a read-only one fails silently at connect time</p>
-<p>You should already have this token from
-<a href="../../getting-started/environment/">setup</a>. If not, create it now at
-<strong><a href="https://github.com/settings/personal-access-tokens/new">github.com/settings/personal-access-tokens/new</a></strong>.</p>
-<p>This task creates a branch, commits a file and opens a pull request, so
-on a <strong>fine-grained</strong> token scoped to your copy you need:</p>
-<ul>
-<li><strong>Contents: Read and write</strong> — the branch and the commit</li>
-<li><strong>Pull requests: Read and write</strong> — the PR</li>
-<li><strong>Issues: Read and write</strong> — to reference the RCA issue</li>
-</ul>
-<p>Set <em>Repository access</em> to <strong>Only select repositories</strong> and pick your
-repo: it is <strong>private</strong>, so a token limited to public repositories
-cannot see it. A classic token with <code>repo</code> scope works too.</p>
-<p>A read-only or wrongly-scoped token <strong>connects successfully</strong> and then
-fails on the first write, which looks like a broken connector rather
-than a permissions problem.</p>
-<p>If you put your copy in an <strong>organisation</strong> rather than your personal
-account, a fine-grained token may need <strong>owner approval</strong> before it
-works. You were warned about this in
-<a href="../../getting-started/environment/">Set up the environment</a>; if you
-skipped it, this is the point where it bites.</p>
+<p class="admonition-title">\"No writes\" is a tool boundary, not a permission boundary</p>
+<p>Code Access leaves an OAuth credential in the sandbox clone. In <strong>Autonomous</strong> mode an agent with only
+Code Access has been seen reading it and filing the issue with <code>gh api</code>. What holds the line is <strong>run
+mode and approvals</strong>. Use the connector anyway: it is the governed, auditable path.</p>
 </div>
-<p><strong>Watch what happens next, because this is what makes MCP different from a
-hand-built integration.</strong> The agent immediately calls the server's tool
-listing and registers everything it finds. You did not tell it what tools
-exist. It asked.</p>
-<p>A <strong>Select tools</strong> step appears with every discovered tool preselected, up to
-your remaining capacity.</p>
-<div class="admonition warning">
-<p class="admonition-title">You have a budget of 80 tools, and it is shared</p>
-<p>The limit is 80 tools per agent, native and MCP combined, and the picker
-shows a coloured capacity bar: blue to 70%, yellow to 90%, red above. At
-the cap, unchecked tools are disabled until you free space.</p>
-<p>This is a real design constraint, not a formality. Connect three chatty
-servers with everything selected and you will exhaust the budget and
-degrade the agent's tool selection. Take only the tools this agent needs.</p>
-<p>Deselect the tools you do not need for this task. You want file and
-pull-request capability, not the entire catalog.</p>
-</div>
-<p>Tools are registered with a <strong>namespaced</strong> name, such as
-<code>github-mcp_create_branch</code>, so two servers exposing a <code>search</code> tool never
-collide.</p>
-<p><strong>Now do the thing the connector could not.</strong> Ask for the full
-branch-commit-PR flow in one instruction:</p>
-<blockquote>
-<p>Using your GitHub MCP tools, create a branch called
-<code>rca/crew-verification</code> on <code>&lt;your-org&gt;/aetherion-airops-platform</code>, commit a
-change to the crew-scheduling runbook that adds the verification step we
-were missing during Challenge 5, and open a pull request against <code>main</code>
-that references the RCA issue you filed. Show me the diff before you push.</p>
-</blockquote>
-<p>Approve it in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>, then open the PR on GitHub. <strong>The agent changed a
-file in your repository.</strong> That is the loop closing: it read the repo in
-Challenge 1 and it improves the repo in Challenge 6.</p>
-<div class="admonition tip">
-<p class="admonition-title">Check the connection health while you are here</p>
-<p><strong>Builder → Connectors</strong> shows live status for each server. The agent
-pings every Streamable-HTTP server every 60 seconds and reconnects
-transparently before a tool call if a connection dropped, so a transient
-failure mid-investigation is invisible to you.</p>
-<table>
-<thead>
-<tr>
-<th>Status</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Connected</strong></td>
-<td>Healthy, tools ready</td>
-</tr>
-<tr>
-<td><strong>Disconnected</strong></td>
-<td>Temporary, auto-recovery in progress</td>
-</tr>
-<tr>
-<td><strong>Failed</strong></td>
-<td>Unrecoverable. Check URL, credentials, network</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Failed</strong> with valid-looking settings is almost always the token: a PAT
-without pull-request scope connects fine and then fails on write.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Why not just use MCP for everything?</p>
-<p>You have now used three different GitHub connections, on purpose:</p>
-<table>
-<thead>
-<tr>
-<th>Connection</th>
-<th>Used in</th>
-<th>For</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Code Access</strong></td>
-<td>Challenge 1</td>
-<td>Read and correlate. No writes</td>
-</tr>
-<tr>
-<td><strong>GitHub Connector</strong></td>
-<td>Task 5</td>
-<td>Issues, and PRs between existing branches</td>
-</tr>
-<tr>
-<td><strong>GitHub MCP</strong></td>
-<td>Task 6</td>
-<td>The full tool catalog, including branch and commit</td>
-</tr>
-</tbody>
-</table>
-<p>MCP is the most capable and the least constrained, which is exactly why
-it is the one you should scope most carefully. The tool budget you just
-managed is also a security control.</p>
-</div>
+<p>Issues work because you made your repo from a <strong>template</strong> (forks have Issues disabled). Filing an issue
+records what happened; it does not change what happens next. For that you need a file change, which the
+connector cannot make because it only opens a PR between branches that already exist. That is Task 6.</p>
+</details>
+<details class="note">
+<summary>Task 6 · Open the pull request (stretch)</summary>
+<ol>
+<li><strong>Builder → Connectors → Add connector → GitHub (MCP)</strong>. Transport <strong>Streamable-HTTP</strong>, URL prefilled,
+   auth with your <strong>PAT</strong> (no OAuth option here).</li>
+<li>The token must allow: <strong>Contents</strong>, <strong>Pull requests</strong>, <strong>Issues</strong>, all Read and write, with <em>Only select
+   repositories</em> set to your private copy. A read-only token <strong>connects fine and then fails on the first
+   write</strong>, which looks like a broken connector.</li>
+<li>A <strong>Select tools</strong> step lists everything the server exposes. You have <strong>80 tools in total</strong> per agent,
+   shared with native tools. Take only what you need, or you will degrade tool selection.</li>
+<li>Ask the agent to branch, commit and open a PR that fixes the runbook that failed in Challenge 5.</li>
+</ol>
+<p>In an organisation, a fine-grained token may need <strong>owner approval</strong> before it works.</p>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/github-connector">Connect GitHub</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/mcp-connectors">MCP connectors and tools</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/mcp-connector">Set up an MCP connector</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/track-incident-value">Track incident value</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/monitor-agent-usage">Monitor agent usage</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/memory">Memory and knowledge</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/connect-source-code">Connect source code</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/mcp-connectors">Model Context Protocol connectors</a></li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">🎉 NanoHack complete: you built an AI <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> teammate from scratch</p>
-<p>Across eight challenges you onboarded, investigated, recovered, grounded,
-engineered, automated, and closed a Tier-0 major incident with the Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr>
-Agent.</p>
-<p><a class="md-button md-button--primary" href="../finish/">Finish &amp; wrap up →</a></p>
+<p>You onboarded a read-only agent, recovered an incident under approval, let the agent act on its own, commanded a
+major incident it had already started, and briefed leadership.</p>
+<p><a class="md-button md-button--primary" href="../finish/">Finish →</a></p>
 </div>
-<hr />
 
 
 

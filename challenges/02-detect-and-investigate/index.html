@@ -819,10 +819,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1760,144 +1760,80 @@
 <h1 id="challenge-2-detect-and-investigate-without-touching-production">Challenge 2 · Detect and Investigate Without Touching Production<a class="headerlink" href="#challenge-2-detect-and-investigate-without-touching-production" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 02 of 06 · Act II: Human-Guided Operations</p>
-<p><strong>Run mode:</strong> Review · <strong>Access:</strong> read-only investigation · <strong>Time:</strong> ~40 min</p>
-<p><strong>Stage:</strong> Foundation → <strong>Operations</strong> → Autonomous → Major Incident</p>
+<p><strong>Time:</strong> ~40 min · <strong>Run mode:</strong> Review · <strong>Access:</strong> read-only investigation</p>
 </div>
-<p><strong>Situation:</strong> Online check-in has slowed to a crawl. Requests that used to be
-instant now take seconds, and the <strong>booking / check-in</strong> tile has gone amber just as
-traffic climbs toward a departure peak. Is check-in buckling under the surge, or did
-something change? This incident stays <strong>open</strong> into Challenge 3 — here you detect and
-investigate, you do not fix.</p>
-<p><strong>Mission:</strong> Confirm the check-in slowdown from live signals and form a
-hypothesis for the likely cause, backed by at least two independent signals,
-without changing anything in production.</p>
+<p><strong>Situation.</strong> Online check-in has slowed to a crawl. Requests that took milliseconds now take
+seconds, and the <strong>booking / check-in</strong> tile has gone amber just as traffic climbs toward a
+departure peak. Is check-in buckling under the surge, or did something change?</p>
+<p><strong>Mission.</strong> Confirm the slowdown from live signals and form a hypothesis for the likely cause,
+backed by at least two independent signals, <strong>without changing anything</strong>. Challenge 3 fixes it.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">2</span>   <span class="c"># open the incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">2</span>
 </code></pre></div>
-<p>Starting Challenge 2 injects the first incident. Give it two or three minutes:
-check-in latency climbs from milliseconds to seconds and stays there, while
-the service keeps answering every request successfully, which is itself a clue.</p>
+<p>Give it two or three minutes. Latency climbs from milliseconds to seconds and stays there, while
+every request still succeeds, which is itself a clue.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Confirm the symptom.</strong> Compare check-in latency now to your Challenge 1 baseline, using the Operations Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>, and trust the measured delta.</li>
-<li><strong>Correlate read-only.</strong> Have the agent line up <code>booking</code> request duration against CPU, <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>, dependency calls and request load.</li>
-<li><strong>Record your hypothesis.</strong> Capture the likely cause, the two signals behind it, and the recovery you'd propose (without performing it).</li>
+<li><strong>Confirm the symptom.</strong> Compare check-in latency now with your Challenge 1 baseline, using the Operations Center and <abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr>.</li>
+<li><strong>Correlate read-only.</strong> Have the agent line up <code>booking</code> request duration against CPU, <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>, dependency calls and load.</li>
+<li><strong>Record your hypothesis.</strong> Capture the likely cause, the two signals behind it, and the recovery you would propose. Do not perform it.</li>
 </ol>
 <p><img alt="Challenge 2 storyboard: Sam and Aria detect and investigate the incident read-only" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-2.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
 <p class="admonition-title">Paste into the agent chat</p>
-<p>Check-in has slowed to a crawl. Investigate read-only and tell me the most
-likely cause, with the evidence behind it. Change nothing.</p>
+<p>Check-in has slowed to a crawl. Investigate read-only and tell me the most likely cause,
+with the evidence behind it. Change nothing.</p>
 </div>
-<p>That is deliberately thin, because it is what you would actually type at 18:12.
-The agent's first answer will be broader than you need. Push back on it, and
-notice which follow-up finally moves it forward: that is the skill this challenge
-is really teaching.</p>
-<details class="tip">
-<summary>Optional: feed the agent a HAR trace or screenshot</summary>
-<p>If a partner reports the failure from their side, capture a <strong>HAR</strong> (HTTP
-Archive) trace (browser DevTools → Network → <em>Save all as HAR</em>) or a screenshot
-of the failing call and <strong>upload it in the agent chat</strong>. The agent parses HAR and
-image files directly and folds client-side timing into its investigation.</p>
-</details>
+<p>That is deliberately thin, as it would be at 18:12. The first answer will be broad. Push back, and notice
+which follow-up moves it forward: that is the skill this challenge teaches.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>You've confirmed the slowdown and can name the affected service and user-facing path.</li>
-<li>You can name the most likely cause, backed by at least two independent signals, and separate the surge from <strong>the change that caused it</strong>.</li>
-<li>You've made no change to production.</li>
+<li>You have confirmed the slowdown and can name the affected service and user-facing path.</li>
+<li>You can name the most likely cause, backed by two independent signals, and separate the surge from <strong>the change that caused it</strong>.</li>
+<li>You made no change to production.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">2</span>
 </code></pre></div>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Confirm and correlate.</strong> Start from the delta against your baseline. Line up
-request duration with CPU, <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr> and request load over the same window.</p>
-<p><strong>Capacity, or something else?</strong> A service starved of CPU is <em>busy</em>. This one
-isn't. CPU is low, no pod has restarted, and every request still succeeds. It is
-<strong>waiting</strong> on something. Work out what <code>booking</code> talks to besides its database,
-and how long each of those calls is taking. Then compare the live workload against
-what the repository's manifest declares; the gap between them is the finding.</p>
-<p>You're done when you can describe the symptom precisely and defend a hypothesis,
-not when it's fixed.</p>
-<p><strong>How an experienced operator would have scoped it.</strong> Still going in circles?
-This is the prompt someone who has worked this failure class before would write:</p>
-<blockquote>
-<p>Analyze the check-in / booking path read-only. Correlate <code>booking</code> request
-duration with CPU, <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> count, dependency call durations and request load
-over the last 30 minutes, and check recent deployments and rollout history for
-changes in the same window. Compare the live workload against what the
-repository's manifest declares. Give me the most likely cause with supporting
-evidence, and change nothing.</p>
-</blockquote>
-<p>Read it before you paste it. Every clause is a decision: which window, which
-signals, and the one that does most of the work here, comparing what is <em>running</em>
-against what the repository <em>declares</em>.</p>
+<ul>
+<li>Start from the delta against your baseline, over the same time window.</li>
+<li>A starved service is <em>busy</em>. This one is not: CPU is low, nothing restarted, every request succeeds. It is <strong>waiting</strong> on something. What does <code>booking</code> call besides its database?</li>
+<li>Compare the live workload with what the repository's manifest declares. The gap is the finding.</li>
+<li>Still stuck? Ask: <em>"Analyze the check-in path read-only. Correlate <code>booking</code> duration with CPU, <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr>, dependency call durations and load over the last 30 minutes, check recent rollouts, and compare the live workload with the repository manifest. Give the most likely cause with evidence. Change nothing."</em></li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
 <summary>Task 1 · Confirm the symptom</summary>
-<ul>
-<li>Open the <strong>Operations Center</strong> and note the <strong>booking / check-in</strong> tile: its
-  p95, its error rate, and how steady the numbers are. Then open the
-  <strong><abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr></strong> dashboard for the same window. The two together are your
-  evidence, not the agent's summary.</li>
-<li>Compare that to the baseline you captured in Challenge 1. Requests that
-  took single-digit milliseconds now take seconds, and they all still
-  succeed. A clean, flat, elevated latency is rarely load.</li>
-</ul>
+<p>Open the <strong>Operations Center</strong> and note the <code>booking</code> tile's p95 and error rate, then the <strong><abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr></strong>
+dashboard for the same window. Compare with your baseline: milliseconds became seconds, yet nothing
+fails. A flat, elevated latency is rarely load.</p>
 </details>
 <details class="note">
 <summary>Task 2 · Correlate read-only</summary>
-<ul>
-<li>In the agent chat, paste the <strong>suggested prompt</strong> above (or ask it to
-  correlate <code>booking</code> request duration with CPU, <abbr title="One running copy (pod) of a service; more replicas share the load.">replica</abbr> count, dependency
-  call durations and request load over the last 30 minutes).</li>
-<li>Watch for the disagreement between signals: latency up sharply while CPU,
-  <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr> and error rate are all normal. Something is being <em>waited on</em>,
-  not overloaded.</li>
-<li>Ask it to compare the running workload with the manifest in the connected
-  repository. A live value that no longer matches the checked-in one is the
-  strongest single piece of evidence you will find.</li>
-<li>Stay read-only, you're gathering evidence, changing nothing.</li>
-</ul>
+<p>Paste the prompt above. Look for signals that disagree: latency up while CPU, <abbr title="Running copies (pods) of a service; more replicas share the load.">replicas</abbr> and errors are
+normal. Something is being waited on, not overloaded. Then ask the agent to compare the running
+workload with the manifest in your connected repo. Stay read-only.</p>
 </details>
 <details class="note">
 <summary>Task 3 · Record your hypothesis</summary>
-<p>Paste this into the agent chat:</p>
 <blockquote>
-<p>Summarise this investigation in under 200 words: the likely root cause,
-the two independent signals that support it, and the least-disruptive
-recovery you would propose. Do not perform any remediation.</p>
+<p>Summarise this investigation in under 200 words: the likely root cause, the two independent signals,
+and the least-disruptive recovery you would propose. Do not remediate.</p>
 </blockquote>
-<p>Then save it so Challenge 3 can pick it up. Either leave it in this chat
-thread, or commit it to memory by typing <code>/remember .</code> in the chat box
-(it becomes <code>#remember</code>), or by saying <em>"save this to your knowledge"</em>.</p>
-<p><strong>Confirm it stuck.</strong> In a <strong>new</strong> chat thread, ask:</p>
-<blockquote>
-<p>What do you remember about the check-in slowdown?</p>
-</blockquote>
-<p>If it repeats your hypothesis back, it saved. If it doesn't, the summary
-only exists in the old thread, so keep that thread open for Challenge 3.</p>
+<p>Keep this chat thread open for Challenge 3, or save it with <em>"save this to your knowledge"</em>.</p>
 <div class="admonition tip">
-<p class="admonition-title">Write down one number before you move on</p>
-<p>Note the wall-clock time from when you ran <code>start-challenge.ps1 2</code> to
-the moment you could defend a hypothesis. Just the number of minutes,
-on paper or in the thread.</p>
-<p>You are investigating this failure class cold, with an agent that
-knows nothing about Aetherion yet. In Challenge 5 you meet the same
-class again, by which point the agent has your runbooks, a specialist
-subagent and a memory of today. Challenge 6 asks you what that was
-worth, and this is the only chance to capture the <em>before</em> number.</p>
+<p class="admonition-title">Write down one number</p>
+<p>Note how many minutes passed between <code>start-challenge.ps1 2</code> and a defensible hypothesis. You will
+compare it with the agent's speed in Challenge 5.</p>
 </div>
 </details>
 </details>
@@ -1905,14 +1841,12 @@ worth, and this is the only chance to capture the <em>before</em> number.</p>
 <ul>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/deep-investigation">Run a deep investigation</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/root-cause-analysis">Root cause analysis</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/memory">Memory and knowledge</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: Controlled recovery under approval</p>
-<p>With a defensible hypothesis, you're ready to recover check-in under approval and then the flight board goes dark.</p>
+<p class="admonition-title">Up next: controlled recovery</p>
+<p>With a defensible hypothesis, you recover check-in under approval.</p>
 <p><a class="md-button md-button--primary" href="../03-controlled-recovery/">Proceed to Challenge 3 · Controlled Recovery →</a></p>
 </div>
-<hr />
 
 
 

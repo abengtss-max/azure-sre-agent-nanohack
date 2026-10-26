@@ -1039,10 +1039,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1760,24 +1760,24 @@
 <h1 id="challenge-5-final-incident-restore-global-check-in-before-peak-departure">Challenge 5 · Final Incident: Restore Global Check-In Before Peak Departure<a class="headerlink" href="#challenge-5-final-incident-restore-global-check-in-before-peak-departure" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 05 of 06 · Act IV: Major Incident</p>
-<p><strong>Run mode:</strong> Review + bounded automation · <strong>Governance:</strong> you decide what is approved and what is automated · <strong>Time:</strong> ~60 min</p>
-<p><strong>Stage:</strong> Foundation → Operations → Autonomous → <strong>Major Incident</strong></p>
+<p><strong>Time:</strong> ~60 min · <strong>Run mode:</strong> Review plus bounded automation · <strong>Access:</strong> you decide what is approved and what is automated</p>
 </div>
 <div class="admonition danger">
-<p class="admonition-title">Before you start: is your Sev1 plan armed?</p>
-<p>This challenge depends on the response plan you built in Challenge 4. Open
-<strong>Incidents → Triggers + response plans</strong> and confirm one plan shows
-<strong>Status: On</strong> and <strong>Severity: Sev1</strong>. If it doesn't, fix that first — the agent
-will never pick the incident up, and Task 1 has nothing to hand over.</p>
+<p class="admonition-title">Before you start: is your Sev1 plan armed on YOUR alert?</p>
+<p>This challenge depends on Challenge 4. Open <strong>Incidents → Triggers + response plans</strong> and confirm one plan
+shows <strong>Status: On</strong>, <strong>Severity: Sev1</strong> and <strong>Title contains = your alert name</strong>
+(<code>(Get-Content ./scripts/.env.aetherion.json | ConvertFrom-Json).incidentAlertName</code>).
+Without it your agent never picks the incident up. Other attendees share this subscription: <strong>only your own
+alert may start your agent</strong>. If a thread for someone else's alert appears in your agent, tell your proctor.</p>
 </div>
-<p><strong>Situation.</strong> Minutes before peak departures, several services fail together under
-a passenger surge: the flight board is dark, crew scheduling is timing out, check-in
-has slowed to a crawl, and the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is failing legitimate partner and
-mobile traffic. The risk gauge is pinned. Everything you built today is now in play.</p>
-<p><strong>You are not first on scene.</strong> The Sev1 plan you armed in Challenge 4 matched the
-alert before anyone paged you, and the agent has been working the incident
-unattended. Your first job is not to fix something. It is to find out what has
-already been changed in your absence.</p>
+<p><strong>Situation.</strong> Minutes before peak departures, several services fail together under a passenger surge: the
+flight board is dark, crew scheduling is timing out, check-in has slowed to a crawl, and the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>
+is failing partner and mobile traffic.</p>
+<p><strong>You are not first on scene.</strong> The Sev1 plan you armed matched your alert before anyone paged you, and the
+agent has been working the incident unattended. Your first job is not to fix something. It is to find out what
+has already been changed in your absence.</p>
+<p><strong>Mission.</strong> Take handover from the agent, then restore Aetherion AirOps before peak departure: verify what it
+changed, triage the rest by business tier, remediate within the runbook guardrails, and verify each service.</p>
 <details class="note">
 <summary>Incident timeline</summary>
 <table>
@@ -1802,7 +1802,7 @@ already been changed in your absence.</p>
 </tr>
 <tr>
 <td>18:17</td>
-<td>The live flight board goes dark for all stations</td>
+<td>The live flight board goes dark</td>
 </tr>
 <tr>
 <td>18:21</td>
@@ -1810,274 +1810,151 @@ already been changed in your absence.</p>
 </tr>
 <tr>
 <td>18:23</td>
-<td><code>aetherion-major-incident</code> fires at <strong>Sev1</strong> and auto-triggers the agent</td>
+<td><strong>Your</strong> Sev1 alert fires and auto-triggers your agent</td>
 </tr>
 <tr>
 <td>18:25</td>
 <td>Major incident declared. You are incident commander</td>
 </tr>
-<tr>
-<td>18:26</td>
-<td>The agent is already acting on its own in a thread it opened itself</td>
-</tr>
 </tbody>
 </table>
 </details>
-<p><strong>Mission.</strong> Take handover from the agent, then bring Aetherion AirOps back to full
-health before peak departure: verify what it changed without you, triage the rest by
-business tier, remediate within the runbook guardrails, and verify recovery service
-by service.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">5</span>   <span class="c"># open the incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">5</span>
 </code></pre></div>
-<p>Four faults land at once and the board takes two or three minutes to reflect
-all of them. Don't start triaging from a half-drawn picture.</p>
+<p>Four faults land at once and the board takes two or three minutes to show all of them. Your alert fires a
+few minutes later. Do not triage from a half-drawn picture.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Take handover from the agent.</strong> Find the thread the Sev1 alert opened by itself, read what the agent has already changed unattended, and verify it independently before you trust it.</li>
-<li><strong>Read the whole board.</strong> Order the remaining work by business impact (situational awareness and legal-to-fly first), not the loudest alert.</li>
-<li><strong>Check the agent's memory.</strong> Ask whether a similar incident has happened and let session insights surface the earlier RCA.</li>
-<li><strong>Delegate and recover.</strong> If you built the optional specialist subagent and crew recovery skill (Extra B), hand <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to the subagent and reuse the skill. If not, direct the main agent yourself, keeping every action governed.</li>
-<li><strong>Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>.</strong> Use the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison and treat the policy change as customer-facing.</li>
-<li><strong>Verify every service.</strong> Confirm each fix from telemetry, then the whole platform back to green.</li>
+<li><strong>Take handover.</strong> Find the thread your alert opened by itself, read what the agent changed unattended, and verify it yourself.</li>
+<li><strong>Read the whole board.</strong> Order the remaining work by business impact (flight board and legal-to-fly first), not the loudest alert.</li>
+<li><strong>Check the agent's memory.</strong> Ask whether it has seen a similar incident, and let it surface the earlier RCA.</li>
+<li><strong>Recover.</strong> Fix the remaining tiers with sanctioned, reversible actions. Use the Extra B subagent and skill if you built them; otherwise direct the main agent.</li>
+<li><strong>Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>.</strong> Compare direct against <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> and treat the policy change as customer-facing.</li>
+<li><strong>Verify every service.</strong> Confirm each fix from telemetry, then the whole platform green.</li>
 </ol>
-<details class="note">
-<summary>Why Sev1?</summary>
-<p>The environment pre-provisions a fixed <strong>Sev1</strong> Azure Monitor alert
-(<code>aetherion-major-incident</code>, on <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed requests). A response
-plan matches incoming alerts <strong>by severity</strong>, so your filter must be <code>Sev1</code> to
-catch it; a broader filter fires on everything, a mismatched one catches nothing.</p>
-<p><strong>This one is graded.</strong> <code>check-challenge.ps1 5</code> marks the platform's end state
-<em>and</em> confirms a Sev1 major-incident alert actually fired since you started the
-challenge. Driving the whole incident by hand is not enough on its own.</p>
-</details>
 <p><img alt="Challenge 5 storyboard: Sam, Aria and Elena restore global check-in before peak departure" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-7.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
-<p class="admonition-title">Paste into the <code>[Sev1] aetherion-major-incident</code> thread</p>
-<p>You picked this incident up before I did. List every action you have already
-taken without my approval, and how I can verify each one. Then tell me what is
-still broken, and what you recommend I deal with first.</p>
+<p class="admonition-title">Paste into the <code>[Sev1] &lt;your alert name&gt;</code> thread</p>
+<p>You picked this incident up before I did. List every action you took without my approval and how I can
+verify each one. Then tell me what is still broken and what I should deal with first.</p>
 </div>
 <details class="warning">
 <summary>Paste it into the right thread</summary>
-<p>This prompt only works <strong>inside the thread the response plan opened by itself</strong>.
-Started in a fresh chat it has no incident to refer to, so it answers about
-whatever it worked on last — validated: pasted into a new thread it reported on
-the <em>previous</em> challenge's baggage canary and declared traffic healthy while
-the flight board was 100% down. Open the <code>[Sev1] aetherion-major-incident</code>
-thread first (Task 1), then ask.</p>
+<p>It only works <strong>inside the thread your alert opened</strong>. In a fresh chat it answers about whatever it worked on
+last (validated: it reported on the previous baggage canary while the flight board was 100% down).</p>
 </details>
-<p>The second half is the part you own. It will give you an order; your job is to
-decide whether it's the right one for an airline at peak departure.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>You can state exactly what the agent changed without your approval, and you verified it from the cluster rather than from its summary.</li>
-<li>All remaining failing services are triaged by priority and restored with sanctioned, reversible actions.</li>
-<li>The API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> serves legitimate traffic again, and every fix is verified from telemetry/health before closing.</li>
-<li>The platform is healthy and <code>check-challenge.ps1 5</code> passes.</li>
+<li>You can state exactly what the agent changed without approval, verified from the cluster rather than its summary.</li>
+<li>Every failing service is triaged by priority and restored with a reversible action, and the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> serves legitimate traffic again.</li>
+<li>The platform is healthy, <strong>your own</strong> Sev1 alert fired and triggered your agent, and <code>check-challenge.ps1 5</code> passes.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">5</span>
 </code></pre></div>
+<p>It grades the end state <em>and</em> that a Sev1 alert <strong>from your environment</strong> fired since you started. Fixing
+everything by hand is not enough.</p>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Triage, don't firefight.</strong> Don't fix the first red tile you see; read the whole
-board and order by business tier. You've solved every one of these failure classes
-already: delegate <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to your specialist and apply your crew recovery skill
-if you built them, otherwise direct the main agent.</p>
-<p><strong>Is it the service, or the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>?</strong> If the backend is healthy when you hit it
-directly but clients still fail, the problem is at the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>, not the
-services. Treat the policy change as customer-facing.</p>
-<p>Expect the board to get <em>worse</em> once the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is fixed: with traffic flowing
-again, the degradations further back become visible. That is normal in a layered
-incident. Restoring the edge doesn't create new faults, it reveals the ones the
-outage was masking.</p>
-<p><strong>How an experienced incident commander would have scoped it.</strong> If the agent's
-account is scattered, this is how someone who has run a major incident would ask
-for it:</p>
-<blockquote>
-<p>Read the whole Aetherion board and give me an incident-command triage: list every
-service still failing, order remediation by business tier (situational awareness
-and legal-to-fly first), and for each name the sanctioned, reversible fix. Have we
-seen a similar crew-scheduling / check-in incident before? Pull the earlier RCA
-from session memory.</p>
-</blockquote>
-<p>Two things in there are doing the work: <strong>order by business tier</strong>, which stops you
-fixing whatever is loudest, and <strong>pull the earlier RCA from memory</strong>, which is the
-difference between solving crew scheduling for the first time and the second.</p>
+<ul>
+<li><strong>Triage, don't firefight.</strong> Order by business tier. You have solved each of these failure classes before.</li>
+<li><strong>Service or <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>?</strong> If the backend is healthy when you hit it directly but clients still fail, the fault is at the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>.</li>
+<li>The board may get <em>worse</em> once the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is fixed: traffic flowing reveals what the outage was masking.</li>
+<li>Still stuck? Ask: <em>"Read the whole Aetherion board. List every service still failing, order remediation by business tier (flight board and legal-to-fly first), name the sanctioned reversible fix for each, and pull any earlier crew-scheduling or check-in RCA from memory."</em></li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first, and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
-<summary>Task 1 · Take handover from the agent</summary>
-<p>The agent started before you did. Treat this exactly like taking handover
-from a colleague who has been on the incident for ten minutes.</p>
-<p><strong>Find the thread it opened by itself.</strong> In the agent's chat list, look for
-a thread whose title starts with <code>[Sev1] aetherion-major-incident</code>. You did
-not create it. The response plan did, off the alert.</p>
-<p><strong>Read what it already changed.</strong> Ask it directly, in that thread:</p>
-<blockquote>
-<p>You picked this incident up before I did. List every action you have
-already taken without my approval, what each one changed, and how I can
-verify it. Then list what you deliberately did not act on, and why.</p>
-</blockquote>
-<p><strong>Verify it yourself. Do not take its word for it.</strong> The whole point of
-autonomy is that you audit the outcome, not the intention:</p>
+<summary>Task 1 · Take handover</summary>
+<p>Treat it like handover from a colleague who has been on the incident ten minutes. Open the thread titled
+<code>[Sev1] &lt;your alert name&gt;</code> (you did not create it) and paste the prompt above. Then audit the outcome:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">rollout</span> <span class="nb">history </span><span class="n">deployment</span><span class="p">/</span><span class="n">flight-ops</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">get</span> <span class="n">deploy</span> <span class="n">flight-ops</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s1">'{.spec.template.spec.containers[0].image}{"\n"}'</span>
 </code></pre></div>
-<p>Expect it to have acted on <strong>some</strong> tiers and not others. It moves where the
-fix is unambiguous and reversible, and holds where the call is a judgement.
-Those held tiers are your work.</p>
+<p>Expect it to have acted where the fix is unambiguous and reversible, and held where the call is a
+judgement. Those held tiers are your work.</p>
 <div class="admonition tip">
-<p class="admonition-title">If no thread was auto-created</p>
-<p>The plan did not match. Open <strong>Incidents → Triggers + response plans</strong>
-and confirm your Sev1 plan shows <strong>Status: On</strong> and <strong>Severity: Sev1</strong>,
-that <strong>Subagent name</strong> reads <em>Set up</em> (none bound), and that no leftover
-<strong>quickstart</strong> plan is competing with it. Fix it, then re-run the start
-command so the alert fires again. You can still command the incident by
-hand, but the alert has to fire for this challenge to pass.</p>
+<p class="admonition-title">If no thread appeared</p>
+<p>Check the plan: <strong>Status On</strong>, <strong>Severity Sev1</strong>, <strong>Title contains = your exact alert name</strong>, no subagent,
+and no leftover quickstart plan. Check <strong>Monitor → Alerts</strong> shows your alert <strong>Fired</strong>. If the alert
+fired and nothing started, tell your proctor: the agent may lack Monitoring Contributor on the
+subscription. Re-run <code>start-challenge.ps1 5</code> once fixed.</p>
 </div>
 </details>
 <details class="note">
 <summary>Task 2 · Read the whole board</summary>
-<ul>
-<li>Open the Operations Center and list every failing service. Order remediation
-  by business tier: situational awareness (flight board) and legal-to-fly
-  (crew) first, not by whichever alert is loudest.</li>
-</ul>
+<p>List every failing service and order by business tier.</p>
 <div class="admonition warning">
 <p class="admonition-title">The board cannot see your <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></p>
-<p>The Operations Center polls each service <strong>directly</strong>, inside the
-cluster. It has no view of API Management. So the board can read fully
-green while every partner and mobile customer is getting a 500 at the
-edge, which is exactly what happens in this incident.</p>
-<p>Validated: an agent told to "read the whole board" recovered all four
-in-cluster faults, declared the incident stable, and never mentioned the
-<abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> once. It was not wrong about the board. The board was
-incomplete.</p>
-<p>Treat the internal board and the customer-facing path as two separate
-questions, and always ask the second one. That is Task 5.</p>
+<p>The Operations Center polls services <strong>directly</strong>, inside the cluster, so it can read green while every
+partner and mobile customer gets a 500 at the edge. Always ask the customer-facing question separately.
+That is Task 5.</p>
 </div>
 </details>
 <details class="note">
 <summary>Task 3 · Check the agent's memory</summary>
-<p>Ask it directly, in the same thread as the investigation:</p>
 <blockquote>
-<p>Have you investigated a crew-scheduling or check-in slowdown on this
-platform before? Recall what the root cause was and which fix worked.</p>
+<p>Have you investigated a crew-scheduling or check-in slowdown on this platform before? Recall the root
+cause and which fix worked.</p>
 </blockquote>
-<p>If you saved a hypothesis in Challenge 2 or grounded the runbooks in
-Extra A, session insights should surface the earlier RCA and the fix.
-That is the point of the exercise: the second incident should cost less
-than the first.</p>
+<p>If you saved your Challenge 2 hypothesis (or did Extra A), session insights should surface it. The second
+incident should cost less than the first.</p>
 </details>
 <details class="note">
-<summary>Task 4 · Delegate and recover</summary>
-<div class="admonition note">
-<p class="admonition-title">Optional extras</p>
-<p>The <code>aks-triage</code> subagent and the <code>crew-query-path-recovery</code> skill come from
-Extra B (optional). If you skipped it, ask the main
-agent to do the same work: it has the same tools, just no specialist.</p>
-</div>
-<p>Name both the subagent and the skill explicitly. Neither fires on its own.</p>
-<p>For the <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> tier:</p>
+<summary>Task 4 · Recover</summary>
+<p>Keep actions governed and follow the runbooks: fix the layer that is actually saturated, never delete the
+database. If you built Extra B, name the subagent and skill explicitly, because neither fires on its own:</p>
 <blockquote>
-<p>Delegate this to your <code>aks-triage</code> subagent: which workloads in the
-<code>aetherion</code> namespace are unhealthy, and why?</p>
+<p>Delegate to your <code>aks-triage</code> subagent: which workloads in <code>aetherion</code> are unhealthy, and why?
+Use the <code>crew-query-path-recovery</code> skill to restore crew scheduling.</p>
 </blockquote>
-<p>Expect it to investigate and then <strong>hand back rather than fix</strong>. You scoped
-it without <code>RunKubectlWriteCommand</code> in Extra B, so it physically cannot
-change the cluster. It reports; you and the main agent act on it. That split
-is deliberate, and under incident pressure it is worth noticing that you do
-not have to trust a prompt to keep it in its lane.</p>
-<p>For the crew tier:</p>
-<blockquote>
-<p>Use the <code>crew-query-path-recovery</code> skill to restore crew scheduling.</p>
-</blockquote>
-<p>Crew is failing the same way it did in Extra A, so the skill carries.
-Asking the agent to "act as" a specialist does <strong>not</strong> invoke the subagent,
-it only adopts the persona.</p>
-<ul>
-<li>Keep actions governed and follow the runbooks: fix the layer that is
-  actually saturated, never delete the database.</li>
-</ul>
+<p>The subagent reports and hands back (it has no write tool). Without Extra B, ask the main agent for the
+same work.</p>
 <div class="admonition tip">
-<p class="admonition-title">Time the crew tier specifically</p>
-<p>Note the minutes from starting on crew scheduling to the point it is
-healthy again. This is the same failure class you worked cold in
-Challenge 2 and diagnosed in Extra A — but now the agent has your
-runbooks, a skill written for exactly this, and a memory of the earlier
-incident.</p>
-<p>Compare it with the number you wrote down in Challenge 2. Whatever the
-gap is, that is the finding you take to Challenge 6. If it is smaller
-than you expected, that is worth reporting honestly too.</p>
+<p class="admonition-title">Time the crew tier</p>
+<p>Note the minutes to restore crew scheduling and compare with your Challenge 2 number. That gap is the
+finding you take to Challenge 6, even if it is smaller than you expected.</p>
 </div>
 </details>
 <details class="note">
 <summary>Task 5 · Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></summary>
-<ul>
-<li>Compare backend health <strong>directly</strong> (<code>http://&lt;gateway-ip&gt;/api/status</code>)
-  against the same call <strong>through <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr></strong>. If direct returns 200 but <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr>
-  fails, the fault is the <strong>edge policy</strong>, not the service; treat the change
-  as customer-facing.</li>
-</ul>
+<p>Compare backend health <strong>directly</strong> with the same call <strong>through <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr></strong>. Direct 200 with <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> failing means
+the edge policy is at fault.</p>
 <div class="admonition warning">
-<p class="admonition-title">Run the comparison from your machine, not the agent</p>
-<p>The agent's sandbox egress can block the public gateway IP and
-<code>*.azure-api.net</code>, so an external probe it runs itself comes back as a
-proxy-generated <code>403</code> before the request ever reaches Azure. Validated:
-the agent repaired the policy correctly and then reported it could not
-confirm the fix externally.</p>
-<p>Do the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison yourself, and treat the agent's
-"external check failed" as a tooling limit rather than evidence the fix
-did not land. Confirm from the policy XML plus your own call:</p>
+<p class="admonition-title">Run this from your machine, not the agent</p>
+<p>The agent's sandbox can block the gateway, returning a proxy <code>403</code> before Azure sees the request. Treat
+"external check failed" as a tooling limit. Confirm from the policy plus your own call:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$st</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="p">./</span><span class="n">scripts</span><span class="p">/.</span><span class="n">env</span><span class="p">.</span><span class="n">aetherion</span><span class="p">.</span><span class="n">json</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"http://</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">gatewayIp</span><span class="p">)</span><span class="s2">/api/status"</span><span class="p">).</span><span class="n">StatusCode</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">apimGatewayUrl</span><span class="p">)</span><span class="s2">/aetherion/api/status"</span> <span class="p">`</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   <span class="n">-Headers</span> <span class="p">@{</span> <span class="s1">'Ocp-Apim-Subscription-Key'</span> <span class="p">=</span> <span class="nv">$st</span><span class="p">.</span><span class="n">apimSubscriptionKey</span> <span class="p">}).</span><span class="n">StatusCode</span>
 </code></pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Why it can fix this at all</p>
-<p>Everywhere else today the agent has held write access to Kubernetes and
-nothing else. It can repair the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> because its identity also
-holds <strong>API Management Service Contributor</strong>, scoped to the API
-Management service alone rather than the resource group.</p>
-<p>Narrow enough to fix this, too narrow to touch anything else. That is
-what least privilege looks like when it is actually load-bearing: had it
-been scoped to the resource group, the same repair would have carried the
-authority to change every resource in the environment.</p>
-</div>
+<p>It can fix the edge because its identity holds <strong>API Management Service Contributor</strong>, scoped to the <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr>
+service alone: narrow enough to fix this and nothing else.</p>
 </details>
 <details class="note">
 <summary>Task 6 · Verify every service</summary>
-<ul>
-<li>Confirm each fix from telemetry / health before closing, then check the
-  whole platform is green and <code>/api/flights</code> responds.</li>
-</ul>
+<p>Confirm each fix from telemetry, not from the agent's summary, then run the check.</p>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response">Automate incident response</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response-plans">Incident response plans</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/execute-mitigations">Review and approve mitigations</a></li>
+<li><a href="https://sre.azure.com/docs/capabilities/azure-monitor-alerts">Azure Monitor alerts</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: brief airline leadership</p>
-<p>The incident is technically closed; now leadership needs it closed formally.</p>
+<p class="admonition-title">Up next: brief leadership</p>
+<p>Boarding resumes. Close the incident out for the people who were not on the bridge.</p>
 <p><a class="md-button md-button--primary" href="../06-leadership-briefing/">Proceed to Challenge 6 · Leadership Briefing →</a></p>
 </div>
-<hr />
 
 
 

@@ -847,10 +847,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#suggested-azure-sre-agent-prompt" class="md-nav__link">
+  <a href="#suggested-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Suggested Azure SRE Agent prompt
+        Suggested prompt
       
     </span>
   </a>
@@ -1760,159 +1760,85 @@
 <h1 id="challenge-3-controlled-recovery">Challenge 3 · Controlled Recovery<a class="headerlink" href="#challenge-3-controlled-recovery" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Challenge 03 of 06 · Act II: Human-Guided Operations</p>
-<p><strong>Run mode:</strong> Review → approved write · <strong>Governance:</strong> every action approved by you</p>
-<p><strong>Time:</strong> ~25 min</p>
-<p><strong>Stage:</strong> Foundation → <strong>Operations</strong> → Autonomous → Major Incident</p>
+<p><strong>Time:</strong> ~25 min · <strong>Run mode:</strong> Review, approved writes · <strong>Access:</strong> every action approved by you</p>
 </div>
-<p><strong>Situation.</strong> Your check-in hypothesis from Challenge 2 is solid and
-<strong>Elena Vasquez</strong>, Aetherion's operations director, wants it fixed <strong>safely</strong>,
-with a human in the loop. The incident is still open, so now you recover it.</p>
-<p><strong>Mission.</strong> Recover check-in with the least-disruptive action under human approval,
-and verify it from telemetry.</p>
+<p><strong>Situation.</strong> Your check-in hypothesis is solid. <strong>Elena Vasquez</strong>, Aetherion's operations director,
+wants it fixed <strong>safely</strong>, with a human in the loop. The incident from Challenge 2 is still open.</p>
+<p><strong>Mission.</strong> Recover check-in with the least-disruptive action, under your approval, and verify it
+from telemetry.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">3</span>   <span class="c"># continues the open check-in incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">3</span>
 </code></pre></div>
-<p>Challenge 2 already opened this incident, so starting Challenge 3 does not add
-a new fault.</p>
+<p>This continues the Challenge 2 incident. No new fault is added.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Plan the fix.</strong> Ask the agent to turn your hypothesis into a concrete <code>booking</code> remediation plan and name the permission it needs.</li>
-<li><strong>Recover under approval.</strong> Keep the agent in Review, approve the least-disruptive fix, then confirm latency is back to baseline.</li>
+<li><strong>Plan the fix.</strong> Ask the agent to turn your hypothesis into a concrete <code>booking</code> remediation plan and to name the permission it needs.</li>
+<li><strong>Recover under approval.</strong> Keep the agent in Review, approve the least-disruptive fix, and confirm latency is back to baseline.</li>
 </ol>
-<p><img alt="Challenge 3 storyboard: Sam, Aria and Elena run a controlled recovery and correlate the change" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-3.webp" /></p>
-<h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
+<p><img alt="Challenge 3 storyboard: Sam, Aria and Elena run a controlled recovery" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-3.webp" /></p>
+<h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
 <p class="admonition-title">Paste into the agent chat</p>
 <p>Check-in is still slow. Propose a fix. Don't change anything yet.</p>
 </div>
-<p>Whatever it comes back with, make it name the permission each action needs before
-you let it near production.</p>
+<p>Whatever it proposes, make it name the permission each action needs before it goes near production.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Check-in is remediated with a least-disruptive action you approved in <strong>Review</strong> mode (not ungoverned automation); <code>booking</code> is healthy, latency is back to baseline, and <strong>the setting the change altered matches what the repository declares</strong>. Compensating around it is not a fix.</li>
-<li><code>check-challenge.ps1 3</code> passes.</li>
+<li>Check-in is fixed by a least-disruptive action you approved in <strong>Review</strong> mode, not by ungoverned automation.</li>
+<li><code>booking</code> is healthy, latency is back to baseline, and <strong>the setting the change altered matches what the repository declares</strong>. Compensating around it is not a fix.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">3</span>
 </code></pre></div>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Recover check-in safely.</strong> Ask the agent for a remediation <em>plan</em> before any
-action. The plan names the permission the write needs, and it is what you are
-approving.</p>
-<p>The safe fix puts back exactly what the last change took away, rather than a value
-someone picks now. It shouldn't need to restart the cache, touch the database, or
-go near the nodes.</p>
-<p><strong>How an experienced operator would have scoped it.</strong> If the agent is wandering,
-this is how someone who has done this before would ask:</p>
-<blockquote>
-<p>Turn my check-in hypothesis into a concrete remediation plan for the <code>booking</code>
-service. Restore it to exactly what the repository's manifest declares rather
-than to a value you choose, and tell me exactly what permission the action
-needs.</p>
-</blockquote>
-<p>Note what it refuses to leave open: <em>restore to what the repository declares, not
-a value you choose</em>. Compensating around a bad change looks like a fix and isn't.</p>
-<p>Not every change arrives through git. This one was applied straight to the cluster,
-so the rollout history <em>is</em> the change record, which is exactly why teams insist
-changes go through a pipeline that leaves one.</p>
+<ul>
+<li>Ask for a <em>plan</em> before any action. The plan names the permission the write needs, and it is what you approve.</li>
+<li>The safe fix puts back exactly what the last change took away. It should not restart the cache, touch the database or go near the nodes.</li>
+<li>Still stuck? Ask: <em>"Turn my check-in hypothesis into a remediation plan for <code>booking</code>. Restore it to exactly what the repository manifest declares, not a value you choose, and tell me what permission the action needs."</em></li>
+</ul>
 </details>
 <details class="question">
-<summary>Stuck? Step-by-step for each task</summary>
-<p>Give each task a genuine attempt first, and skim the hints above. When you want
-the exact clicks, open the matching task below.</p>
+<summary>Stuck? Step by step</summary>
 <details class="note">
 <summary>Task 1 · Plan the fix</summary>
-<ul>
-<li>In the agent chat, paste the <strong>suggested prompt</strong> above (or ask it to turn
-  your check-in hypothesis into a concrete <code>booking</code> remediation plan).</li>
-<li>Read what it proposes: it should say exactly what it will change and the
-  <strong>permission</strong> the action needs. That is what you are about to approve.</li>
-</ul>
+<p>Paste the prompt above. The agent should say exactly what it will change and which <strong>permission</strong> that needs.</p>
 <div class="admonition warning">
 <p class="admonition-title">A plan is not a pending action</p>
-<p>The agent will write you a plan and then stop, and no <strong>Approve</strong> button
-appears. That is correct behaviour, not a broken setup: in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr>
-the approval card only appears when the agent <strong>attempts a write</strong>. Read
-commands run on their own; nothing is queued until you say so.</p>
-<p>When you're happy with the plan, tell it to go:</p>
-<blockquote>
-<p>Apply the booking remediation now.</p>
-</blockquote>
-<p>The approval appears then. The agent may also describe a plan as
-"ready for approval" while nothing is actually queued, so treat that
-phrasing as "I've finished thinking", not "your turn to click".</p>
+<p>No <strong>Approve</strong> button appears yet. That is correct: in <abbr title="SRE Agent run mode where it proposes a plan and waits for your approval before any write.">Review mode</abbr> the card only appears when the
+agent <strong>attempts a write</strong>. When you are happy with the plan, say <em>"Apply the booking remediation now."</em></p>
 </div>
 </details>
 <details class="note">
 <summary>Task 2 · Recover under approval</summary>
+<p>Read the exact command on the approval card, then select <strong>Approve action</strong>. One instruction queues
+one action. Then confirm <code>booking</code> latency is back to baseline and that no override is left on the
+deployment.</p>
 <ul>
-<li>Keep the agent in <strong>Review</strong>. When the approval card appears, read the exact
-  command on it, then select <strong>Approve action</strong>: it runs once, and the action
-  is recorded.</li>
-<li>Note <em>what</em> gated that write. The recovery is a Kubernetes operation, so it
-  was your <strong>run mode</strong> that held it for approval, not the agent's Azure role.
-  Permissions decide what the agent can reach; run mode decides whether it
-  asks first.</li>
+<li><strong>What gated the write?</strong> Your <strong>run mode</strong>, not the agent's Azure role. Permissions decide what the
+  agent can reach; run mode decides whether it asks first.</li>
+<li><strong>Who made the change?</strong> The card says <em>"Agent permissions will be used"</em>: the write runs as the
+  agent's <abbr title="An Azure identity for a workload (here, the agent) so it can authenticate without stored secrets.">managed identity</abbr>, so the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> names the agent, not you. Remember this in Challenge 6.</li>
+<li><strong>Check the change record.</strong> <code>kubectl rollout history deploy/booking -n aetherion</code> shows the bad change
+  and the fix with the same change cause, because the fix did not record why. That is why teams insist on
+  pipelines that leave a record.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Read the small print on the approval card</p>
-<p>It says <strong>"Agent permissions will be used to complete this action."</strong>
-The write runs as the agent's own <abbr title="An Azure identity for a workload (here, the agent) so it can authenticate without stored secrets.">managed identity</abbr>, not as you. So the
-change is attributed in the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> to the agent, not to the person
-who approved it. Worth remembering in Challenge 6, when you're asked to
-produce change evidence and explain who did what.</p>
-</div>
-<p>One instruction queues <strong>one</strong> action: approving the check-in fix queues
-nothing else.</p>
-<p>Then verify <code>booking</code> latency is back to baseline, and confirm the change was
-actually reverted rather than worked around. The running configuration
-should match what the repository's manifest declares, with no leftover
-override on the deployment.</p>
-<div class="admonition note">
-<p class="admonition-title">Check the change record afterwards</p>
-<p>Run <code>kubectl rollout history deploy/booking -n aetherion</code> once check-in
-is fixed. The revision that <em>caused</em> the incident and the revision that
-<em>fixed</em> it carry the same change cause, because the remediation didn't
-set a new one.</p>
-<p>Nothing is broken. It's what happens when a fix is applied without
-recording why, and it's the reason your change log stops being evidence.
-You'll want this in the Challenge 6 handover.</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Optional · ask it to draw what it just told you</p>
-<p>Once check-in is back, try:</p>
-<blockquote>
-<p>Visualize this incident as a diagram: the timeline, the causal chain
-from the change to the slowdown, and the request path a passenger hit.</p>
-</blockquote>
-<p>The agent writes the image in its Python sandbox and hands it back. It
-takes seconds, and it is the artefact that works on a bridge call: the
-people who join late understand the shape of the incident without
-reading a single line of your investigation.</p>
-<p>You will render a formal PDF in Challenge 6. This is the version you
-produce <strong>while the incident is still open</strong>, which is usually when it
-is worth the most.</p>
-</div>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/execute-mitigations">Review and approve mitigations</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/manage-permissions">Manage roles and permissions</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/connect-source-code">Connect source code</a></li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Up next: let the agent act on its own</p>
 <p>Every write so far waited for your approval. Next, a minor incident is safe enough to hand to the agent.</p>
 <p><a class="md-button md-button--primary" href="../04-autonomous-recovery/">Proceed to Challenge 4 · Autonomous Recovery →</a></p>
 </div>
-<hr />
 
 
 
