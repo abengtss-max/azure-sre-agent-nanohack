@@ -12,7 +12,9 @@ param(
     # Empty means "ask Azure for the current stable version". Set it only to pin.
     [string]$KubernetesVersion = "",
     [ValidateSet("Consumption", "Developer")]
-    [string]$ApimSkuName = "Consumption"
+    [string]$ApimSkuName = "Consumption",
+    [string]$PgSkuName = "Standard_B2s",
+    [string]$PgSkuTier = "Burstable"
 )
 
 $ErrorActionPreference = "Stop"
@@ -111,6 +113,8 @@ for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
             aksNodeVmSize=$AksNodeVmSize `
             kubernetesVersion=$aksVersion `
             apimSkuName=$ApimSkuName `
+            pgSkuName=$PgSkuName `
+            pgSkuTier=$PgSkuTier `
         --query properties.outputs -o json
     if ($LASTEXITCODE -eq 0) { break }
     if ($attempt -lt $maxAttempts) {

@@ -35,6 +35,12 @@ param aksNodeCount int = 2
 @description('VM size for AKS worker nodes.')
 param aksNodeVmSize string = 'Standard_D4s_v5'
 
+@description('PostgreSQL SKU. Burstable B-series can have no regional capacity; Standard_D2ds_v5 with tier GeneralPurpose is the fallback.')
+param pgSkuName string = 'Standard_B2s'
+
+@allowed([ 'Burstable', 'GeneralPurpose' ])
+param pgSkuTier string = 'Burstable'
+
 @description('Kubernetes version for AKS. Leave empty to let AKS pick the current default; the deploy script resolves the stable GA version at runtime and passes it in.')
 param kubernetesVersion string = ''
 
@@ -153,8 +159,8 @@ resource pg 'Microsoft.DBforPostgreSQL/flexibleServers@2024-08-01' = {
   name: pgName
   location: location
   sku: {
-    name: 'Standard_B2s'
-    tier: 'Burstable'
+    name: pgSkuName
+    tier: pgSkuTier
   }
   properties: {
     version: '16'

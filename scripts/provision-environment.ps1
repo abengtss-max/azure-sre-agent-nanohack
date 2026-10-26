@@ -19,6 +19,9 @@ param(
     [string]$KubernetesVersion = "",
     [ValidateSet("Consumption", "Developer")]
     [string]$ApimSkuName = "Consumption",
+    [string]$PgSkuName = "Standard_B2s",
+    [ValidateSet("Burstable", "GeneralPurpose")]
+    [string]$PgSkuTier = "Burstable",
     [switch]$SkipProviders,
     [switch]$SkipValidate,
     [switch]$NoBanner,
@@ -117,7 +120,9 @@ Write-Step $step $totalSteps "Deploying infrastructure (a few minutes)"
     -AksNodeCount $AksNodeCount `
     -AksNodeVmSize $AksNodeVmSize `
     -KubernetesVersion $KubernetesVersion `
-    -ApimSkuName $ApimSkuName
+    -ApimSkuName $ApimSkuName `
+    -PgSkuName $PgSkuName `
+    -PgSkuTier $PgSkuTier
 if ($LASTEXITCODE -ne 0) { throw "Infrastructure deployment failed." }
 
 # --- Step 3: build & push image ----------------------------------------------

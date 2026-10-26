@@ -73,7 +73,7 @@ if ([string]::IsNullOrWhiteSpace($apiKey)) { throw "Could not read the APIM key.
 $state['apimSubscriptionKey'] = $apiKey
 
 # HTTPS is optional: only present if the facilitator ran the HTTPS step.
-$host_ = kubectl get gateway aetherion-gw -n $ns -o jsonpath='{.spec.listeners[0].hostname}' 2>$null
+$host_ = kubectl get httproute gateway-route -n $ns -o jsonpath='{.spec.hostnames[0]}' 2>$null
 if (-not [string]::IsNullOrWhiteSpace($host_)) {
     $state['gatewayFqdn'] = $host_
     $state['httpsUrl'] = "https://$host_/"
