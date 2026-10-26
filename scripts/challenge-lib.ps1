@@ -605,7 +605,7 @@ $script:Challenges = [ordered]@{
     }
 
     7 = @{
-        Title = "Extra A: Give the Agent Aetherion's Operational Knowledge"
+        Title = "Give the Agent Aetherion's Operational Knowledge"
         Kind  = 'fault'
         Start = {
             Invoke-Fault 'crew-scheduling' 'slow-query'
@@ -628,7 +628,7 @@ $script:Challenges = [ordered]@{
     }
 
     8 = @{
-        Title = 'Extra B: Engineer the Agent: Specialist Subagent and Reusable Skill'
+        Title = 'Engineer the Agent: Specialist Subagent and Reusable Skill'
         Kind  = 'config'
         Start = {
             Write-Host "The platform is stable - the right time to invest in tooling." -ForegroundColor Gray
@@ -830,7 +830,11 @@ function ConvertTo-ChallengeKey([string]$Value) {
     switch -Regex ($Value.Trim()) {
         '^[Aa]$' { return 7 }
         '^[Bb]$' { return 8 }
-        '^\d+$'  { return [int]$Value }
+        '^\d+$'  {
+            $n = [int]$Value
+            if ($n -ge 1 -and $n -le (Get-MaxChallenge)) { return $n }
+            throw "Unknown challenge '$Value'. Use 1..$(Get-MaxChallenge), or A / B for the optional extras."
+        }
         default  { throw "Unknown challenge '$Value'. Use 1..$(Get-MaxChallenge), or A / B for the optional extras." }
     }
 }
