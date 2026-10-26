@@ -1,0 +1,508 @@
+'use strict';
+
+const path = require('path');
+const http = require('http');
+const express = require('express');
+const { initTelemetry, trackEvent, trackMetric } = require('./lib/telemetry');
+const db = require('./lib/db');
+const redisLib = require('./lib/redis');
+
+const ROLE = (process.env.ROLE || 'gateway').toLowerCase();
+const PORT = parseInt(process.env.PORT || '8080', 10);
+
+// A Kubernetes Service load-balances per TCP connection, not per request, so a
+// pooled keep-alive client pins every call to whichever pod it first reached.
+// The gateway would then poll and proxy to a single replica and never see the
+// others. Opening a connection per call keeps traffic spread across endpoints.
+const serviceAgent = new http.Agent({ keepAlive: false, maxSockets: 64 });
+
+function callService(target, { method = 'GET', body = null, timeoutMs = 6000 } = {}) {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    let url;
+    try {
+      url = new URL(target);
+    } catch (err) {
+      resolve({ ok: false, status: 0, latencyMs: 0, error: 'BadTarget', body: '' });
+      return;
+    }
+
+    const payload = body === null ? null : Buffer.from(body);
+    const req = http.request(
+      {
+        agent: serviceAgent,
+        protocol: url.protocol,
+        hostname: url.hostname,
+        port: url.port || 80,
+        path: url.pathname + url.search,
+        method,
+        headers: payload
+          ? { 'content-type': 'application/json', 'content-length': payload.length }
+          : { 'content-type': 'application/json' }
+      },
+      (res) => {
+        const chunks = [];
+        res.on('data', (c) => chunks.push(c));
+        res.on('end', () =>
+          resolve({
+            ok: res.statusCode >= 200 && res.statusCode < 400,
+            status: res.statusCode,
+            latencyMs: Date.now() - started,
+            contentType: res.headers['content-type'],
+            body: Buffer.concat(chunks).toString('utf8')
+          })
+        );
+      }
+    );
+
+    req.setTimeout(timeoutMs, () => req.destroy(new Error('timeout')));
+    req.on('error', (err) =>
+      resolve({
+        ok: false,
+        status: 0,
+        latencyMs: Date.now() - started,
+        error: err.message === 'timeout' ? 'TimeoutError' : err.code || 'RequestError',
+        body: ''
+      })
+    );
+    if (payload) req.write(payload);
+    req.end();
+  });
+}
+
+initTelemetry(ROLE);
+
+const app = express();
+app.use(express.json());
+
+let started = Date.now();
+let requestCount = 0;
+
+app.use((req, res, next) => {
+  requestCount++;
+  next();
+});
+
+// ---- Health probes -------------------------------------------------------
+app.get('/health/live', (req, res) => {
+  res.json({ status: 'alive', role: ROLE, uptimeSec: Math.round((Date.now() - started) / 1000) });
+});
+
+app.get('/health/ready', async (req, res) => {
+  // Readiness answers "can this pod serve", not "is the database fast". A slow
+  // dependency must not eject every replica from the Service - that turns a
+  // degradation into an outage and stops the remedy from ever taking effect.
+  if (['crew-scheduling', 'booking', 'telemetry-ingest'].includes(ROLE) && db.isConfigured()) {
+    try {
+      const pool = db.getPool();
+      await Promise.race([
+        pool.query('SELECT 1'),
+        new Promise((resolve) => setTimeout(() => resolve('slow'), 1000))
+      ]);
+    } catch (err) {
+      // Only a hard failure (refused, unresolvable, rejected credentials) means
+      // this pod genuinely cannot serve.
+      const hard = ['ECONNREFUSED', 'ENOTFOUND', 'EHOSTUNREACH', '28P01', '3D000'];
+      if (hard.includes(err.code)) {
+        return res.status(503).json({ status: 'not-ready', reason: 'database unreachable' });
+      }
+    }
+  }
+  res.json({ status: 'ready', role: ROLE });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ role: ROLE, requests: requestCount });
+});
+
+// ---- Role-specific domain endpoints -------------------------------------
+function registerRoleRoutes() {
+  switch (ROLE) {
+    case 'flight-ops':
+      app.get('/api/flights', async (req, res) => {
+        try {
+          const pool = db.getPool();
+          const { rows } = pool
+            ? await pool.query('SELECT flight_no, origin, destination, status FROM flights ORDER BY id LIMIT 30')
+            : { rows: [] };
+          res.json({ flights: rows, count: rows.length });
+        } catch (err) {
+          res.status(500).json({ error: err.message });
+        }
+      });
+      break;
+
+    case 'crew-scheduling':
+      app.get('/api/crew', async (req, res) => {
+        try {
+          const pool = db.getPool();
+          const { rows } = await pool.query(
+            `SELECT flight_no, crew_member, role, assigned
+               FROM crew_roster
+              WHERE assigned = true AND role <> 'Cabin Crew'
+              ORDER BY flight_no, crew_member
+              LIMIT 40`
+          );
+          res.json({ roster: rows, count: rows.length });
+        } catch (err) {
+          res.status(500).json({ error: err.message });
+        }
+      });
+      break;
+
+    case 'booking':
+      app.post('/api/book', async (req, res) => {
+        try {
+          const pnr = 'PNR' + Math.random().toString(36).slice(2, 8).toUpperCase();
+          const passenger = (req.body && req.body.passenger) || 'Traveler';
+          const flightNo = (req.body && req.body.flightNo) || 'AE100';
+          const pool = db.getPool();
+          if (pool) {
+            await pool.query('INSERT INTO bookings (pnr, passenger, flight_no) VALUES ($1,$2,$3)', [
+              pnr, passenger, flightNo
+            ]);
+          }
+          const rc = await redisLib.getClient();
+          if (rc) await redisLib.cacheSet(`session:${pnr}`, JSON.stringify({ passenger, flightNo }), 900);
+          res.json({ pnr, passenger, flightNo, status: 'confirmed' });
+        } catch (err) {
+          res.status(500).json({ error: err.message });
+        }
+      });
+      app.get('/api/bookings/count', async (req, res) => {
+        try {
+          // The counter is served from the cache; the reservations table only
+          // grows, so it is refreshed from the planner's row estimate rather
+          // than scanned on every request.
+          const cached = await redisLib.cacheGet('bookings:count');
+          if (cached !== null && cached !== undefined) {
+            return res.json({ bookings: Number(cached), cached: true });
+          }
+          const pool = db.getPool();
+          if (!pool) return res.json({ bookings: 0 });
+          const { rows } = await pool.query(
+            "SELECT reltuples::bigint AS c FROM pg_class WHERE relname = 'bookings'"
+          );
+          let count = rows.length ? Number(rows[0].c) : -1;
+          if (count < 0) {
+            const exact = await pool.query('SELECT count(*)::int AS c FROM bookings');
+            count = exact.rows[0].c;
+          }
+          await redisLib.cacheSet('bookings:count', String(count), 10);
+          res.json({ bookings: count, cached: false });
+        } catch (err) {
+          res.status(500).json({ error: err.message });
+        }
+      });
+      break;
+
+    case 'baggage':
+      app.get('/api/baggage/throughput', async (req, res) => {
+        res.json({ bagsPerMinute: 400 + Math.floor(Math.random() * 200), inTransit: Math.floor(Math.random() * 5000) });
+      });
+      break;
+
+    case 'telemetry-ingest':
+      app.post('/api/telemetry', async (req, res) => {
+        trackMetric('aircraft_telemetry_events', 1);
+        res.json({ accepted: true, ts: Date.now() });
+      });
+      break;
+
+    case 'gateway':
+    default:
+      registerGatewayRoutes();
+      break;
+  }
+}
+
+// The gateway serves the Ops Center GUI and aggregates downstream health.
+function registerGatewayRoutes() {
+  const services = {
+    'flight-ops': process.env.SVC_FLIGHT_OPS || 'http://flight-ops',
+    'crew-scheduling': process.env.SVC_CREW || 'http://crew-scheduling',
+    booking: process.env.SVC_BOOKING || 'http://booking',
+    baggage: process.env.SVC_BAGGAGE || 'http://baggage',
+    'telemetry-ingest': process.env.SVC_TELEMETRY || 'http://telemetry-ingest'
+  };
+
+  const LABELS = {
+    'flight-ops': 'Flight Ops',
+    'crew-scheduling': 'Crew Scheduling',
+    booking: 'Booking & Check-in',
+    baggage: 'Baggage',
+    'telemetry-ingest': 'Telemetry Ingest'
+  };
+  // Core revenue-path services raise higher-severity incidents when they fail.
+  const CORE = { booking: 'SEV-1', 'flight-ops': 'SEV-1' };
+
+  // Probe each service's REAL user-facing endpoint (not just readiness) so the
+  // Ops Center reflects what customers actually experience, not just pod state.
+  // This measures genuine request latency and status.
+  const PROBES = {
+    'flight-ops': { method: 'GET', path: '/api/flights' },
+    'crew-scheduling': { method: 'GET', path: '/api/crew' },
+    booking: { method: 'GET', path: '/api/bookings/count' },
+    baggage: { method: 'GET', path: '/api/baggage/throughput' },
+    'telemetry-ingest': { method: 'POST', path: '/api/telemetry' }
+  };
+
+  async function probe(url, spec) {
+    const r = await callService(`${url}${spec.path}`, {
+      method: spec.method,
+      body: spec.method === 'POST' ? '{}' : null,
+      timeoutMs: 4000
+    });
+    return { ok: r.ok, status: r.status, latencyMs: r.latencyMs, error: r.error };
+  }
+
+  // A single probe samples an instantaneous queue depth, so one reading swings
+  // wildly on a service that is steadily degraded. Keep a short window per
+  // service and report percentiles, the way an operator would read a dashboard.
+  const WINDOW = 12;
+  // Aetherion's latency budget for a passenger-facing path.
+  const LATENCY_BUDGET_MS = 400;
+  const history = {};
+  const latest = {};
+
+  function summarise(name) {
+    const h = history[name] || [];
+    if (!h.length) return null;
+
+    const sorted = h.map((x) => x.latencyMs).sort((a, b) => a - b);
+    const at = (q) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * q) - 1))];
+    const failures = h.filter((x) => !x.ok).length;
+    const errorRatePct = +((failures / h.length) * 100).toFixed(1);
+    const last = h[h.length - 1];
+
+    return {
+      // A service is down when it is mostly failing, not because one probe
+      // caught it mid-restart.
+      ok: errorRatePct < 50,
+      status: last.status,
+      latencyMs: at(0.95),
+      p50Ms: at(0.5),
+      p95Ms: at(0.95),
+      lastMs: last.latencyMs,
+      errorRatePct,
+      samples: h.length
+    };
+  }
+
+  async function sampleAll() {
+    await Promise.all(
+      Object.entries(services).map(async ([name, url]) => {
+        const result = await probe(url, PROBES[name]);
+        const h = history[name] || (history[name] = []);
+        h.push(result);
+        if (h.length > WINDOW) h.shift();
+        latest[name] = result;
+      })
+    );
+  }
+
+  // Real throughput. Every request to the platform passes through a gateway pod,
+  // but each pod only counts its own share, so the pods publish their rate to
+  // Redis and the dashboard sums them. Without Redis we report this pod's own
+  // measured rate rather than inventing a number.
+  const POD_ID = process.env.HOSTNAME || `gw-${process.pid}`;
+  const RATE_WINDOW_MS = 60000;
+  const RATE_KEY = 'ops:gwrates';
+  const rateSamples = [];
+
+  function recordRateSample() {
+    const now = Date.now();
+    rateSamples.push({ t: now, c: requestCount });
+    while (rateSamples.length > 2 && now - rateSamples[0].t > RATE_WINDOW_MS) rateSamples.shift();
+  }
+
+  function localRatePerMin() {
+    if (rateSamples.length < 2) return null;
+    const first = rateSamples[0];
+    const last = rateSamples[rateSamples.length - 1];
+    const elapsedMs = last.t - first.t;
+    if (elapsedMs < 5000) return null;
+    return Math.max(0, Math.round(((last.c - first.c) / elapsedMs) * 60000));
+  }
+
+  // Published on the timer, not on request: a pod that never serves /api/status
+  // still contributes its share of the traffic.
+  async function publishRate() {
+    const mine = localRatePerMin();
+    if (mine === null) return;
+    try {
+      const rc = await redisLib.getClient();
+      if (!rc) return;
+      await rc.hSet(RATE_KEY, POD_ID, JSON.stringify({ rate: mine, ts: Date.now() }));
+      await rc.expire(RATE_KEY, 120);
+    } catch (e) { /* rate falls back to this pod's own measurement */ }
+  }
+
+  async function platformRatePerMin() {
+    const mine = localRatePerMin();
+    try {
+      const rc = await redisLib.getClient();
+      if (!rc) return mine;
+      const all = await rc.hGetAll(RATE_KEY);
+      let total = 0;
+      let seen = 0;
+      for (const [pod, raw] of Object.entries(all || {})) {
+        try {
+          const entry = JSON.parse(raw);
+          // Drop pods that stopped reporting, so a restart cannot inflate the total.
+          if (Date.now() - entry.ts > 30000) { await rc.hDel(RATE_KEY, pod); continue; }
+          total += entry.rate;
+          seen++;
+        } catch (e) { /* ignore a malformed entry */ }
+      }
+      return seen > 0 ? total : mine;
+    } catch (e) {
+      return mine;
+    }
+  }
+
+  // Poll continuously so the board reflects the platform's recent behaviour
+  // rather than whatever a single request happened to catch.
+  setInterval(() => {
+    sampleAll().catch(() => {});
+    recordRateSample();
+    publishRate().catch(() => {});
+  }, 5000).unref();
+
+  // Derive executive/business/operational signals from the REAL probe results so
+  // every panel reflects the live state of the platform.
+  function deriveSignals(health, requestsPerMin) {
+    const values = Object.values(health);
+    const total = values.length || 1;
+    const down = values.filter((h) => !h.ok).length;
+    const slow = values.filter((h) => h.ok && h.p95Ms > LATENCY_BUDGET_MS).length;
+    const flaky = values.filter((h) => h.ok && h.errorRatePct > 0).length;
+
+    const score = Math.min(100, down * 32 + slow * 20 + flaky * 12 + (down + slow + flaky ? 6 : 4));
+    const level = score >= 60 ? 'HIGH' : score >= 25 ? 'MEDIUM' : 'LOW';
+
+    const latencies = values.map((h) => h.p95Ms || 0).sort((a, b) => a - b);
+    const p95Ms = latencies.length ? latencies[Math.min(latencies.length - 1, Math.ceil(latencies.length * 0.95) - 1)] : 0;
+    // Share of probed requests that actually failed, not the share of services
+    // that are down - otherwise an error-rate incident reads as 0%.
+    const sampled = values.reduce((n, h) => n + (h.samples || 0), 0);
+    const failed = values.reduce((n, h) => n + ((h.samples || 0) * (h.errorRatePct || 0)) / 100, 0);
+    const errorRatePct = sampled ? +((failed / sampled) * 100).toFixed(2) : 0;
+    const availabilityPct = +(100 - errorRatePct).toFixed(2);
+
+    const incidents = [];
+    for (const [name, h] of Object.entries(health)) {
+      const label = LABELS[name] || name;
+      if (!h.ok) {
+        incidents.push({ sev: CORE[name] || 'SEV-2', title: `${label} unavailable`, status: 'Investigating', service: name });
+      } else if (h.errorRatePct > 0) {
+        incidents.push({ sev: 'SEV-3', title: `${label} intermittent errors`, status: 'Investigating', service: name });
+      } else if (h.p95Ms > LATENCY_BUDGET_MS) {
+        incidents.push({ sev: 'SEV-3', title: `${label} elevated latency`, status: 'Monitoring', service: name });
+      }
+    }
+
+    const impact = {
+      revenue: down * 920000 + slow * 140000,
+      passengers: down * 8600 + slow * 1400,
+      flightsDelayed: down * 24 + slow * 6
+    };
+
+    const ribbon = {
+      flightsActive: 1247,
+      passengersInTransit: 182331,
+      airports: 25,
+      aircraftTracked: 873,
+      incidents: incidents.length,
+      slaPct: availabilityPct
+    };
+
+    return {
+      risk: { score, level },
+      metrics: { p95Ms, errorRatePct, availabilityPct, requestsPerMin: requestsPerMin == null ? 0 : requestsPerMin },
+      impact,
+      ribbon,
+      incidents
+    };
+  }
+
+  app.get('/api/status', async (req, res) => {
+    if (!Object.keys(history).length) await sampleAll();
+    const health = {};
+    for (const name of Object.keys(services)) {
+      health[name] = summarise(name) || { ok: false, status: 0, latencyMs: 0, p50Ms: 0, p95Ms: 0, errorRatePct: 100, samples: 0 };
+    }
+    // A service that answers every request twenty times slower than budget is not
+    // "operational", so the headline reads from the same thresholds as the tiles.
+    const healthy = Object.values(health).every(
+      (h) => h.ok && h.errorRatePct === 0 && h.p95Ms <= LATENCY_BUDGET_MS
+    );
+    const requestsPerMin = await platformRatePerMin();
+    const derived = deriveSignals(health, requestsPerMin);
+    trackEvent('ops_status_poll', { healthy: String(healthy), risk: derived.risk.level });
+    res.json({
+      platform: 'Aetherion AirOps',
+      overall: healthy ? 'operational' : 'degraded',
+      services: health,
+      ...derived,
+      generatedAt: new Date().toISOString()
+    });
+  });
+
+
+  // Reverse-proxy the downstream domain endpoints so external traffic (the k6
+  // load generator via APIM, and operators hitting the gateway directly) reaches
+  // the role services. Without this the gateway 404s these paths and the load
+  // never exercises the downstream services, so degradations produce no
+  // signal under load.
+  const PROXY_ROUTES = [
+    { method: 'get', path: '/api/flights', target: services['flight-ops'] },
+    { method: 'get', path: '/api/crew', target: services['crew-scheduling'] },
+    { method: 'post', path: '/api/book', target: services.booking },
+    { method: 'get', path: '/api/bookings/count', target: services.booking },
+    { method: 'get', path: '/api/baggage/throughput', target: services.baggage },
+    { method: 'post', path: '/api/telemetry', target: services['telemetry-ingest'] }
+  ];
+  for (const route of PROXY_ROUTES) {
+    app[route.method](route.path, async (req, res) => {
+      const start = Date.now();
+      const r = await callService(`${route.target}${req.path}`, {
+        method: req.method,
+        body: req.method === 'POST' ? JSON.stringify(req.body || {}) : null,
+        timeoutMs: 6000
+      });
+      if (r.status === 0) {
+        res.status(502).json({
+          error: 'upstream_unreachable',
+          service: route.path,
+          detail: r.error,
+          latencyMs: Date.now() - start
+        });
+        return;
+      }
+      if (r.contentType) res.set('content-type', r.contentType);
+      res.status(r.status).send(r.body);
+    });
+  }
+
+  // Serve the Ops Center single-page GUI
+  const webDir = path.join(__dirname, '..', 'web');
+  app.use('/', express.static(webDir));
+  app.get('/', (req, res) => res.sendFile(path.join(webDir, 'index.html')));
+}
+
+async function bootstrap() {
+  try {
+    if (['flight-ops', 'crew-scheduling', 'booking', 'telemetry-ingest'].includes(ROLE)) {
+      await db.initSchema();
+    }
+  } catch (err) {
+    console.error('[bootstrap] schema init failed (continuing):', err.message);
+  }
+  registerRoleRoutes();
+  app.listen(PORT, () => {
+    console.log(`[aetherion] role=${ROLE} listening on :${PORT}`);
+  });
+}
+
+bootstrap();

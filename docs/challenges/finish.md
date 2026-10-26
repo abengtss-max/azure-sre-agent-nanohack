@@ -1,0 +1,50 @@
+# :material-flag-checkered: Finish: you kept Aetherion flying
+
+!!! success "NanoHack complete"
+    You onboarded a read-only agent, investigated and recovered a live incident under
+    approval, let the agent recover autonomously within guardrails, commanded a Tier-0
+    major incident that the agent had already started working, and briefed leadership.
+    That's the **Reactive → Assisted → Autonomous** journey with the Azure SRE Agent.
+
+### What you can now do
+
+<div class="grid cards why-cards" markdown>
+
+- :material-radar: **Detect & investigate** incidents read-only, with evidence-backed root cause
+- :material-account-check-outline: **Recover safely** under approval or bounded autonomy
+- :material-book-open-variant: **Ground & extend** the agent with runbooks, subagents and skills (the optional extras)
+- :material-file-chart-outline: **Close the loop**: RCA handover and a leadership briefing
+
+</div>
+
+### What changed in your estate
+
+Every incident today was an ordinary change made badly. In a real environment,
+these are the six you'd have to undo, and the list is the change-management
+lesson in miniature:
+
+| Incident | What changed | How it was undone |
+|---|---|---|
+| Check-in slowdown | A "cache migration" repointed `booking` at a cache endpoint that answers nothing, so every read waited out its timeout before falling back to the database | Remove the override so it resolves the real cache again |
+| Flight board dark | A release pinned `flight-ops` to an image tag that was never published | `kubectl rollout undo` |
+| Crew scheduling | The index behind the crew duty lookup went missing, so every request scanned the whole roster table | Rebuild the index under approval |
+| Baggage errors | A canary revision served the wrong API surface behind the same Service | Remove the bad revision |
+| Check-in, under peak load | A cost optimisation cut `booking`'s CPU limit and pinned its replica count, so the autoscaler couldn't absorb the surge | Restore the limit and the autoscaling ceiling |
+| API front door | A backend override was published to the APIM product policy | Restore the default policy |
+
+### Your environment
+
+!!! info "Your facilitator removes it"
+    The environment runs in a shared subscription and your facilitator tears it down
+    after the session. **Do not run the teardown script.** If you want to run the
+    NanoHack again, ask your facilitator.
+
+### Where to go next
+
+- **Use it for real:** [Azure SRE Agent overview](https://learn.microsoft.com/en-us/azure/sre-agent/overview) · [Permissions & run modes](https://learn.microsoft.com/en-us/azure/sre-agent/permissions) · [Skills](https://learn.microsoft.com/en-us/azure/sre-agent/skills)
+- **Go deeper on this build:** [Architecture](../reference/architecture.md) · [Service catalog](../reference/service-catalog.md) · [Commands](../reference/commands.md)
+- **Found it useful?** Share feedback on [GitHub](https://github.com/abengtss-max/azure-sre-agent-nanohack).
+
+---
+
+*Want to go further? Try the optional extras: [Challenge 4](04-ground-the-agent.md) and [Challenge 5](05-engineer-the-agent.md).*

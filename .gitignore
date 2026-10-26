@@ -1,0 +1,27 @@
+# Local environment state (contains generated PostgreSQL password + APIM key)
+scripts/.env.aetherion.json
+
+# Node
+node_modules/
+npm-debug.log*
+*.log
+
+# Rendered/temp
+*.rendered.yaml
+
+# MkDocs site build + local docs venv
+site/
+.venv-docs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+.publish-cache/
+
+# Internal, never-committed planning / brainstorming notes (local only)
+internal-planning/
+
+# Compiled Bicep ARM output
+infra/main.json
+publish/overlays/infra/main.json
