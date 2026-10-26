@@ -343,7 +343,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../challenges/04-ground-the-agent/" class="md-tabs__link">
+        <a href="../../challenges/extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -824,7 +824,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -840,7 +840,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -853,14 +853,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../../challenges/04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -918,7 +918,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -934,7 +934,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -947,14 +947,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/07-major-incident/" class="md-nav__link">
+      <a href="../../challenges/05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -975,14 +975,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/08-leadership-briefing/" class="md-nav__link">
+      <a href="../../challenges/06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1104,14 +1104,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/04-ground-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1132,14 +1132,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/05-engineer-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1805,7 +1805,7 @@ the agent back to your own environment.</p>
 <tbody>
 <tr>
 <td><strong>Azure Monitor / <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> / <abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr></strong> <em>(used in this hack)</em></td>
-<td>Primary signal plane: metrics, traces, logs, and the <strong>Sev1 alert</strong> that triggers a response plan in Challenge 7.</td>
+<td>Primary signal plane: metrics, traces, logs, and the <strong>Sev1 alert</strong> that triggers a response plan in Challenge 5.</td>
 </tr>
 <tr>
 <td><strong><abbr title="Dashboarding tool used here to visualise AKS and Application Insights metrics.">Grafana</abbr></strong> <em>(used in this hack)</em></td>
@@ -1824,7 +1824,7 @@ paging, and corrective work stay in the systems your team already uses.</p>
 <h2 id="how-to-think-about-integrations-in-this-hack">How to think about integrations in this hack<a class="headerlink" href="#how-to-think-about-integrations-in-this-hack" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Ground first.</strong> Point the agent at the code and runbooks that define "correct"
-  before you point it at dashboards. Challenge 3 and Challenge 7 both lean on
+  before you point it at dashboards. Challenge 3 and Challenge 5 both lean on
   change correlation.</li>
 <li><strong>Signals in, actions out.</strong> Monitoring integrations tell the agent <em>something is
   wrong</em>; ticketing/paging integrations make sure the <em>right humans</em> are looped in

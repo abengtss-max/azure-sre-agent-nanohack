@@ -18,7 +18,7 @@
         <link rel="prev" href="../02-detect-and-investigate/">
       
       
-        <link rel="next" href="../06-autonomous-and-cost/">
+        <link rel="next" href="../04-autonomous-recovery/">
       
       
         
@@ -347,7 +347,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../04-ground-the-agent/" class="md-tabs__link">
+        <a href="../extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -933,7 +933,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -949,7 +949,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -962,14 +962,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -1030,7 +1030,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -1046,7 +1046,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -1059,14 +1059,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-major-incident/" class="md-nav__link">
+      <a href="../05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -1087,14 +1087,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-leadership-briefing/" class="md-nav__link">
+      <a href="../06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1216,14 +1216,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-ground-the-agent/" class="md-nav__link">
+      <a href="../extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1244,14 +1244,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-engineer-the-agent/" class="md-nav__link">
+      <a href="../extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1759,10 +1759,10 @@
 
 <h1 id="challenge-3-controlled-recovery">Challenge 3 · Controlled Recovery<a class="headerlink" href="#challenge-3-controlled-recovery" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
-<p class="admonition-title">Challenge 03 of 08 · Act II: Human-Guided Operations</p>
+<p class="admonition-title">Challenge 03 of 06 · Act II: Human-Guided Operations</p>
 <p><strong>Run mode:</strong> Review → approved write · <strong>Governance:</strong> every action approved by you</p>
 <p><strong>Time:</strong> ~25 min</p>
-<p><strong>Stage:</strong> Foundation → <strong>Operations</strong> → Engineering → Autonomous → Major Incident</p>
+<p><strong>Stage:</strong> Foundation → <strong>Operations</strong> → Autonomous → Major Incident</p>
 </div>
 <p><strong>Situation.</strong> Your check-in hypothesis from Challenge 2 is solid and
 <strong>Elena Vasquez</strong>, Aetherion's operations director, wants it fixed <strong>safely</strong>,
@@ -1865,7 +1865,7 @@ phrasing as "I've finished thinking", not "your turn to click".</p>
 <p>It says <strong>"Agent permissions will be used to complete this action."</strong>
 The write runs as the agent's own <abbr title="An Azure identity for a workload (here, the agent) so it can authenticate without stored secrets.">managed identity</abbr>, not as you. So the
 change is attributed in the <abbr title="Azure's record of control-plane changes (who changed what, and when).">Activity Log</abbr> to the agent, not to the person
-who approved it. Worth remembering in Challenge 8, when you're asked to
+who approved it. Worth remembering in Challenge 6, when you're asked to
 produce change evidence and explain who did what.</p>
 </div>
 <p>One instruction queues <strong>one</strong> action: approving the check-in fix queues
@@ -1882,7 +1882,7 @@ is fixed. The revision that <em>caused</em> the incident and the revision that
 set a new one.</p>
 <p>Nothing is broken. It's what happens when a fix is applied without
 recording why, and it's the reason your change log stops being evidence.
-You'll want this in the Challenge 8 handover.</p>
+You'll want this in the Challenge 6 handover.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Optional · ask it to draw what it just told you</p>
@@ -1895,7 +1895,7 @@ from the change to the slowdown, and the request path a passenger hit.</p>
 takes seconds, and it is the artefact that works on a bridge call: the
 people who join late understand the shape of the incident without
 reading a single line of your investigation.</p>
-<p>You will render a formal PDF in Challenge 8. This is the version you
+<p>You will render a formal PDF in Challenge 6. This is the version you
 produce <strong>while the incident is still open</strong>, which is usually when it
 is worth the most.</p>
 </div>
@@ -1910,7 +1910,7 @@ is worth the most.</p>
 <div class="admonition success">
 <p class="admonition-title">Up next: let the agent act on its own</p>
 <p>Every write so far waited for your approval. Next, a minor incident is safe enough to hand to the agent.</p>
-<p><a class="md-button md-button--primary" href="../06-autonomous-and-cost/">Proceed to Challenge 6 · Autonomous Recovery →</a></p>
+<p><a class="md-button md-button--primary" href="../04-autonomous-recovery/">Proceed to Challenge 4 · Autonomous Recovery →</a></p>
 </div>
 <hr />
 
@@ -1965,13 +1965,13 @@ is worth the most.</p>
         
         
           
-          <a href="../06-autonomous-and-cost/" class="md-footer__link md-footer__link--next" aria-label="Next: 06 · Autonomous Recovery &amp; Sev1 Plan">
+          <a href="../04-autonomous-recovery/" class="md-footer__link md-footer__link--next" aria-label="Next: 04 · Autonomous Recovery &amp; Sev1 Plan">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                06 · Autonomous Recovery & Sev1 Plan
+                04 · Autonomous Recovery & Sev1 Plan
               </div>
             </div>
             <div class="md-footer__button md-icon">

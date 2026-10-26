@@ -12,13 +12,13 @@
         <meta name="author" content="Aetherion AirOps Reliability Engineering">
       
       
-        <link rel="canonical" href="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/07-major-incident/">
+        <link rel="canonical" href="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/04-autonomous-recovery/">
       
       
-        <link rel="prev" href="../06-autonomous-and-cost/">
+        <link rel="prev" href="../03-controlled-recovery/">
       
       
-        <link rel="next" href="../08-leadership-briefing/">
+        <link rel="next" href="../05-major-incident/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>07 · Final Major Incident - Azure SRE Agent NanoHack</title>
+        <title>04 · Autonomous Recovery & Sev1 Plan - Azure SRE Agent NanoHack</title>
       
     
     
@@ -71,14 +71,14 @@
   
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Azure SRE Agent NanoHack">
-  <meta property="og:title" content="07 · Final Major Incident · Azure SRE Agent NanoHack">
+  <meta property="og:title" content="04 · Autonomous Recovery & Sev1 Plan · Azure SRE Agent NanoHack">
   <meta property="og:description" content="Hands-on NanoHack (3-4 hours): use the Azure SRE Agent to detect, investigate and recover live incidents on the Aetherion AirOps Tier-0 aviation platform.">
   <meta property="og:image" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/assets/og-cover.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/07-major-incident/">
+  <meta property="og:url" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/challenges/04-autonomous-recovery/">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="07 · Final Major Incident · Azure SRE Agent NanoHack">
+  <meta name="twitter:title" content="04 · Autonomous Recovery & Sev1 Plan · Azure SRE Agent NanoHack">
   <meta name="twitter:description" content="Hands-on NanoHack (3-4 hours): use the Azure SRE Agent to detect, investigate and recover live incidents on the Aetherion AirOps Tier-0 aviation platform.">
   <meta name="twitter:image" content="https://abengtss-max.github.io/azure-sre-agent-nanohack/assets/og-cover.jpg">
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/aetherion-airops-favicon-16.png">
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#challenge-7-final-incident-restore-global-check-in-before-peak-departure" class="md-skip">
+        <a href="#challenge-4-autonomous-recovery-and-cost-aware-governance" class="md-skip">
           Skip to content
         </a>
       
@@ -140,7 +140,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              07 · Final Major Incident
+              04 · Autonomous Recovery & Sev1 Plan
             
           </span>
         </div>
@@ -347,7 +347,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../04-ground-the-agent/" class="md-tabs__link">
+        <a href="../extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -807,109 +807,12 @@
                 
   
   
-  
-  
-    
-    
-      
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Act IV · Autonomous
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Act IV · Autonomous
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-autonomous-and-cost/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06 · Autonomous Recovery & Sev1 Plan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
   
     
     
-      
-        
       
         
       
@@ -929,17 +832,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act III · Autonomous
   
 
     
@@ -950,12 +853,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act III · Autonomous
   
 
           </label>
@@ -984,7 +887,7 @@
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -1002,7 +905,7 @@
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -1080,6 +983,75 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Act IV · Major Incident
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Act IV · Major Incident
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -1087,14 +1059,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-leadership-briefing/" class="md-nav__link">
+      <a href="../05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    05 · Final Major Incident
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-leadership-briefing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Leadership Briefing
   
 
     
@@ -1216,14 +1216,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-ground-the-agent/" class="md-nav__link">
+      <a href="../extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1244,14 +1244,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-engineer-the-agent/" class="md-nav__link">
+      <a href="../extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1757,325 +1757,256 @@
   
 
 
-<h1 id="challenge-7-final-incident-restore-global-check-in-before-peak-departure">Challenge 7 · Final Incident: Restore Global Check-In Before Peak Departure<a class="headerlink" href="#challenge-7-final-incident-restore-global-check-in-before-peak-departure" title="Permanent link">&para;</a></h1>
+<h1 id="challenge-4-autonomous-recovery-and-cost-aware-governance">Challenge 4 · Autonomous Recovery and Cost-Aware Governance<a class="headerlink" href="#challenge-4-autonomous-recovery-and-cost-aware-governance" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
-<p class="admonition-title">Challenge 07 of 08 · Act V: Major Incident</p>
-<p><strong>Run mode:</strong> Review + bounded automation · <strong>Governance:</strong> you decide what is approved and what is automated · <strong>Time:</strong> ~60 min</p>
-<p><strong>Stage:</strong> Foundation → Operations → Engineering → Autonomous → <strong>Major Incident</strong></p>
+<p class="admonition-title">Challenge 04 of 06 · Act III: Autonomous</p>
+<p><strong>Run mode:</strong> Autonomous (bounded) · <strong>Governance:</strong> bounded <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, no per-action approval · <strong>Time:</strong> ~30 min (+15 min for the optional cost tasks)</p>
+<p><strong>Stage:</strong> Foundation → Operations → <strong>Autonomous</strong> → Major Incident</p>
 </div>
-<div class="admonition danger">
-<p class="admonition-title">Before you start: is your Sev1 plan armed?</p>
-<p>This challenge depends on the response plan you built in Challenge 6. Open
-<strong>Incidents → Triggers + response plans</strong> and confirm one plan shows
-<strong>Status: On</strong> and <strong>Severity: Sev1</strong>. If it doesn't, fix that first — the agent
-will never pick the incident up, and Task 1 has nothing to hand over.</p>
-</div>
-<p><strong>Situation.</strong> Minutes before peak departures, several services fail together under
-a passenger surge: the flight board is dark, crew scheduling is timing out, check-in
-has slowed to a crawl, and the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is failing legitimate partner and
-mobile traffic. The risk gauge is pinned. Everything you built today is now in play.</p>
-<p><strong>You are not first on scene.</strong> The Sev1 plan you armed in Challenge 6 matched the
-alert before anyone paged you, and the agent has been working the incident
-unattended. Your first job is not to fix something. It is to find out what has
-already been changed in your absence.</p>
-<details class="note">
-<summary>Incident timeline</summary>
-<table>
-<thead>
-<tr>
-<th>Time</th>
-<th>Event</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>18:07</td>
-<td>A change rolls out to flight-ops</td>
-</tr>
-<tr>
-<td>18:12</td>
-<td>Check-in / booking latency begins to climb</td>
-</tr>
-<tr>
-<td>18:14</td>
-<td>Crew scheduling starts timing out under load</td>
-</tr>
-<tr>
-<td>18:17</td>
-<td>The live flight board goes dark for all stations</td>
-</tr>
-<tr>
-<td>18:21</td>
-<td>The API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> starts failing partner traffic</td>
-</tr>
-<tr>
-<td>18:23</td>
-<td><code>aetherion-major-incident</code> fires at <strong>Sev1</strong> and auto-triggers the agent</td>
-</tr>
-<tr>
-<td>18:25</td>
-<td>Major incident declared. You are incident commander</td>
-</tr>
-<tr>
-<td>18:26</td>
-<td>The agent is already acting on its own in a thread it opened itself</td>
-</tr>
-</tbody>
-</table>
-</details>
-<p><strong>Mission.</strong> Take handover from the agent, then bring Aetherion AirOps back to full
-health before peak departure: verify what it changed without you, triage the rest by
-business tier, remediate within the runbook guardrails, and verify recovery service
-by service.</p>
+<p><strong>Situation.</strong> Every write so far has waited for your approval. Now a minor issue
+appears: the <strong>baggage</strong> service returns intermittent errors to a slice of traffic.
+Bags still move, no flight is grounded, and the fix is one you've already seen. That's
+exactly when it's safe to let the agent run <strong>autonomously</strong> while you supervise.
+Meanwhile <strong>Priya Nair</strong> from FinOps wants to know what autonomy costs before you
+make more of it.</p>
+<p><strong>Mission.</strong> Let the agent recover the baggage service autonomously within
+guardrails, design a cost-aware operating model for its Azure Agent Unit (<abbr title="Agent Activity Unit — the consumption/billing unit for Azure SRE Agent usage.">AAU</abbr>)
+usage, and arm a <strong>Sev1</strong> response plan so the next major incident auto-triggers an
+investigation, before you reach Challenge 5.</p>
 <div class="admonition example">
 <p class="admonition-title">Start this challenge</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">7</span>   <span class="c"># open the incident</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="nb">start-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>   <span class="c"># open the incident</span>
 </code></pre></div>
-<p>Four faults land at once and the board takes two or three minutes to reflect
-all of them. Don't start triaging from a half-drawn picture.</p>
+<p>Give it a couple of minutes. The errors only show up once enough traffic has
+hit the affected slice for the board to average it.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Take handover from the agent.</strong> Find the thread the Sev1 alert opened by itself, read what the agent has already changed unattended, and verify it independently before you trust it.</li>
-<li><strong>Read the whole board.</strong> Order the remaining work by business impact (situational awareness and legal-to-fly first), not the loudest alert.</li>
-<li><strong>Check the agent's memory.</strong> Ask whether a similar incident has happened and let session insights surface the earlier RCA.</li>
-<li><strong>Delegate and recover.</strong> If you built the optional specialist subagent and crew recovery skill (Challenge 5), hand <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to the subagent and reuse the skill. If not, direct the main agent yourself, keeping every action governed.</li>
-<li><strong>Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>.</strong> Use the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison and treat the policy change as customer-facing.</li>
-<li><strong>Verify every service.</strong> Confirm each fix from telemetry, then the whole platform back to green.</li>
+<li><strong>Confirm the symptom.</strong> Verify the baggage errors in the Ops Center and telemetry so you know what "recovered" looks like.</li>
+<li><strong>Decide the bounds, then hand over.</strong> Judge whether this incident is safe to automate, switch to <strong>Autonomous</strong> mode, let the agent fix it end-to-end, then review the action log.</li>
+<li><strong>Optional · See where AAUs go.</strong> Inspect the agent's consumption by thread type and purpose.</li>
+<li><strong>Optional · Design a cost-aware model.</strong> Name concrete reductions without losing reliability or investigation quality.</li>
+<li><strong>Arm the Sev1 response plan.</strong> Connect Azure Monitor as an incident platform, then bind a <strong>Sev1</strong> plan to the pre-provisioned <code>aetherion-major-incident</code> alert so the next major incident auto-triggers. <strong>Challenge 5 does not work without this</strong> — do it before you move on.</li>
 </ol>
-<details class="note">
-<summary>Why Sev1?</summary>
-<p>The environment pre-provisions a fixed <strong>Sev1</strong> Azure Monitor alert
-(<code>aetherion-major-incident</code>, on <abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed requests). A response
-plan matches incoming alerts <strong>by severity</strong>, so your filter must be <code>Sev1</code> to
-catch it; a broader filter fires on everything, a mismatched one catches nothing.</p>
-<p><strong>This one is graded.</strong> <code>check-challenge.ps1 7</code> marks the platform's end state
-<em>and</em> confirms a Sev1 major-incident alert actually fired since you started the
-challenge. Driving the whole incident by hand is not enough on its own.</p>
-</details>
-<p><img alt="Challenge 7 storyboard: Sam, Aria and Elena restore global check-in before peak departure" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-7.webp" /></p>
+<p><img alt="Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery and cost governance" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-6.webp" /></p>
 <h3 id="suggested-azure-sre-agent-prompt">Suggested Azure <abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent prompt<a class="headerlink" href="#suggested-azure-sre-agent-prompt" title="Permanent link">&para;</a></h3>
 <div class="admonition quote">
-<p class="admonition-title">Paste into the <code>[Sev1] aetherion-major-incident</code> thread</p>
-<p>You picked this incident up before I did. List every action you have already
-taken without my approval, and how I can verify each one. Then tell me what is
-still broken, and what you recommend I deal with first.</p>
+<p class="admonition-title">Paste into the agent chat</p>
+<p>The <code>baggage</code> service is returning intermittent errors to a slice of traffic
+while other requests succeed. Detect the fault, decide the sanctioned reversible
+fix, apply it autonomously, and report exactly what you changed and why it was
+safe to automate.</p>
 </div>
-<details class="warning">
-<summary>Paste it into the right thread</summary>
-<p>This prompt only works <strong>inside the thread the response plan opened by itself</strong>.
-Started in a fresh chat it has no incident to refer to, so it answers about
-whatever it worked on last — validated: pasted into a new thread it reported on
-the <em>previous</em> challenge's baggage canary and declared traffic healthy while
-the flight board was 100% down. Open the <code>[Sev1] aetherion-major-incident</code>
-thread first (Task 1), then ask.</p>
-</details>
-<p>The second half is the part you own. It will give you an order; your job is to
-decide whether it's the right one for an airline at peak departure.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
-<li>You can state exactly what the agent changed without your approval, and you verified it from the cluster rather than from its summary.</li>
-<li>All remaining failing services are triaged by priority and restored with sanctioned, reversible actions.</li>
-<li>The API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> serves legitimate traffic again, and every fix is verified from telemetry/health before closing.</li>
-<li>The platform is healthy and <code>check-challenge.ps1 7</code> passes.</li>
+<li>The agent detects the baggage errors, executes a sanctioned fix autonomously, the service returns to healthy, and you can explain why it was safe to automate: small <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, a reversible and well-understood remedy, a service that is degraded rather than down, and a run mode you chose deliberately.</li>
+<li><em>(Optional, Tasks 3 and 4)</em> You've reviewed real consumption data and produced a written, defensibly balanced operating model: the two largest consumers with their actual figures, at least three named levers each with a trade-off, and an explicit reliability floor. Cost-aware, not merely cheapest. The check does not require it.</li>
+<li>A <strong>Sev1 major-incident response plan</strong> is active on the agent (bound to the pre-provisioned <code>aetherion-major-incident</code> alert), ready to auto-trigger the agent when the next major incident fires.</li>
+<li><code>check-challenge.ps1 4</code> passes.</li>
 </ul>
+<details class="warning">
+<summary>Ground truth only</summary>
+<p>Don't invent <abbr title="Agent Activity Unit — the consumption/billing unit for Azure SRE Agent usage.">AAU</abbr> rates, prices, or savings figures. Use only values present in
+the <a href="https://learn.microsoft.com/en-us/azure/sre-agent/pricing-billing">official docs</a>
+or your environment. Don't claim that stopping an agent ends all billing.</p>
+</details>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
-<p>Run this when you're done. It grades the real end state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">7</span>
+<p>Run this when you're done. It grades the real end state, then walks your
+response plan setting by setting. Answer those honestly: a plan that looks
+right and never fires is the one failure that doesn't surface until
+Challenge 5 is already open.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">./</span><span class="n">scripts</span><span class="p">/</span><span class="n">check-challenge</span><span class="p">.</span><span class="n">ps1</span> <span class="n">4</span>
 </code></pre></div>
 </div>
 <details class="tip">
 <summary>Hints</summary>
-<p><strong>Triage, don't firefight.</strong> Don't fix the first red tile you see; read the whole
-board and order by business tier. You've solved every one of these failure classes
-already: delegate <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> triage to your specialist and apply your crew recovery skill
-if you built them, otherwise direct the main agent.</p>
-<p><strong>Is it the service, or the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>?</strong> If the backend is healthy when you hit it
-directly but clients still fail, the problem is at the API <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr>, not the
-services. Treat the policy change as customer-facing.</p>
-<p>Expect the board to get <em>worse</em> once the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> is fixed: with traffic flowing
-again, the degradations further back become visible. That is normal in a layered
-incident. Restoring the edge doesn't create new faults, it reveals the ones the
-outage was masking.</p>
-<p><strong>How an experienced incident commander would have scoped it.</strong> If the agent's
-account is scattered, this is how someone who has run a major incident would ask
-for it:</p>
-<blockquote>
-<p>Read the whole Aetherion board and give me an incident-command triage: list every
-service still failing, order remediation by business tier (situational awareness
-and legal-to-fly first), and for each name the sanctioned, reversible fix. Have we
-seen a similar crew-scheduling / check-in incident before? Pull the earlier RCA
-from session memory.</p>
-</blockquote>
-<p>Two things in there are doing the work: <strong>order by business tier</strong>, which stops you
-fixing whatever is loudest, and <strong>pull the earlier RCA from memory</strong>, which is the
-difference between solving crew scheduling for the first time and the second.</p>
+<p><strong>Make autonomy safe.</strong> Confirm the symptom first; you can't judge an autonomous
+recovery without knowing what healthy looks like.</p>
+<p>What makes this one safe to automate isn't a permission setting. It's the shape of
+the incident: one degraded (not down) service, a remedy you can undo in seconds, and
+a <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr> you can describe in a sentence. Decide that <em>before</em> you switch mode,
+then switch to Autonomous and resist helping.</p>
+<p><strong>Cost model and the Sev1 plan.</strong> Optimize what you can measure: look at real
+consumption by thread type and purpose — consolidation, deleting unused pilots,
+model fit, and plan/schedule noise are the biggest levers. Aim for a <em>balanced</em>
+model, not the cheapest. Then wire the <strong>Sev1</strong> response plan now, matching the
+pre-provisioned <code>aetherion-major-incident</code> alert's severity exactly, or you'll be
+wiring it by hand while the board is red in Challenge 5.</p>
 </details>
 <details class="question">
 <summary>Stuck? Step-by-step for each task</summary>
 <p>Give each task a genuine attempt first, and skim the hints above. When you want
 the exact clicks, open the matching task below.</p>
 <details class="note">
-<summary>Task 1 · Take handover from the agent</summary>
-<p>The agent started before you did. Treat this exactly like taking handover
-from a colleague who has been on the incident for ten minutes.</p>
-<p><strong>Find the thread it opened by itself.</strong> In the agent's chat list, look for
-a thread whose title starts with <code>[Sev1] aetherion-major-incident</code>. You did
-not create it. The response plan did, off the alert.</p>
-<p><strong>Read what it already changed.</strong> Ask it directly, in that thread:</p>
-<blockquote>
-<p>You picked this incident up before I did. List every action you have
-already taken without my approval, what each one changed, and how I can
-verify it. Then list what you deliberately did not act on, and why.</p>
-</blockquote>
-<p><strong>Verify it yourself. Do not take its word for it.</strong> The whole point of
-autonomy is that you audit the outcome, not the intention:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">rollout</span> <span class="nb">history </span><span class="n">deployment</span><span class="p">/</span><span class="n">flight-ops</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">kubectl</span> <span class="n">-n</span> <span class="n">aetherion</span> <span class="n">get</span> <span class="n">deploy</span> <span class="n">flight-ops</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s1">'{.spec.template.spec.containers[0].image}{"\n"}'</span>
-</code></pre></div>
-<p>Expect it to have acted on <strong>some</strong> tiers and not others. It moves where the
-fix is unambiguous and reversible, and holds where the call is a judgement.
-Those held tiers are your work.</p>
-<div class="admonition tip">
-<p class="admonition-title">If no thread was auto-created</p>
-<p>The plan did not match. Open <strong>Incidents → Triggers + response plans</strong>
-and confirm your Sev1 plan shows <strong>Status: On</strong> and <strong>Severity: Sev1</strong>,
-that <strong>Subagent name</strong> reads <em>Set up</em> (none bound), and that no leftover
-<strong>quickstart</strong> plan is competing with it. Fix it, then re-run the start
-command so the alert fires again. You can still command the incident by
-hand, but the alert has to fire for this challenge to pass.</p>
-</div>
-</details>
-<details class="note">
-<summary>Task 2 · Read the whole board</summary>
+<summary>Task 1 · Confirm the symptom</summary>
 <ul>
-<li>Open the Operations Center and list every failing service. Order remediation
-  by business tier: situational awareness (flight board) and legal-to-fly
-  (crew) first, not by whichever alert is loudest.</li>
+<li>Check the <strong>baggage</strong> tile and telemetry (<abbr title="Azure application-performance monitoring — requests, dependencies, exceptions, latency.">Application Insights</abbr> failed
+  requests) so you know the current error rate and what "recovered" means.</li>
+<li>Some requests succeed and some fail. Ask the agent what is different about
+  the ones that fail — the answer is in what sits behind the Service, not in
+  the Service itself.</li>
+<li><code>kubectl get pods -n aetherion -l app=baggage --show-labels</code> shows the same
+  thing directly, if you want to confirm the agent's account.</li>
 </ul>
-<div class="admonition warning">
-<p class="admonition-title">The board cannot see your <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></p>
-<p>The Operations Center polls each service <strong>directly</strong>, inside the
-cluster. It has no view of API Management. So the board can read fully
-green while every partner and mobile customer is getting a 500 at the
-edge, which is exactly what happens in this incident.</p>
-<p>Validated: an agent told to "read the whole board" recovered all four
-in-cluster faults, declared the incident stable, and never mentioned the
-<abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> once. It was not wrong about the board. The board was
-incomplete.</p>
-<p>Treat the internal board and the customer-facing path as two separate
-questions, and always ask the second one. That is Task 5.</p>
-</div>
 </details>
 <details class="note">
-<summary>Task 3 · Check the agent's memory</summary>
-<p>Ask it directly, in the same thread as the investigation:</p>
-<blockquote>
-<p>Have you investigated a crew-scheduling or check-in slowdown on this
-platform before? Recall what the root cause was and which fix worked.</p>
-</blockquote>
-<p>If you saved a hypothesis in Challenge 2 or grounded the runbooks in
-Challenge 4, session insights should surface the earlier RCA and the fix.
-That is the point of the exercise: the second incident should cost less
-than the first.</p>
-</details>
-<details class="note">
-<summary>Task 4 · Delegate and recover</summary>
+<summary>Task 2 · Decide the bounds, then hand over</summary>
+<ul>
+<li>Write down the bounds first: what may the agent change, what must it never
+  touch, and how would you undo it? That judgement is the governance here.</li>
+<li>Set the run mode to <strong>Autonomous</strong> (on the response plan / task), then let
+  the agent detect → decide → fix on its own. Review the action log after.</li>
+</ul>
 <div class="admonition note">
-<p class="admonition-title">Optional extras</p>
-<p>The <code>aks-triage</code> subagent and the <code>crew-query-path-recovery</code> skill come from
-Challenge 5, which is an optional extra. If you skipped it, ask the main
-agent to do the same work: it has the same tools, just no specialist.</p>
+<p class="admonition-title">\"Never delete\" applies to data, not to a bad revision</p>
+<p>Aetherion's guardrails forbid deleting <strong>data resources</strong>: databases,
+caches, storage. Removing a workload revision that shouldn't be serving
+is an ordinary, reversible rollback, and it is the sanctioned fix here.</p>
 </div>
-<p>Name both the subagent and the skill explicitly. Neither fires on its own.</p>
-<p>For the <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> tier:</p>
-<blockquote>
-<p>Delegate this to your <code>aks-triage</code> subagent: which workloads in the
-<code>aetherion</code> namespace are unhealthy, and why?</p>
-</blockquote>
-<p>Expect it to investigate and then <strong>hand back rather than fix</strong>. You scoped
-it without <code>RunKubectlWriteCommand</code> in Challenge 5, so it physically cannot
-change the cluster. It reports; you and the main agent act on it. That split
-is deliberate, and under incident pressure it is worth noticing that you do
-not have to trust a prompt to keep it in its lane.</p>
-<p>For the crew tier:</p>
-<blockquote>
-<p>Use the <code>crew-query-path-recovery</code> skill to restore crew scheduling.</p>
-</blockquote>
-<p>Crew is failing the same way it did in Challenge 4, so the skill carries.
-Asking the agent to "act as" a specialist does <strong>not</strong> invoke the subagent,
-it only adopts the persona.</p>
+</details>
+<details class="note">
+<summary>Task 3 · See where AAUs go</summary>
 <ul>
-<li>Keep actions governed and follow the runbooks: fix the layer that is
-  actually saturated, never delete the database.</li>
+<li>In the agent, open <strong>Settings → Agent Consumption</strong> and read the breakdown
+  by thread type (Chats, Incidents, Scheduled tasks, Triggers) and by thread.</li>
+<li><strong>Write down the two largest consumers and their actual figures.</strong> Task 4
+  is only worth doing against real numbers, and "incidents cost more than
+  chats" is a guess until you have looked.</li>
 </ul>
+</details>
+<details class="note">
+<summary>Task 4 · Design a cost-aware model</summary>
+<p>Produce something a finance partner could actually review, not an essay.
+Ask the agent for it, then correct it against what you saw in Task 3:</p>
+<blockquote>
+<p>Using my agent consumption figures, draft a cost-aware operating model
+as a table: each row a named lever, what it would save, and what it
+costs us in reliability, ownership, isolation or investigation quality.
+Add one line stating the floor we will not go below. Use only the
+figures I give you and do not invent numbers.</p>
+</blockquote>
+<p><strong>It has to contain, at minimum:</strong></p>
+<ul>
+<li><strong>Three named levers</strong> with a real figure attached to each — for example
+  consolidating workloads under one agent, deleting unused pilot agents,
+  matching the model to the task, or trimming noisy response plans and
+  schedules.</li>
+<li><strong>A reliability floor</strong> stated explicitly: the thing you will not trade
+  away to save AAUs. Cheapest is not the target.</li>
+</ul>
+<p>Keep it: it is useful material for the leadership briefing in Challenge 6.
+<code>check-challenge.ps1 4</code> does not grade it.</p>
+</details>
+<details class="note">
+<summary>Task 5 · Arm the Sev1 response plan</summary>
+<p><strong>Connect an incident platform first.</strong> Response plans do not exist until
+you do, and this catches people out.</p>
+<ol>
+<li><strong>Incidents</strong> in the left-hand menu → <strong>Triggers + response plans</strong>.</li>
+<li><strong>Connect an incident platform</strong> → <strong>Azure Monitor</strong> → <strong>Save</strong>. It
+   configures itself from your agent's scope, so there is nothing to fill in.
+   You'll see <strong>Azure Monitor is connected</strong> in the top right when it's done.</li>
+<li><strong>Delete the quickstart plan.</strong> Connecting a platform automatically
+   creates a default <strong>quickstart</strong> response plan. Leave it there and it
+   runs alongside yours, which can route the incident to the wrong agent
+   or process it twice. Select it and delete it before you continue.</li>
+<li><strong>+ Create a response plan</strong>.</li>
+</ol>
+<p>Fill it in as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incident response plan name</td>
+<td><code>aetherion-major-incident-sev1</code></td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td><strong>Sev1</strong></td>
+</tr>
+<tr>
+<td>Title contains / does not contain</td>
+<td>leave empty</td>
+</tr>
+<tr>
+<td><strong>Response subagent</strong></td>
+<td><strong>leave empty</strong></td>
+</tr>
+<tr>
+<td><strong>Agent autonomy level</strong></td>
+<td><strong>Autonomous</strong></td>
+</tr>
+<tr>
+<td><strong>Alert reinvestigation cooldown</strong></td>
+<td><strong>disable it</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Then <strong>Next</strong> to see <strong>Incidents preview</strong>, and create.</p>
+<p><strong>Severity is the whole match.</strong> The environment pre-provisions
+<code>aetherion-major-incident</code> at <strong>Sev1</strong>, so a plan filtered to anything else
+catches nothing and a broader plan fires on everything. Leave the title
+filters empty. They are an extra way to miss the alert, not an extra
+safeguard.</p>
 <div class="admonition tip">
-<p class="admonition-title">Time the crew tier specifically</p>
-<p>Note the minutes from starting on crew scheduling to the point it is
-healthy again. This is the same failure class you worked cold in
-Challenge 2 and diagnosed in Challenge 4 — but now the agent has your
-runbooks, a skill written for exactly this, and a memory of the earlier
-incident.</p>
-<p>Compare it with the number you wrote down in Challenge 2. Whatever the
-gap is, that is the finding you take to Challenge 8. If it is smaller
-than you expected, that is worth reporting honestly too.</p>
+<p class="admonition-title">Why not route it to your <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr> specialist?</p>
+<p>The <strong>Response subagent</strong> dropdown is populated by any subagent you
+built (Extra B is an optional extra), so it is tempting to select
+<code>aks-triage</code> here if you have one. Don't.</p>
+<p>Challenge 5's incident spans <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr>, API Management <strong>and</strong> PostgreSQL.
+Handing the auto-triggered investigation to an <abbr title="Azure Kubernetes Service — the managed Kubernetes cluster that runs the microservices.">AKS</abbr>-only specialist
+scopes it to one tier of a four-tier incident. Leave it empty so the
+main agent commands the whole board, and delegate to the specialist
+<em>within</em> the incident instead.</p>
+<p>Deciding <em>not</em> to use a tool you just built is a real operational
+judgement, and this is the moment to make it.</p>
 </div>
-</details>
-<details class="note">
-<summary>Task 5 · Localize the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr></summary>
-<ul>
-<li>Compare backend health <strong>directly</strong> (<code>http://&lt;gateway-ip&gt;/api/status</code>)
-  against the same call <strong>through <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr></strong>. If direct returns 200 but <abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr>
-  fails, the fault is the <strong>edge policy</strong>, not the service; treat the change
-  as customer-facing.</li>
-</ul>
 <div class="admonition warning">
-<p class="admonition-title">Run the comparison from your machine, not the agent</p>
-<p>The agent's sandbox egress can block the public gateway IP and
-<code>*.azure-api.net</code>, so an external probe it runs itself comes back as a
-proxy-generated <code>403</code> before the request ever reaches Azure. Validated:
-the agent repaired the policy correctly and then reported it could not
-confirm the fix externally.</p>
-<p>Do the direct-vs-<abbr title="Azure API Management — the API &quot;front door&quot; that authenticates and rate-limits traffic to the services.">APIM</abbr> comparison yourself, and treat the agent's
-"external check failed" as a tooling limit rather than evidence the fix
-did not land. Confirm from the policy XML plus your own call:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$st</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="p">./</span><span class="n">scripts</span><span class="p">/.</span><span class="n">env</span><span class="p">.</span><span class="n">aetherion</span><span class="p">.</span><span class="n">json</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"http://</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">gatewayIp</span><span class="p">)</span><span class="s2">/api/status"</span><span class="p">).</span><span class="n">StatusCode</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">(</span><span class="nb">Invoke-WebRequest</span> <span class="s2">"</span><span class="p">$(</span><span class="nv">$st</span><span class="p">.</span><span class="n">apimGatewayUrl</span><span class="p">)</span><span class="s2">/aetherion/api/status"</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   <span class="n">-Headers</span> <span class="p">@{</span> <span class="s1">'Ocp-Apim-Subscription-Key'</span> <span class="p">=</span> <span class="nv">$st</span><span class="p">.</span><span class="n">apimSubscriptionKey</span> <span class="p">}).</span><span class="n">StatusCode</span>
-</code></pre></div>
+<p class="admonition-title">Turn the cooldown off for this workshop</p>
+<p><strong>Alert reinvestigation cooldown</strong> defaults to enabled at 3 hours: the
+plan skips reinvestigation if the same plan already started one inside
+that window. Sensible in production, wrong here. Re-run Challenge 5
+and the plan silently will not fire the second time.</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Why it can fix this at all</p>
-<p>Everywhere else today the agent has held write access to Kubernetes and
-nothing else. It can repair the <abbr title="The single public entry point (API Management) through which all client traffic passes.">front door</abbr> because its identity also
-holds <strong>API Management Service Contributor</strong>, scoped to the API
-Management service alone rather than the resource group.</p>
-<p>Narrow enough to fix this, too narrow to touch anything else. That is
-what least privilege looks like when it is actually load-bearing: had it
-been scoped to the resource group, the same repair would have carried the
-authority to change every resource in the environment.</p>
+<div class="admonition danger">
+<p class="admonition-title">Choose Autonomous, and understand what you are choosing</p>
+<p>Selecting <strong>Autonomous</strong> shows an information icon. Open it and read the
+<strong><abbr title="SRE Agent run mode where it executes approved classes of action without pausing for each step.">Autonomous mode</abbr> acknowledgment</strong> before you accept: it covers the
+agent's boundaries, the model's limitations, and the fact that scoping
+its access and reviewing its outcomes remain your responsibility.</p>
+<p>In production you would start at <strong>Review</strong> and only promote a plan to
+<strong>Autonomous</strong> once you trust its tool selection. You are promoting it
+after one supervised autonomous recovery in this challenge, which is
+faster than you should move on a real platform. That is a deliberate
+trade so Challenge 5 can show you what unattended response looks like.</p>
 </div>
-</details>
-<details class="note">
-<summary>Task 6 · Verify every service</summary>
-<ul>
-<li>Confirm each fix from telemetry / health before closing, then check the
-  whole platform is green and <code>/api/flights</code> responds.</li>
-</ul>
+<p><strong>Autonomy level is per plan</strong>, separate from the agent's own run mode. At
+<strong>Autonomous</strong>, the auto-triggered investigation can mitigate without waiting
+for you. It will not fix everything: it acts where the fix is unambiguous and
+reversible, and leaves the judgement calls. Challenge 5 is built around that
+split, and your first job there is to audit what it decided to do alone.</p>
+<p>Do this <strong>now</strong>. Challenge 5 depends on it auto-triggering, and
+<code>check-challenge.ps1 4</code> will ask you about each of the six settings above
+one at a time. Every one of them is a way to end up with a plan that is
+listed, looks correct, and quietly matches nothing.</p>
 </details>
 </details>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response">Automate incident response</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/run-modes">Run modes</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/pricing-billing">Pricing and billing</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/incident-response-plans">Incident response plans</a></li>
-<li><a href="https://learn.microsoft.com/en-us/azure/sre-agent/execute-mitigations">Review and approve mitigations</a></li>
 </ul>
 <div class="admonition success">
-<p class="admonition-title">Up next: brief airline leadership</p>
-<p>The incident is technically closed; now leadership needs it closed formally.</p>
-<p><a class="md-button md-button--primary" href="../08-leadership-briefing/">Proceed to Challenge 8 · Leadership Briefing →</a></p>
+<p class="admonition-title">Up next: the final major incident</p>
+<p>Your Sev1 plan is armed at <strong>Autonomous</strong>. When everything breaks at once, the agent triggers itself and starts working the incident before anyone pages you. You arrive second, and your first job is to audit what it already did.</p>
+<p><a class="md-button md-button--primary" href="../05-major-incident/">Proceed to Challenge 5 · Final Major Incident →</a></p>
 </div>
 <hr />
 
@@ -2113,7 +2044,7 @@ authority to change every resource in the environment.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-autonomous-and-cost/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 06 · Autonomous Recovery &amp; Sev1 Plan">
+          <a href="../03-controlled-recovery/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 03 · Controlled Recovery">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2123,20 +2054,20 @@ authority to change every resource in the environment.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                06 · Autonomous Recovery & Sev1 Plan
+                03 · Controlled Recovery
               </div>
             </div>
           </a>
         
         
           
-          <a href="../08-leadership-briefing/" class="md-footer__link md-footer__link--next" aria-label="Next: 08 · Leadership Briefing">
+          <a href="../05-major-incident/" class="md-footer__link md-footer__link--next" aria-label="Next: 05 · Final Major Incident">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                08 · Leadership Briefing
+                05 · Final Major Incident
               </div>
             </div>
             <div class="md-footer__button md-icon">

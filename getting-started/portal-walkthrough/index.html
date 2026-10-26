@@ -341,7 +341,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../challenges/04-ground-the-agent/" class="md-tabs__link">
+        <a href="../../challenges/extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -822,7 +822,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -838,7 +838,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -851,14 +851,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../../challenges/04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -916,7 +916,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -932,7 +932,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -945,14 +945,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/07-major-incident/" class="md-nav__link">
+      <a href="../../challenges/05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -973,14 +973,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/08-leadership-briefing/" class="md-nav__link">
+      <a href="../../challenges/06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1102,14 +1102,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/04-ground-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1130,14 +1130,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/05-engineer-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -2131,7 +2131,7 @@ separate steps. Create alone grants no access to your app.</p>
 scope keeps the agent focused on just this application.</p>
 </div>
 <blockquote>
-<p><strong>Knowledge</strong> is connected later, in Challenge 4, not here.</p>
+<p><strong>Knowledge</strong> is connected later, in Extra A, not here.</p>
 </blockquote>
 <hr />
 <h2 id="e-reader">E · Give the agent read-only (<abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr>) access<a class="headerlink" href="#e-reader" title="Permanent link">&para;</a></h2>
@@ -2164,7 +2164,7 @@ run mode (section F), not from the role.</p>
 <li><strong>Review</strong> (default): the agent proposes a plan and waits for your approval
    before any write. Use this for Acts I-III.</li>
 <li><strong>Autonomous:</strong> the agent executes approved classes of action without pausing.
-   Only switch a <strong>specific, validated</strong> fault to Autonomous (Challenge 6).</li>
+   Only switch a <strong>specific, validated</strong> fault to Autonomous (Challenge 4).</li>
 <li>Changing run mode is approved by the <strong><abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent Administrator</strong> role.</li>
 </ol>
 <hr />
@@ -2241,11 +2241,11 @@ own identity, which is why scoping that identity matters.</p>
 <li><strong>Scope the Tools panel deliberately.</strong> Left alone the subagent inherits all
    46 tools, which makes it a persona rather than a specialist. Selecting tools
    <em>replaces</em> the inherited set instead of adding to it, so your list has to be
-   complete, not a highlight reel. Challenge 5 gives the exact eight tools and
+   complete, not a highlight reel. Extra B gives the exact eight tools and
    the reason for each. Instructions are advisory; the tool list is what is
    actually enforced.</li>
 <li><strong>Leave Skills inherited while you build.</strong> Who owns which skill is a
-   deliberate decision you make in Challenge 5, Task 3.</li>
+   deliberate decision you make in Extra B, Task 3.</li>
 <li><strong>Create</strong>, then use it by asking the main agent to <strong>delegate to it by name</strong>
    ("delegate this to your <code>aks-triage</code> subagent"). Asking the agent to "act as"
    a specialist does not invoke the subagent. It just adopts the persona.</li>

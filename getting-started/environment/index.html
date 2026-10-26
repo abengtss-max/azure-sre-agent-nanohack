@@ -345,7 +345,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../challenges/04-ground-the-agent/" class="md-tabs__link">
+        <a href="../../challenges/extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -937,7 +937,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -953,7 +953,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -966,14 +966,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../../challenges/04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -1031,7 +1031,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -1047,7 +1047,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -1060,14 +1060,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/07-major-incident/" class="md-nav__link">
+      <a href="../../challenges/05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -1088,14 +1088,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/08-leadership-briefing/" class="md-nav__link">
+      <a href="../../challenges/06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1217,14 +1217,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/04-ground-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1245,14 +1245,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/05-engineer-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1824,7 +1824,7 @@ need <code>pwsh</code> installed and the <code>winget</code> step replaced with 
 <tr>
 <td>GitHub CLI (<code>gh</code>)</td>
 <td>any recent</td>
-<td>optional, but the steps below and Challenge 8 give <code>gh</code> one-liners, and the Challenge 8 grader uses it to confirm your work instead of asking you</td>
+<td>optional, but the steps below and Challenge 6 give <code>gh</code> one-liners, and the Challenge 6 grader uses it to confirm your work instead of asking you</td>
 </tr>
 </tbody>
 </table>
@@ -1860,13 +1860,13 @@ investigates.</p>
 <td><strong>Lab clone</strong></td>
 <td>This workshop: challenges, scripts, runbooks, the subagent and skill files</td>
 <td><code>git clone</code></td>
-<td>Running <code>start-challenge</code> / <code>check-challenge</code>, and the <code>knowledge/</code> files in the optional Challenge 4</td>
+<td>Running <code>start-challenge</code> / <code>check-challenge</code>, and the <code>knowledge/</code> files in the optional Extra A</td>
 </tr>
 <tr>
 <td><strong>Your app repo</strong></td>
 <td>The Aetherion AirOps application source</td>
 <td><strong>Use this template</strong></td>
-<td>The repo you connect the <strong><abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</strong> to, and the one it writes to in Challenge 8</td>
+<td>The repo you connect the <strong><abbr title="Site Reliability Engineering — running services with software-engineering discipline.">SRE</abbr> Agent</strong> to, and the one it writes to in Challenge 6</td>
 </tr>
 </tbody>
 </table>
@@ -1889,7 +1889,7 @@ it through the Code Access connection you make in Challenge 1, not anonymously.<
 <details class="tip">
 <summary>Why a template and not a fork</summary>
 <p>A fork would work, but GitHub turns <strong>Issues off on every new fork</strong> and
-Challenge 8 has the agent file the incident RCA as an issue. A template copy
+Challenge 6 has the agent file the incident RCA as an issue. A template copy
 arrives with Issues already enabled, so that failure never happens.</p>
 <p>Creating it under your <strong>personal account</strong> also avoids the token-approval
 step in <strong>c)</strong> below.</p>
@@ -1898,7 +1898,7 @@ in the hack depends on that history: Challenge 3 correlates change from the
 Kubernetes <strong>rollout history</strong>, and reads the repo only to answer <em>"what does
 the manifest declare"</em>.</p>
 </details>
-<p><strong>c) Create a GitHub Personal Access Token now.</strong> Challenge 8 has the agent write
+<p><strong>c) Create a GitHub Personal Access Token now.</strong> Challenge 6 has the agent write
 back to your repo — it files the incident RCA as an issue and opens a pull request
 — and the GitHub MCP connector it uses for that accepts <strong>a PAT only</strong>. There is no
 OAuth option on that connector.</p>
@@ -1945,7 +1945,7 @@ and fill it in like this:</p>
 </tbody>
 </table>
 <p>Click <strong>Generate token</strong> and <strong>copy it now</strong> — GitHub shows it once. Keep it in
-your password manager until Challenge 8.</p>
+your password manager until Challenge 6.</p>
 <p>Prefer a classic token? <strong><a href="https://github.com/settings/tokens/new">github.com/settings/tokens/new</a></strong>
 with the top-level <strong><code>repo</code></strong> scope works too.</p>
 <h2 id="3-check-you-have-access">3. Check you have access<a class="headerlink" href="#3-check-you-have-access" title="Permanent link">&para;</a></h2>

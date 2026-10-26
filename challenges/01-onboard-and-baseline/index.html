@@ -347,7 +347,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../04-ground-the-agent/" class="md-tabs__link">
+        <a href="../extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -933,7 +933,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -949,7 +949,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -962,14 +962,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -1030,7 +1030,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -1046,7 +1046,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -1059,14 +1059,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../07-major-incident/" class="md-nav__link">
+      <a href="../05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -1087,14 +1087,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../08-leadership-briefing/" class="md-nav__link">
+      <a href="../06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1216,14 +1216,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-ground-the-agent/" class="md-nav__link">
+      <a href="../extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1244,14 +1244,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-engineer-the-agent/" class="md-nav__link">
+      <a href="../extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1759,9 +1759,9 @@
 
 <h1 id="challenge-1-onboard-the-agent-and-establish-the-baseline">Challenge 1 · Onboard the Agent and Establish the Baseline<a class="headerlink" href="#challenge-1-onboard-the-agent-and-establish-the-baseline" title="Permanent link">&para;</a></h1>
 <div class="admonition abstract">
-<p class="admonition-title">Challenge 01 of 08 · Act I: Foundation</p>
+<p class="admonition-title">Challenge 01 of 06 · Act I: Foundation</p>
 <p><strong>Run mode:</strong> Review · <strong>Access:</strong> scoped to one resource group · <strong>Time:</strong> ~45 min</p>
-<p><strong>Stage:</strong> <strong>Foundation</strong> → Operations → Engineering → Autonomous → Major Incident</p>
+<p><strong>Stage:</strong> <strong>Foundation</strong> → Operations → Autonomous → Major Incident</p>
 </div>
 <p><strong>Situation:</strong> You are <strong>Sam Rivera</strong>, on your first shift as a reliability engineer
 at Aetherion AirOps. Every service tile is green. Beside you is <strong>Aria</strong>, the Azure
@@ -1869,7 +1869,7 @@ access. Choose <strong>Full setup</strong> and connect:</p>
 <strong>Your account</strong> and sign in. Code Access only <em>reads</em> the repo, so
 OAuth is enough, and it refreshes itself. Don't spend the PAT you
 created during setup here — that one is for the GitHub MCP connector
-in Challenge 8, and if it expires overnight this connection dies with
+in Challenge 6, and if it expires overnight this connection dies with
 it. <em>Bring your own GitHub App</em> is for org-managed identities and is
 not needed.</p>
 <div class="admonition danger">
@@ -1893,9 +1893,9 @@ whole hack. It must only ever see
   for the cluster's nodes — leave it out, nothing here needs it.</li>
 </ul>
 <p>Two of the five cards are deliberately left for later. <strong>Incidents</strong> is
-connected in Challenge 6; connecting it now also creates a quickstart
+connected in Challenge 4; connecting it now also creates a quickstart
 response plan you would have to clean up before the final incident.
-<strong>Knowledge files</strong> are loaded in Challenge 4.</p>
+<strong>Knowledge files</strong> are loaded in Extra A.</p>
 <div class="admonition tip">
 <p class="admonition-title">Finish setup before you start chatting</p>
 <p>When the agent finishes deploying, the portal opens a <strong>Team onboarding</strong>
@@ -1903,7 +1903,7 @@ chat and invites you to start talking to it. You can chat before the
 context connections are done — it will answer, just with less to work
 with.</p>
 <p>Give it the full picture first, so Challenge 3 can correlate a rollback
-to a commit and Challenge 4 can read container logs:</p>
+to a commit and Extra A can read container logs:</p>
 <ul>
 <li><strong>Builder → Code Access</strong> lists <code>github.com</code> as <strong>Connected</strong> and your
   <code>aetherion-airops-platform</code> copy as <strong>Ready</strong>, with a recent sync time.</li>
@@ -1928,7 +1928,7 @@ approval, not act.</p>
 <p>Which log sources and code repositories are you connected to right now?</p>
 </blockquote>
 <p>It should name <code>aetherion-law</code> and your repo. If it names neither, the
-<strong>Code</strong> and <strong>Logs</strong> connections did not save, and Challenges 3 and 4 will
+<strong>Code</strong> and <strong>Logs</strong> connections did not save, and Challenge 3 and Extra A will
 underperform for reasons that look like agent weakness rather than setup.</p>
 </details>
 <details class="note">

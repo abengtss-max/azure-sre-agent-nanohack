@@ -343,7 +343,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../challenges/04-ground-the-agent/" class="md-tabs__link">
+        <a href="../../challenges/extra-a-ground-the-agent/" class="md-tabs__link">
           
   
   
@@ -824,7 +824,7 @@
   <span class="md-ellipsis">
     
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
     
@@ -840,7 +840,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act IV · Autonomous
+    Act III · Autonomous
   
 
           </label>
@@ -853,14 +853,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/06-autonomous-and-cost/" class="md-nav__link">
+      <a href="../../challenges/04-autonomous-recovery/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    06 · Autonomous Recovery & Sev1 Plan
+    04 · Autonomous Recovery & Sev1 Plan
   
 
     
@@ -918,7 +918,7 @@
   <span class="md-ellipsis">
     
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
     
@@ -934,7 +934,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Act V · Major Incident
+    Act IV · Major Incident
   
 
           </label>
@@ -947,14 +947,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/07-major-incident/" class="md-nav__link">
+      <a href="../../challenges/05-major-incident/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    07 · Final Major Incident
+    05 · Final Major Incident
   
 
     
@@ -975,14 +975,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/08-leadership-briefing/" class="md-nav__link">
+      <a href="../../challenges/06-leadership-briefing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    08 · Leadership Briefing
+    06 · Leadership Briefing
   
 
     
@@ -1104,14 +1104,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/04-ground-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-a-ground-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    04 · Ground the Agent
+    Extra A · Ground the Agent
   
 
     
@@ -1132,14 +1132,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../challenges/05-engineer-the-agent/" class="md-nav__link">
+      <a href="../../challenges/extra-b-engineer-the-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    05 · Engineer the Agent (Subagent + Skill)
+    Extra B · Engineer the Agent (Subagent + Skill)
   
 
     
@@ -1783,15 +1783,15 @@ provisioner printed, and delete the stale environments with
 <code>./scripts/99-teardown.ps1</code>.</p>
 </details>
 <details class="question">
-<summary>Knowledge files stay stuck and never reach Indexed (Challenge 4)</summary>
+<summary>Knowledge files stay stuck and never reach Indexed (Extra A)</summary>
 <p>Bulk upload can partially fail without reporting it. Open <strong>Builder → Knowledge
 Sources</strong> and check every file individually reached <strong>Indexed</strong>; re-upload any
 that didn't, one at a time. An un-indexed runbook is invisible to the agent, so
 the advice stays generic and the challenge looks broken when it isn't.</p>
 </details>
 <details class="question">
-<summary>The Sev1 response plan never fires (Challenge 6 → 7)</summary>
-<p>This is the failure that only surfaces once Challenge 7 is already open. Check
+<summary>The Sev1 response plan never fires (Challenge 4 → 7)</summary>
+<p>This is the failure that only surfaces once Challenge 5 is already open. Check
 <strong>Incidents → Triggers + response plans</strong>:</p>
 <ul>
 <li><strong>Status</strong> must be <strong>On</strong>, and <strong>Severity</strong> must be exactly <strong>Sev1</strong> — a
@@ -1799,10 +1799,10 @@ the advice stays generic and the challenge looks broken when it isn't.</p>
 <li><strong>Azure Monitor</strong> must be connected as an incident platform.</li>
 <li>No leftover <strong>quickstart</strong> plan should be competing with yours.</li>
 </ul>
-<p>Fix it, then re-run <code>./scripts/start-challenge.ps1 7</code>.</p>
+<p>Fix it, then re-run <code>./scripts/start-challenge.ps1 5</code>.</p>
 </details>
 <details class="question">
-<summary>GitHub writes fail in Challenge 8</summary>
+<summary>GitHub writes fail in Challenge 6</summary>
 <p>The GitHub MCP connector accepts a <strong>PAT only</strong>, and the token you created during
 setup expires quickly by design. Confirm it hasn't expired, and that it is scoped
 to <em>your</em> <code>aetherion-airops-platform</code> copy with <strong>Contents</strong>, <strong>Pull requests</strong>
@@ -1810,7 +1810,7 @@ and <strong>Issues</strong> set to read and write. A token missing one of those 
 step that needs it, not at connection time.</p>
 </details>
 <details class="question">
-<summary>The agent runs out of tools after adding an MCP server (Challenge 8)</summary>
+<summary>The agent runs out of tools after adding an MCP server (Challenge 6)</summary>
 <p>Tools are capped at an <strong>80-tool budget</strong> across the agent. A full MCP server can
 consume most of it on its own. Disable the tools you don't need on the connector
 so the agent keeps the Azure and Kubernetes tools the rest of the day depends on.</p>
