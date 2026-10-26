@@ -29,7 +29,7 @@ $ErrorActionPreference = "Stop"
 $here = $PSScriptRoot
 $repoRoot = Split-Path -Parent $here
 $envFile = Join-Path $here ".env.aetherion.json"
-if (-not (Test-Path $envFile)) { throw "State file not found. Run 03-deploy-app.ps1 first." }
+if (-not (Test-Path $envFile)) { throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first." }
 $state = Get-Content $envFile -Raw | ConvertFrom-Json
 
 # Resolve the target from the state file when not passed explicitly, so surge/reset
@@ -42,7 +42,7 @@ if ([string]::IsNullOrWhiteSpace($LoadGenResourceGroup)) { $LoadGenResourceGroup
 $baseUrl = "$($state.apimGatewayUrl)/aetherion"
 $apiKey = $state.apimSubscriptionKey
 if ([string]::IsNullOrWhiteSpace($apiKey)) {
-    throw "APIM subscription key not found in state. Run 03-deploy-app.ps1 first."
+    throw "APIM subscription key not found in state. Run ./scripts/attach-environment.ps1 -Force to rebuild it."
 }
 # Aetherion's own stations and mobile backend reach the platform directly, so a
 # fault at the partner front door does not take the workload idle.

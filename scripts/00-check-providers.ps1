@@ -49,10 +49,15 @@ foreach ($p in $providers) {
 if ($toRegister.Count -gt 0) {
     Write-Host "Waiting for $($toRegister.Count) provider(s) to finish registering..." -ForegroundColor Cyan
     foreach ($p in $toRegister) {
+        $empty = 0; $waited = 0
         do {
-            Start-Sleep -Seconds 10
+            Start-Sleep -Seconds 10; $waited += 10
             $state = az provider show --namespace $p --query registrationState -o tsv 2>$null
             Write-Host "  [$p] = $state"
+            # An empty answer means az itself is failing (not signed in, or throttled), not that it is still registering.
+            if ([string]::IsNullOrWhiteSpace($state)) { $empty++ } else { $empty = 0 }
+            if ($empty -ge 6) { throw "Azure CLI returned no status for $p six times in a row. Check 'az account show' and that you are signed in (az login)." }
+            if ($waited -ge 1800) { throw "Timed out after 30 minutes waiting for $p to register." }
         } while ($state -ne "Registered")
     }
 }

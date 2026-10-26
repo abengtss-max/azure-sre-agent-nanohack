@@ -12,7 +12,7 @@ if (-not (Test-Path $envFile)) {
     if ($ResourceGroup) {
         throw "State file not found at '$envFile'. Re-provision this environment first (resource group: '$ResourceGroup')."
     }
-    throw "State file not found at '$envFile'. Run the deploy scripts first."
+    throw "State file not found at '$envFile'. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first."
 }
 $state = Get-Content $envFile -Raw | ConvertFrom-Json
 

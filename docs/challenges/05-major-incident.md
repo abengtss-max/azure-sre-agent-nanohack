@@ -39,7 +39,9 @@ changed, triage the rest by business tier, remediate within the runbook guardrai
     ./scripts/start-challenge.ps1 5
     ```
 
-    Four faults land at once and the board takes two or three minutes to show all of them. Your alert fires a
+    If your Sev1 alert from Challenge 4 is still firing, the script **waits (up to about 6 minutes) for it to clear**,
+    because a new alert, and so a new agent thread, only appears after the old one resolves. That is normal.
+    Then four faults land at once and the board takes two or three minutes to show all of them. Your alert fires a
     few minutes later. Do not triage from a half-drawn picture.
 
 ### Tasks

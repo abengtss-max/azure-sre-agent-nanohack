@@ -33,7 +33,7 @@ kubectl create secret generic aetherion-secrets -n $ns `
 Write-Host "Applying application manifests..." -ForegroundColor Cyan
 $manifest = Get-Content (Join-Path $repoRoot "k8s/aetherion-airops.yaml") -Raw
 $manifest = $manifest.Replace("REPLACE_ACR", $state.acrLoginServer)
-$tmp = Join-Path $env:TEMP "aetherion-airops.rendered.yaml"
+$tmp = Join-Path $env:TEMP ("aetherion-airops.rendered-" + [guid]::NewGuid().ToString('N').Substring(0, 8) + ".yaml")
 $manifest | Set-Content -Path $tmp -Encoding UTF8
 kubectl apply -f $tmp
 

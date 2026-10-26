@@ -33,6 +33,10 @@ for your own alert**, so the next major incident triggers your agent before you 
     It looks like `aetherion-major-incident-a1b2c3`. It is also in the portal under **Monitor → Alerts →
     Alert rules**, in your resource group.
 
+!!! note "Your Sev1 alert may fire during this challenge"
+    The baggage errors count as failed requests, so your alert can fire here too. If your agent opens a
+    [Sev1] thread for it after you arm the plan, that is expected. Challenge 5 waits for it to clear before it starts.
+
 ### Tasks
 
 1. **Confirm the symptom.** Verify the baggage errors in the Ops Center and telemetry, so you know what "recovered" looks like.

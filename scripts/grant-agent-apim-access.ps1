@@ -17,7 +17,7 @@ $ErrorActionPreference = 'Stop'
 $envFile = Join-Path $PSScriptRoot '.env.aetherion.json'
 if (-not (Test-Path $envFile)) {
     if ($IfPresent) { return }
-    throw "State file not found. Run 01-deploy-infra.ps1 first."
+    throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first."
 }
 $state = Get-Content $envFile -Raw | ConvertFrom-Json
 $rg = $state.resourceGroup

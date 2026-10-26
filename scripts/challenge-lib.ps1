@@ -29,7 +29,7 @@ $script:InjectPs = Join-Path $PSScriptRoot 'inject-failure.ps1'
 # ---------------------------------------------------------------------------
 function Get-AetherionState {
     if (-not (Test-Path $script:EnvFile)) {
-        throw "State file not found: $script:EnvFile. Provision the environment first."
+        throw "State file not found: $script:EnvFile. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first."
     }
     return Get-Content $script:EnvFile -Raw | ConvertFrom-Json
 }
@@ -47,7 +47,7 @@ function Get-AetherionGatewayIp {
     } catch { }
 
     if ([string]::IsNullOrWhiteSpace($gatewayIp)) {
-        throw "State file not found at '$script:EnvFile', and the gateway IP could not be discovered from the current Kubernetes context. Provision the environment or select its AKS context first."
+        throw "State file not found at '$script:EnvFile', and the gateway IP could not be discovered from the current Kubernetes context. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first."
     }
     return $gatewayIp.Trim()
 }
@@ -328,6 +328,35 @@ function Test-AgentApimAccess {
     $n = az role assignment list --assignee-object-id $principalId --scope $scope `
         --query "[?roleDefinitionName=='API Management Service Contributor'] | length(@)" -o tsv 2>$null
     return ([int]$n -gt 0)
+}
+
+# True while THIS environment's Sev1 alert is currently Fired. An alert only produces a new
+# instance (and so a new agent thread) after the previous one has resolved, and Challenge 4's
+# baggage errors can trip the same alert, so Challenge 5 waits for it to clear first.
+function Test-OwnIncidentAlertActive {
+    $st  = Get-AetherionState
+    $sub = Get-AetherionSubscriptionId
+    $rule = Get-IncidentAlertName
+    $tmp = Join-Path ([IO.Path]::GetTempPath()) "aeth-alerts-active-$PID.json"
+    az rest --method get --uri "https://management.azure.com/subscriptions/$sub/providers/Microsoft.AlertsManagement/alerts?api-version=2019-05-05-preview&timeRange=1h&monitorCondition=Fired" -o json 2>$null > $tmp
+    if (-not (Test-Path $tmp)) { return $false }
+    $raw = Get-Content $tmp -Raw; Remove-Item $tmp -ErrorAction SilentlyContinue
+    if ([string]::IsNullOrWhiteSpace($raw)) { return $false }
+    foreach ($al in ($raw | ConvertFrom-Json).value) {
+        $e = $al.properties.essentials
+        if ($e.alertRule -match [regex]::Escape($rule) -and $e.monitorCondition -eq 'Fired') { return $true }
+    }
+    return $false
+}
+
+function Wait-OwnIncidentAlertClear([int]$TimeoutMinutes = 12) {
+    if (-not (Test-OwnIncidentAlertActive)) { return }
+    Write-Host "Your Sev1 alert is still firing from the previous incident. A new alert (and a new agent thread)" -ForegroundColor Yellow
+    Write-Host "only appears after it resolves, so waiting for it to clear (up to $TimeoutMinutes min)..." -ForegroundColor Yellow
+    $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
+    while ((Get-Date) -lt $deadline -and (Test-OwnIncidentAlertActive)) { Start-Sleep -Seconds 30; Write-Host "  still firing..." -ForegroundColor Gray }
+    if (Test-OwnIncidentAlertActive) { Write-Host "  It has not cleared. Run ./scripts/reset-environment.ps1, wait about 6 minutes, then start again." -ForegroundColor Yellow }
+    else { Write-Host "  Cleared." -ForegroundColor Green }
 }
 
 # Proves the alert -> response plan path actually works, rather than asking.
@@ -762,6 +791,7 @@ $script:Challenges = [ordered]@{
         Title = 'Final Incident: Restore Global Check-In Before Peak Departure'
         Kind  = 'fault'
         Start = {
+            Wait-OwnIncidentAlertClear
             Invoke-Fault 'flight-ops' 'badimage'
             Invoke-Fault 'crew-scheduling' 'slow-query'
             Invoke-Fault 'booking' 'cpu-starve'
@@ -802,6 +832,8 @@ $script:Challenges = [ordered]@{
             if (-not $fired) {
                 Write-Host "  No Sev1 'major incident' alert fired since this challenge started - the auto-trigger path did not exercise." -ForegroundColor Yellow
                 Write-Host "  Check the Sev1 response plan from challenge 4, then re-run start-challenge 5." -ForegroundColor Yellow
+                Write-Host "  If your alert was already firing when you started, run ./scripts/reset-environment.ps1," -ForegroundColor Yellow
+                Write-Host "  wait about 6 minutes for it to resolve, then run start-challenge 5 again." -ForegroundColor Yellow
             }
             $pass = ($allOk -and $apimOk -and $tagFlight -eq 'latest' -and $okCrew -and $cpuBook -ge 500 -and $fired)
             if ($pass -and $s.overall -ne 'operational') {
@@ -933,14 +965,14 @@ function Test-AetherionChallenge([int]$Number) {
     }
     $ch = Get-ChallengeByNumber $Number
     Write-Host ""
-    Write-Host "=== Grading $((Get-ChallengeLabel $Number).ToLower()) : $($ch.Title) ===" -ForegroundColor Cyan
+    Write-Host "=== Grading $(Get-ChallengeLabel $Number) : $($ch.Title) ===" -ForegroundColor Cyan
     $result = & $ch.Check
 
     Write-Host ""
     Write-Host "  $($result.Detail)" -ForegroundColor Gray
     Write-Host ""
     if ($result.Pass) {
-        Write-Host "  PASS - $((Get-ChallengeLabel $Number).ToLower()) resolved." -ForegroundColor Green
+        Write-Host "  PASS - $(Get-ChallengeLabel $Number) resolved." -ForegroundColor Green
         # Nothing advanced this before, so 'unlocked' sat at 1 for the whole hack.
         if ($Number -lt (Get-MaxChallenge) -and (Get-Unlocked) -lt ($Number + 1)) { Set-Unlocked ($Number + 1) }
         if ($Number -eq (Get-MaxChallenge)) {

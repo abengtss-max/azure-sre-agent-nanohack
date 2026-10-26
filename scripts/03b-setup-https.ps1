@@ -143,7 +143,7 @@ spec:
         - name: gateway
           port: 80
 "@
-$tmp = Join-Path $env:TEMP "aetherion-https.yaml"
+$tmp = Join-Path $env:TEMP ("aetherion-https-" + [guid]::NewGuid().ToString('N').Substring(0, 8) + ".yaml")
 $yaml | Set-Content -Path $tmp -Encoding UTF8
 kubectl apply -f $tmp
 if ($LASTEXITCODE -ne 0) { throw "Failed to apply HTTPS resources." }

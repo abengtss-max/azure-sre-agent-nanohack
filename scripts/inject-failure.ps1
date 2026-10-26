@@ -30,7 +30,7 @@ $envFile = Join-Path $PSScriptRoot ".env.aetherion.json"
 
 if ($Service -eq "apim") {
     if ($Fault -ne "bad-backend") { throw "For service 'apim', only -Fault bad-backend is supported." }
-    if (-not (Test-Path $envFile)) { throw "State file not found. Deploy first." }
+    if (-not (Test-Path $envFile)) { throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first." }
     $state = Get-Content $envFile -Raw | ConvertFrom-Json
 
     # A backend override published to the product policy. The host does not
@@ -49,7 +49,7 @@ if ($Service -eq "apim") {
 
 if ($Service -eq "postgres") {
     if ($Fault -ne "db-firewall") { throw "For service 'postgres', only -Fault db-firewall is supported." }
-    if (-not (Test-Path $envFile)) { throw "State file not found. Deploy first." }
+    if (-not (Test-Path $envFile)) { throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first." }
     $state = Get-Content $envFile -Raw | ConvertFrom-Json
 
     # Every workload reaches PostgreSQL through the AllowAllAzureServices rule, so
@@ -82,7 +82,7 @@ if ($Service -eq "postgres") {
 # like a real incident rather than a lab.
 
 if ($Fault -eq "badimage") {
-    if (-not (Test-Path $envFile)) { throw "State file not found. Deploy first." }
+    if (-not (Test-Path $envFile)) { throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first." }
     $state = Get-Content $envFile -Raw | ConvertFrom-Json
     $badTag = "$($state.acrLoginServer)/aetherion-airops:v2.4.1"
     Write-Host "Rolling '$Service' to release $badTag..." -ForegroundColor Yellow
@@ -140,7 +140,7 @@ if ($Fault -eq "slow-query") {
 }
 
 if ($Fault -eq "canary") {
-    if (-not (Test-Path $envFile)) { throw "State file not found. Deploy first." }
+    if (-not (Test-Path $envFile)) { throw "State file not found. Run ./scripts/attach-environment.ps1 -ResourceGroup <your-resource-group> first." }
     $state = Get-Content $envFile -Raw | ConvertFrom-Json
     # A second revision behind the same Service, rolled out with the wrong ROLE.
     # Its pods pass health checks but serve the wrong API surface, so a slice of

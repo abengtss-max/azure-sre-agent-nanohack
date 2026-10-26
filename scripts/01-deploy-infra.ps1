@@ -143,8 +143,14 @@ Write-Host "Infrastructure deployed. State saved to $envFile" -ForegroundColor G
 # Container Insights is enabled AFTER the cluster exists (not inline in Bicep) so
 # the AKS create stays fast and never hangs reconciling the monitoring addon.
 Write-Host "Enabling Container Insights on AKS..." -ForegroundColor Cyan
-az aks enable-addons --resource-group $ResourceGroup --name $state.aksName `
-    --addons monitoring --workspace-resource-id $state.logAnalyticsId --only-show-errors 2>$null
+# Optional add-ons can fail transiently when many environments deploy at once (another
+# operation on the cluster in progress, throttling), so retry before giving up.
+for ($try = 1; $try -le 3; $try++) {
+    az aks enable-addons --resource-group $ResourceGroup --name $state.aksName `
+        --addons monitoring --workspace-resource-id $state.logAnalyticsId --only-show-errors 2>$null
+    if ($LASTEXITCODE -eq 0) { break }
+    if ($try -lt 3) { Start-Sleep -Seconds 30 }
+}
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  Container Insights not enabled yet - enable later with:" -ForegroundColor Yellow
     Write-Host "  az aks enable-addons -g $ResourceGroup -n $($state.aksName) -a monitoring --workspace-resource-id $($state.logAnalyticsId)" -ForegroundColor Gray
@@ -154,9 +160,13 @@ if ($LASTEXITCODE -ne 0) {
 # ask the agent to correlate CPU over a window have nothing to read. The CLI wires
 # up the data collection rule and endpoint that managed Prometheus needs.
 Write-Host "Enabling managed Prometheus metrics on AKS..." -ForegroundColor Cyan
-az aks update --resource-group $ResourceGroup --name $state.aksName `
-    --enable-azure-monitor-metrics --azure-monitor-workspace-resource-id $state.azureMonitorWorkspaceId `
-    --only-show-errors 2>$null
+for ($try = 1; $try -le 3; $try++) {
+    az aks update --resource-group $ResourceGroup --name $state.aksName `
+        --enable-azure-monitor-metrics --azure-monitor-workspace-resource-id $state.azureMonitorWorkspaceId `
+        --only-show-errors 2>$null
+    if ($LASTEXITCODE -eq 0) { break }
+    if ($try -lt 3) { Start-Sleep -Seconds 30 }
+}
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  Managed Prometheus not enabled yet - enable later with:" -ForegroundColor Yellow
     Write-Host "  az aks update -g $ResourceGroup -n $($state.aksName) --enable-azure-monitor-metrics --azure-monitor-workspace-resource-id $($state.azureMonitorWorkspaceId)" -ForegroundColor Gray
@@ -167,3 +177,5 @@ Write-Host "  AKS:     $($state.aksName)" -ForegroundColor Gray
 Write-Host "  APIM:    $($state.apimGatewayUrl)" -ForegroundColor Gray
 Write-Host "  Grafana: $($state.grafanaEndpoint)" -ForegroundColor Gray
 Write-Host "IMPORTANT: .env.aetherion.json contains a password. Do not commit it." -ForegroundColor Yellow
+# The optional add-ons above must not turn a successful deployment into a failed exit code.
+$global:LASTEXITCODE = 0

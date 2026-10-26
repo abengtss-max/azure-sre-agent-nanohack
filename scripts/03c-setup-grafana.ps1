@@ -57,7 +57,7 @@ try {
         Replace('__APIM__', $apimName).
         Replace('__LAW_ID__', $lawId).
         Replace('__TENANT__', $tenantId)
-    $tmp = Join-Path $env:TEMP "aetherion-overview.rendered.json"
+    $tmp = Join-Path $env:TEMP ("aetherion-overview.rendered-" + [guid]::NewGuid().ToString('N').Substring(0, 8) + ".json")
     $rendered | Set-Content -Path $tmp -Encoding UTF8
 
     Write-Host "Importing dashboard into Grafana..." -ForegroundColor Cyan
