@@ -25,3 +25,6 @@ internal-planning/
 # Compiled Bicep ARM output
 infra/main.json
 publish/overlays/infra/main.json
+
+# Fleet provisioning output (state files with secrets, az config copies)
+edition/out/
