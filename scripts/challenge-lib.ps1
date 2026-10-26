@@ -499,8 +499,9 @@ function Get-PlanTitleText($plan) {
 }
 
 # Challenge 4: the Sev1 response plan, read from the same store the portal reads.
-# 'mergeEnabled' is the alert-reinvestigation cooldown; 'handlingAgent' empty
-# means no subagent is bound, which is what the challenge asks for.
+# 'mergeEnabled' is the alert-reinvestigation cooldown; 'handlingAgent' empty or
+# 'meta_agent' (the portal's default, shown as "Meta Agent") means no custom subagent
+# is bound, which is what the challenge asks for.
 # 'TitleIsMine' is true only when 'Title contains' holds this environment's alert name.
 function Get-ResponsePlanSummary {
     $r = Invoke-SreData '/api/v1/incidentPlayground/filters'
@@ -516,7 +517,7 @@ function Get-ResponsePlanSummary {
         Found        = [bool]$sev1
         Id           = if ($sev1) { "$($sev1.id)" } else { '' }
         Autonomous   = [bool]($sev1 -and $sev1.agentMode -eq 'autonomous')
-        NoSubagent   = [bool]($sev1 -and [string]::IsNullOrWhiteSpace($sev1.handlingAgent))
+        NoSubagent   = [bool]($sev1 -and ([string]::IsNullOrWhiteSpace($sev1.handlingAgent) -or $sev1.handlingAgent -eq 'meta_agent'))
         TitleIsMine  = [bool]($sev1 -and (Get-PlanTitleText $sev1) -like "*$mine*")
         NoExclusions = [bool]($sev1 -and @($sev1.titleNotContains | Where-Object { $_ }).Count -eq 0)
         CooldownOff  = [bool]($sev1 -and -not $sev1.mergeEnabled)
@@ -753,7 +754,7 @@ $script:Challenges = [ordered]@{
             $conn = Test-IncidentPlatformConnected
             if (-not $conn) {
                 Write-Host "  Azure Monitor is not connected as an incident platform, so no response plan can exist." -ForegroundColor Yellow
-                Write-Host "  Incidents -> Triggers + response plans -> Connect an incident platform -> Azure Monitor." -ForegroundColor Yellow
+                Write-Host "  Incidents -> Triggers & response plans -> connect Azure Monitor (not PagerDuty)." -ForegroundColor Yellow
             }
             # Read from the same store the portal reads, so a plan that looks right but
             # would never fire is caught here rather than in the middle of challenge 5.
@@ -767,13 +768,13 @@ $script:Challenges = [ordered]@{
                 { if ($null -eq $rp) { $null } else { [bool]$rp.Found } } $(if ($rp -and $rp.Found) { "plan '$($rp.Id)'" } else { '' })
                 $pTitle = Confirm-Verified "Is 'Title contains' set to YOUR alert name ($alert) and 'Title does not contain' empty?" `
                 { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.TitleIsMine -and $rp.NoExclusions } }
-                $pSub = Confirm-Verified 'Does Subagent name read "Set up", i.e. no subagent is bound to the plan?' `
+                $pSub = Confirm-Verified 'Is Response subagent left on the default "Meta Agent" (no custom subagent)?' `
                 { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.NoSubagent } }
                 $pAuto = Confirm-Verified 'Is the agent autonomy level on the plan set to Autonomous?' `
                 { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.Autonomous } }
                 $pCool = Confirm-Verified 'Is alert reinvestigation cooldown disabled (it defaults to 3 hours and will silently block a re-run)?' `
                 { if ($null -eq $rp -or -not $rp.Found) { $null } else { $rp.CooldownOff } }
-                $pQuick = Confirm-Verified 'Have you deleted the default quickstart plan that was created when you connected Azure Monitor?' `
+                $pQuick = Confirm-Verified 'Is yours the only response plan (any default quickstart plan deleted)?' `
                 { if ($null -eq $rp) { $null } else { $rp.Count -le 1 } } $(if ($rp) { "$($rp.Count) plan(s) defined" } else { '' })
                 $plan = ($pOn -and $pTitle -and $pSub -and $pAuto -and $pCool -and $pQuick)
                 if (-not $plan) {

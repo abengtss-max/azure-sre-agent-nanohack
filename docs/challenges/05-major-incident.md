@@ -4,7 +4,7 @@
     **Time:** ~60 min · **Run mode:** Review plus bounded automation · **Access:** you decide what is approved and what is automated
 
 !!! danger "Before you start: is your Sev1 plan armed on YOUR alert?"
-    This challenge depends on Challenge 4. Open **Incidents → Triggers + response plans** and confirm one plan
+    This challenge depends on Challenge 4. Open **Incidents → Triggers & response plans** and confirm one plan
     shows **Status: On**, **Severity: Sev1** and **Title contains = your alert name**
     (`(Get-Content ./scripts/.env.aetherion.json | ConvertFrom-Json).incidentAlertName`).
     Without it your agent never picks the incident up. Other attendees share this subscription: **only your own
@@ -102,8 +102,8 @@ changed, triage the rest by business tier, remediate within the runbook guardrai
         judgement. Those held tiers are your work.
 
         !!! tip "If no thread appeared"
-            Check the plan: **Status On**, **Severity Sev1**, **Title contains = your exact alert name**, no subagent,
-            and no leftover quickstart plan. Check **Monitor → Alerts** shows your alert **Fired**. If the alert
+            Check the plan: **Status On**, **Severity Sev1**,             **Title contains = your exact alert name**, subagent on **Meta Agent**,
+                        and no other plan. Check **Monitor → Alerts** shows your alert **Fired**. If the alert
             fired and nothing started, tell your proctor: the agent may lack Monitoring Contributor on the
             subscription. Re-run `start-challenge.ps1 5` once fixed.
 

@@ -61,7 +61,7 @@ and let the agent investigate.
 
 ??? question "The Sev1 response plan never fires (Challenge 4 → 7)"
     This is the failure that only surfaces once Challenge 5 is already open. Check
-    **Incidents → Triggers + response plans**:
+    **Incidents → Triggers & response plans**:
 
     - **Status** must be **On**, and **Severity** must be exactly **Sev1** — a
       broader filter fires on everything, a mismatched one catches nothing.

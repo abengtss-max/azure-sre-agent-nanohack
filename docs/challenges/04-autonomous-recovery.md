@@ -41,8 +41,8 @@ for your own alert**, so the next major incident triggers your agent before you 
 
 1. **Confirm the symptom.** Verify the baggage errors in the Ops Center and telemetry, so you know what "recovered" looks like.
 2. **Decide the bounds, then hand over.** Judge whether this incident is safe to automate, switch to **Autonomous**, let the agent fix it end to end, then review its action log.
-3. **Connect Azure Monitor.** In **Incidents**, connect Azure Monitor as the incident platform, then delete the quickstart plan it creates.
-4. **Arm the Sev1 plan on your alert.** Severity **Sev1**, **Title contains** = your alert name, Autonomous, no subagent, cooldown off. **Challenge 5 does not work without this.**
+3. **Connect Azure Monitor.** In **Incidents**, connect Azure Monitor as the incident platform (the default is PagerDuty, so switch it). Delete any default plan it creates.
+4. **Arm the Sev1 plan on your alert.** Severity **Sev1**, **Title contains** = your alert name, Autonomous, subagent left on **Meta Agent**, cooldown off. **Challenge 5 does not work without this.**
 
 ![Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery](../assets/storyboard/img-challenge-6.webp){ .story-panel loading=lazy }
 
@@ -56,7 +56,7 @@ for your own alert**, so the next major incident triggers your agent before you 
 ### Success criteria
 
 - The agent fixed baggage autonomously, the service is healthy, and you can say why it was safe to automate: small blast radius, a reversible remedy, degraded rather than down, and a run mode you chose deliberately.
-- One enabled **Sev1** plan exists, with **Title contains** set to **your alert name**, Autonomous, no subagent, and cooldown disabled. The quickstart plan is deleted.
+- One enabled **Sev1** plan exists, with **Title contains** set to **your alert name**, Autonomous, subagent left on **Meta Agent**, and cooldown disabled. It is the only plan.
 
 !!! success "Verify your work"
 
@@ -71,7 +71,7 @@ for your own alert**, so the next major incident triggers your agent before you 
 
     - What makes this safe to automate is the *shape* of the incident, not a permission setting. Decide that **before** you switch mode, then resist helping.
     - Set the plan severity to **Sev1** exactly, and **Title contains** to your full alert name. Anything broader catches other people's alerts; anything narrower misses yours.
-    - Leave the subagent empty so the main agent commands the whole board in Challenge 5.
+    - Leave **Response subagent** on **Meta Agent** so the main agent commands the whole board in Challenge 5.
 
 ??? question "Stuck? Step by step"
 
@@ -89,16 +89,18 @@ for your own alert**, so the next major incident triggers your agent before you 
             revision that should not be serving is an ordinary, reversible rollback and the sanctioned fix.
 
     ??? note "Task 3 · Connect Azure Monitor"
-        1. **Incidents** → **Triggers + response plans** → **Connect an incident platform** → **Azure Monitor** → **Save**.
-        2. Connecting creates a default **quickstart** plan for Sev3. **Delete it**: left in place it runs alongside
-           yours and can route an incident to the wrong place or process it twice.
+        1. **Incidents** → **Connect platform** → choose **Azure Monitor** (PagerDuty is preselected) → **Save**.
+        2. Open **Triggers & response plans**. If a default **quickstart** plan exists, **delete it**: left in place
+           it runs alongside yours and can route an incident to the wrong place or process it twice.
 
-        !!! warning "If it says it cannot assign a role"
-            The agent needs **Monitoring Contributor** on the subscription to scan alerts, and you only own your
-            resource group. Tell your proctor: they run a script that grants it. Then retry.
+        !!! warning "If an orange banner says the identity lacks Monitoring Contributor at subscription scope"
+            Azure Monitor still connects, but the portal can only grant the role on your resource group, and the agent
+            needs it on the **subscription** to scan alerts. Do not click **Assign Monitoring Contributor role**: you
+            only own your resource group. Tell your proctor, who runs a script that grants it. Alerts are not processed
+            until they have.
 
     ??? note "Task 4 · Arm the Sev1 plan on your alert"
-        **+ Create a response plan**:
+        **Create a response plan**:
 
         | Field | Value |
         |---|---|
@@ -106,11 +108,11 @@ for your own alert**, so the next major incident triggers your agent before you 
         | **Severity** | **Sev1** |
         | **Title contains** | **your exact alert name** (for example `aetherion-major-incident-a1b2c3`) |
         | Title does not contain | leave empty |
-        | **Response subagent** | leave empty |
+        | **Response subagent** | leave on **Meta Agent** (the default) |
         | **Agent autonomy level** | **Autonomous** |
         | **Alert reinvestigation cooldown** | **disable** (it defaults to 3 hours and would silently block a re-run) |
 
-        Then **Next** and create. The thread title will read `[Sev1] <your alert name>`.
+        Then **Next** (it previews the incidents your filter matches) and **Create**. The thread title will read `[Sev1] <your alert name>`.
 
     ??? note "Optional · Where do the AAUs go?"
         Open **Settings → Agent Consumption**, note the two largest consumers with real figures, then ask:

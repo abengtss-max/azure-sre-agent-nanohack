@@ -23,8 +23,8 @@ group in Review mode, capture a healthy baseline, and schedule a daily health ch
 
 !!! danger "Model provider: select Azure OpenAI (GPT / ChatGPT). Never Anthropic."
     Regulatory requirement. The create wizard labels **Azure OpenAI** as *Covered by EU Data Boundary
-    commitments*. **Anthropic** is labelled *Excluded from EU Data Boundary*: data may be processed in the
-    United States. Check the label before you click **Next**. You can see and change the provider later in the
+    commitments*. **Anthropic** is labelled *Excluded from EU Data Boundary* (data may be processed in the
+    United States) even though the wizard badges it **Preferred**. Azure OpenAI is preselected: leave it. Check the label before you click **Next**. You can see and change the provider later in the
     agent's settings, so confirm it there too.
 
 ### Tasks
@@ -79,7 +79,7 @@ group in Review mode, capture a healthy baseline, and schedule a daily health ch
               Code Access only reads the repo, so do not spend your PAT here (it is for Challenge 6).
             - **Logs** → **Log Analytics Workspace** → the app's **`aetherion-law`** (not the agent's own `workspace…`).
             - **Azure resources** → **Resource group** → **only your** group, at **Reader**. Never *Subscription*; leave out the `MC_…` group.
-        6. Leave **Incidents** and **Knowledge** for later. Connecting Incidents now adds a quickstart plan you would have to clean up.
+        6. Leave **Incidents** and **Knowledge** for later; Challenge 4 connects Incidents.
 
         !!! danger "Your copy, never the lab repo"
             The lab repo holds the answers and fault scripts. The agent must only see
