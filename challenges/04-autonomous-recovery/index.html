@@ -1795,8 +1795,8 @@ Alert rules</strong>, in your resource group.</p>
 <ol>
 <li><strong>Confirm the symptom.</strong> Verify the baggage errors in the Ops Center and telemetry, so you know what "recovered" looks like.</li>
 <li><strong>Decide the bounds, then hand over.</strong> Judge whether this incident is safe to automate, switch to <strong>Autonomous</strong>, let the agent fix it end to end, then review its action log.</li>
-<li><strong>Connect Azure Monitor.</strong> In <strong>Incidents</strong>, connect Azure Monitor as the incident platform, then delete the quickstart plan it creates.</li>
-<li><strong>Arm the Sev1 plan on your alert.</strong> Severity <strong>Sev1</strong>, <strong>Title contains</strong> = your alert name, Autonomous, no subagent, cooldown off. <strong>Challenge 5 does not work without this.</strong></li>
+<li><strong>Connect Azure Monitor.</strong> In <strong>Incidents</strong>, connect Azure Monitor as the incident platform (the default is PagerDuty, so switch it). Delete any default plan it creates.</li>
+<li><strong>Arm the Sev1 plan on your alert.</strong> Severity <strong>Sev1</strong>, <strong>Title contains</strong> = your alert name, Autonomous, subagent left on <strong>Meta Agent</strong>, cooldown off. <strong>Challenge 5 does not work without this.</strong></li>
 </ol>
 <p><img alt="Challenge 4 storyboard: Sam, Priya and Aria review autonomous recovery" class="story-panel" loading="lazy" src="../../assets/storyboard/img-challenge-6.webp" /></p>
 <h3 id="suggested-prompt">Suggested prompt<a class="headerlink" href="#suggested-prompt" title="Permanent link">&para;</a></h3>
@@ -1809,7 +1809,7 @@ exactly what you changed and why it was safe to automate.</p>
 <h3 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The agent fixed baggage autonomously, the service is healthy, and you can say why it was safe to automate: small <abbr title="How much of the system an incident (or a fix) can affect — kept as small as possible.">blast radius</abbr>, a reversible remedy, degraded rather than down, and a run mode you chose deliberately.</li>
-<li>One enabled <strong>Sev1</strong> plan exists, with <strong>Title contains</strong> set to <strong>your alert name</strong>, Autonomous, no subagent, and cooldown disabled. The quickstart plan is deleted.</li>
+<li>One enabled <strong>Sev1</strong> plan exists, with <strong>Title contains</strong> set to <strong>your alert name</strong>, Autonomous, subagent left on <strong>Meta Agent</strong>, and cooldown disabled. It is the only plan.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Verify your work</p>
@@ -1823,7 +1823,7 @@ is the one failure you would not see until Challenge 5 is open.</p>
 <ul>
 <li>What makes this safe to automate is the <em>shape</em> of the incident, not a permission setting. Decide that <strong>before</strong> you switch mode, then resist helping.</li>
 <li>Set the plan severity to <strong>Sev1</strong> exactly, and <strong>Title contains</strong> to your full alert name. Anything broader catches other people's alerts; anything narrower misses yours.</li>
-<li>Leave the subagent empty so the main agent commands the whole board in Challenge 5.</li>
+<li>Leave <strong>Response subagent</strong> on <strong>Meta Agent</strong> so the main agent commands the whole board in Challenge 5.</li>
 </ul>
 </details>
 <details class="question">
@@ -1847,19 +1847,21 @@ revision that should not be serving is an ordinary, reversible rollback and the 
 <details class="note">
 <summary>Task 3 · Connect Azure Monitor</summary>
 <ol>
-<li><strong>Incidents</strong> → <strong>Triggers + response plans</strong> → <strong>Connect an incident platform</strong> → <strong>Azure Monitor</strong> → <strong>Save</strong>.</li>
-<li>Connecting creates a default <strong>quickstart</strong> plan for Sev3. <strong>Delete it</strong>: left in place it runs alongside
-   yours and can route an incident to the wrong place or process it twice.</li>
+<li><strong>Incidents</strong> → <strong>Connect platform</strong> → choose <strong>Azure Monitor</strong> (PagerDuty is preselected) → <strong>Save</strong>.</li>
+<li>Open <strong>Triggers &amp; response plans</strong>. If a default <strong>quickstart</strong> plan exists, <strong>delete it</strong>: left in place
+   it runs alongside yours and can route an incident to the wrong place or process it twice.</li>
 </ol>
 <div class="admonition warning">
-<p class="admonition-title">If it says it cannot assign a role</p>
-<p>The agent needs <strong>Monitoring Contributor</strong> on the subscription to scan alerts, and you only own your
-resource group. Tell your proctor: they run a script that grants it. Then retry.</p>
+<p class="admonition-title">If an orange banner says the identity lacks Monitoring Contributor at subscription scope</p>
+<p>Azure Monitor still connects, but the portal can only grant the role on your resource group, and the agent
+needs it on the <strong>subscription</strong> to scan alerts. Do not click <strong>Assign Monitoring Contributor role</strong>: you
+only own your resource group. Tell your proctor, who runs a script that grants it. Alerts are not processed
+until they have.</p>
 </div>
 </details>
 <details class="note">
 <summary>Task 4 · Arm the Sev1 plan on your alert</summary>
-<p><strong>+ Create a response plan</strong>:</p>
+<p><strong>Create a response plan</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -1886,7 +1888,7 @@ resource group. Tell your proctor: they run a script that grants it. Then retry.
 </tr>
 <tr>
 <td><strong>Response subagent</strong></td>
-<td>leave empty</td>
+<td>leave on <strong>Meta Agent</strong> (the default)</td>
 </tr>
 <tr>
 <td><strong>Agent autonomy level</strong></td>
@@ -1898,7 +1900,7 @@ resource group. Tell your proctor: they run a script that grants it. Then retry.
 </tr>
 </tbody>
 </table>
-<p>Then <strong>Next</strong> and create. The thread title will read <code>[Sev1] &lt;your alert name&gt;</code>.</p>
+<p>Then <strong>Next</strong> (it previews the incidents your filter matches) and <strong>Create</strong>. The thread title will read <code>[Sev1] &lt;your alert name&gt;</code>.</p>
 </details>
 <details class="note">
 <summary>Optional · Where do the AAUs go?</summary>

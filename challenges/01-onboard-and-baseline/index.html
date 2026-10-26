@@ -1778,8 +1778,8 @@ group in <abbr title="SRE Agent run mode where it proposes a plan and waits for 
 <div class="admonition danger">
 <p class="admonition-title">Model provider: select Azure OpenAI (GPT / ChatGPT). Never Anthropic.</p>
 <p>Regulatory requirement. The create wizard labels <strong>Azure OpenAI</strong> as <em>Covered by EU Data Boundary
-commitments</em>. <strong>Anthropic</strong> is labelled <em>Excluded from EU Data Boundary</em>: data may be processed in the
-United States. Check the label before you click <strong>Next</strong>. You can see and change the provider later in the
+commitments</em>. <strong>Anthropic</strong> is labelled <em>Excluded from EU Data Boundary</em> (data may be processed in the
+United States) even though the wizard badges it <strong>Preferred</strong>. Azure OpenAI is preselected: leave it. Check the label before you click <strong>Next</strong>. You can see and change the provider later in the
 agent's settings, so confirm it there too.</p>
 </div>
 <h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
@@ -1837,7 +1837,7 @@ finding with telemetry and make no changes.</p>
 <li><strong>Azure resources</strong> → <strong>Resource group</strong> → <strong>only your</strong> group, at <strong><abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr></strong>. Never <em>Subscription</em>; leave out the <code>MC_…</code> group.</li>
 </ul>
 </li>
-<li>Leave <strong>Incidents</strong> and <strong>Knowledge</strong> for later. Connecting Incidents now adds a quickstart plan you would have to clean up.</li>
+<li>Leave <strong>Incidents</strong> and <strong>Knowledge</strong> for later; Challenge 4 connects Incidents.</li>
 </ol>
 <div class="admonition danger">
 <p class="admonition-title">Your copy, never the lab repo</p>

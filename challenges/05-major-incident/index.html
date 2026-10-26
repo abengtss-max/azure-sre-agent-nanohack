@@ -1764,7 +1764,7 @@
 </div>
 <div class="admonition danger">
 <p class="admonition-title">Before you start: is your Sev1 plan armed on YOUR alert?</p>
-<p>This challenge depends on Challenge 4. Open <strong>Incidents → Triggers + response plans</strong> and confirm one plan
+<p>This challenge depends on Challenge 4. Open <strong>Incidents → Triggers &amp; response plans</strong> and confirm one plan
 shows <strong>Status: On</strong>, <strong>Severity: Sev1</strong> and <strong>Title contains = your alert name</strong>
 (<code>(Get-Content ./scripts/.env.aetherion.json | ConvertFrom-Json).incidentAlertName</code>).
 Without it your agent never picks the incident up. Other attendees share this subscription: <strong>only your own
@@ -1884,8 +1884,8 @@ everything by hand is not enough.</p>
 judgement. Those held tiers are your work.</p>
 <div class="admonition tip">
 <p class="admonition-title">If no thread appeared</p>
-<p>Check the plan: <strong>Status On</strong>, <strong>Severity Sev1</strong>, <strong>Title contains = your exact alert name</strong>, no subagent,
-and no leftover quickstart plan. Check <strong>Monitor → Alerts</strong> shows your alert <strong>Fired</strong>. If the alert
+<p>Check the plan: <strong>Status On</strong>, <strong>Severity Sev1</strong>,             <strong>Title contains = your exact alert name</strong>, subagent on <strong>Meta Agent</strong>,
+            and no other plan. Check <strong>Monitor → Alerts</strong> shows your alert <strong>Fired</strong>. If the alert
 fired and nothing started, tell your proctor: the agent may lack Monitoring Contributor on the
 subscription. Re-run <code>start-challenge.ps1 5</code> once fixed.</p>
 </div>
