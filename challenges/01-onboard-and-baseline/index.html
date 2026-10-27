@@ -1834,7 +1834,10 @@ finding with telemetry and make no changes.</p>
 <li><strong>Code</strong> → <strong>GitHub</strong> → <strong>Your account</strong> → add <strong>your copy</strong> of <code>aetherion-airops-platform</code>.
   Code Access only reads the repo, so do not spend your PAT here (it is for Challenge 6).</li>
 <li><strong>Logs</strong> → <strong><abbr title="Azure service that stores and queries container and platform logs.">Log Analytics</abbr> Workspace</strong> → the app's <strong><code>aetherion-law</code></strong> (not the agent's own <code>workspace…</code>).</li>
-<li><strong>Azure resources</strong> → <strong>Resource group</strong> → <strong>only your</strong> group, at <strong><abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr></strong>. Never <em>Subscription</em>; leave out the <code>MC_…</code> group.</li>
+<li><strong>Azure resources</strong> → <strong>Resource group</strong> → <strong>only your</strong> group, at <strong><abbr title="The built-in Azure role that grants read-only access — see everything, change nothing.">Reader</abbr></strong>. Never <em>Subscription</em>; leave out the <code>MC_…</code> group.
+  Without this the agent has no access to your cluster and its <code>kubectl</code> calls fail.</li>
+<li>Skipping <strong>Code</strong> has a cost later: in Challenge 3 the agent stops and asks which repository declares the
+  <code>booking</code> manifest, because it cannot restore "what the repository declares" without it.</li>
 </ul>
 </li>
 <li>Leave <strong>Incidents</strong> and <strong>Knowledge</strong> for later; Challenge 4 connects Incidents.</li>
