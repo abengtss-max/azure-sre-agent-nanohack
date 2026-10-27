@@ -79,6 +79,9 @@ group in Review mode, capture a healthy baseline, and schedule a daily health ch
               Code Access only reads the repo, so do not spend your PAT here (it is for Challenge 6).
             - **Logs** → **Log Analytics Workspace** → the app's **`aetherion-law`** (not the agent's own `workspace…`).
             - **Azure resources** → **Resource group** → **only your** group, at **Reader**. Never *Subscription*; leave out the `MC_…` group.
+              Without this the agent has no access to your cluster and its `kubectl` calls fail.
+            - Skipping **Code** has a cost later: in Challenge 3 the agent stops and asks which repository declares the
+              `booking` manifest, because it cannot restore "what the repository declares" without it.
         6. Leave **Incidents** and **Knowledge** for later; Challenge 4 connects Incidents.
 
         !!! danger "Your copy, never the lab repo"

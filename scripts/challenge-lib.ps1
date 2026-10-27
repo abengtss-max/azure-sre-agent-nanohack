@@ -657,7 +657,7 @@ $script:Challenges = [ordered]@{
         Start = {
             # No new fault: this continues the check-in incident that challenge 2 opened.
             Write-Host "The check-in incident from challenge 2 is still open. Recover it under human" -ForegroundColor Yellow
-            Write-Host "approval (Review / on-behalf-of) with the least disruptive safe action."
+            Write-Host "approval (Review mode) with the least disruptive safe action."
         }
         Check = {
             $okBook   = (Test-ServiceHealthy 'booking' 400)
